@@ -1,11 +1,16 @@
 
 let theta = 0;
+let phi = 0;
+
+let grid = 5;
+
+
 
 
 function setup() {
 
 
-    createCanvas(windowHeight / 2, windowWidth / 2);
+    createCanvas(windowWidth / 2, windowHeight / 2);
 
 
 
@@ -16,23 +21,32 @@ function setup() {
 
 function draw() {
     background(0);
+    noStroke();
 
-    loadPixels();
+    // loadPixels();
 
 
-    for (let i = 0; i < width; i++) {
-        for (let j = 0; j < height; j++) {
+    for (let i = 0; i < width; i += grid) {
+        for (let j = 0; j < height; j += grid) {
 
-            let h = map(sin(i + j + theta), -1, 1, 0, 255);
-            let c = col*or(h, 255, 255)
-            set(i, j, c);
+            let si = sin(i * theta / 10000);
+            let co = cos(j * phi / 7054 * si);
+            let h = map(si + co, -2, 2, 0, 255);
+
+            // let h = map(noise(i, j), 0, 1, 0, 255);
+            let c = color(h, 255, 255)
+            // set(i, j, c);
+
+            fill(c);
+            rect(i, j, grid, grid);
 
         }
     }
 
-    updatePixels();
+    // updatePixels();
 
 
     theta += 0.1;
+    phi -= 0.03;
 
 }
