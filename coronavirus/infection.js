@@ -1,12 +1,13 @@
 class Infection {
 
-    constructor(amount, index) {
+    constructor(amount, index, isPrediction) {
         this.amount = amount;
         this.index = index;
         this.pos;
         this.rad = 4;
         this.visible = false;
         this.highlighted = false;
+        this.isPrediction = isPrediction;
         this.yesterday;
         this.actualpos;
         this.growth;
@@ -24,7 +25,7 @@ class Infection {
         return map(this.index, 0, infections.length - 1, border, w + border);
     }
 
-    setPrev(yesterday) {
+    setYesterday(yesterday) {
         this.yesterday = yesterday;
         this.growth = Math.round(this.amount / this.yesterday.amount * 100) - 100;
     }
@@ -56,14 +57,15 @@ class Infection {
         if (this.visible) {
 
             this.update();
+            this.rad = 4;
 
             if (this.highlighted) {
                 fill(255, 255, 0);
                 this.rad = 8;
+            } else if (this.isPrediction) {
+                fill(255, 0, 0);
             } else {
                 fill(200);
-                this.rad = 4;
-
             }
 
             noStroke();
@@ -73,7 +75,7 @@ class Infection {
 
 
 
-            if (this.index % 3 == (infections.length - 1) % 3) {
+            if ((this.index % howmanylabels == (infections.length - 1) % howmanylabels) || this.highlighted) {
                 text(Math.round(this.amount), this.pos.x + 10, this.pos.y + 10);
 
             }
@@ -87,6 +89,11 @@ class Infection {
                 line(this.pos.x, this.pos.y, px, this.pos.y);
                 line(px, py, px, this.pos.y);
                 text(`${this.growth}%`, px - 10, this.pos.y - 10)
+            }
+
+            if (this.index == data.length - 1) {
+                fill(0, 255, 255);
+                ellipse(this.pos.x, this.pos.y, this.rad + 5, this.rad + 5);
             }
 
 

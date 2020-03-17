@@ -52,45 +52,74 @@ let data = [
     101728
 ];
 
-let infections = [];
-let visibleInfections = [];
 
-let logarithmic = true;
-let border = 40;
+
+let logarithmic = false;
+let border = 80;
+let howmanylabels = 10;
 let h, w;
-let maxInfection;
-
-
 let growthchartwidth = 200;
 let growthchartheight = 100;
 
+let infections = [];
+let maxInfection;
+
+let predictionsMoreDaysOfGrowth = 15;
+let predictionMoreDaysTilFlat = 40; // predictionsMoreDaysOfGrowth + data.length;
 
 
 function setup() {
 
 
-    createCanvas(windowWidth - 20, windowHeight - 20);
+    createCanvas(windowWidth - 10, windowHeight - 10);
 
     w = width - border * 2;
     h = height - border * 2;
 
 
     data.forEach((datum, i) => {
-        infections.push(new Infection(datum, i));
+        infections.push(new Infection(datum, i, false));
     })
 
     for (let i = 1; i < infections.length; i++) {
         const infection = infections[i];
-        const prev = infections[i - 1];
-        infection.setPrev(prev);
+        const yesterday = infections[i - 1];
+        infection.setYesterday(yesterday);
 
     }
 
 
-
+    calculatePredictions();
 
     calculateMaxInfection();
 
+
+
+}
+
+
+function calculatePredictions() {
+    const dayssofar = infections.length;
+    const lastgrowthrate = infections[dayssofar - 1].growth;
+    let lastamount = infections[dayssofar - 1].amount;
+    let yesterday;
+    for (let i = 1; i < predictionMoreDaysTilFlat; i++) {
+        let predictedrate = lastgrowthrate;
+        if (i > predictionsMoreDaysOfGrowth) {
+            predictedrate = lerp(0, lastgrowthrate, 1 - (i / predictionMoreDaysTilFlat));
+        }
+        lastamount = lastamount * ((100 + predictedrate) / 100);
+        const newinfection = (new Infection(lastamount, dayssofar + i - 1, true));
+
+        if (yesterday) {
+            newinfection.setYesterday(yesterday);
+        }
+        // newinfection.growth = round(predictedrate);
+        infections.push(newinfection);
+
+        yesterday = newinfection;
+
+    }
 }
 
 
@@ -176,8 +205,8 @@ function draw() {
     stroke(255);
     strokeWeight(2);
     beginShape();
-    infections.forEach((infection, index) => {
-        if (infection.visible) {
+    infections.forEach((infection) => {
+        if (infection.visible && !infection.isPrediction) {
             // let y = infection.ypos();
             // let x = infection.xpos();
             vertex(infection.pos.x, infection.pos.y);
