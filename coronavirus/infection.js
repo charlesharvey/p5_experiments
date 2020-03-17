@@ -70,7 +70,13 @@ class Infection {
 
 
             ellipse(this.pos.x, this.pos.y, this.rad, this.rad);
-            text(Math.round(this.amount), this.pos.x + 10, this.pos.y + 10);
+
+
+
+            if (this.index % 3 == (infections.length - 1) % 3) {
+                text(Math.round(this.amount), this.pos.x + 10, this.pos.y + 10);
+
+            }
 
 
             if (this.highlighted && this.yesterday) {
