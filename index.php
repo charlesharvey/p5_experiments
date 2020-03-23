@@ -128,6 +128,7 @@
       <?php foreach ($projectArray as $date => $name)  : ?>
         <?php  $opacity = ($i+6)/($j-1); ?>
         <?php  $fontsize = $font_int * ($i - 1) + $min_size; ?>
+        <?php if ($name[0] != '.') : ?>
 
          <a id="<?php echo $name; ?>"  href="<?php echo $name; ?>" class="project">
            <h2><?php echo  $name; ?></h2>
@@ -135,6 +136,7 @@
          </a>
 
        <?php  $i=$i-1; $k++; ?>
+        <?php endif; ?>
      <?php endforeach; ?>
 
  </div>
