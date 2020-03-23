@@ -64,9 +64,9 @@ let growthchartheight = 100;
 let infections = [];
 let maxInfection;
 
-let predictionsMoreDaysOfGrowth = 15;
+let predictionsMoreDaysOfGrowth = 20;
 let predictionMoreDaysTilFlat = 40; // predictionsMoreDaysOfGrowth + data.length;
-
+let lastgrowthrate = 0;
 
 function setup() {
 
@@ -100,13 +100,15 @@ function setup() {
 
 function calculatePredictions() {
     const dayssofar = infections.length;
-    const lastgrowthrate = infections[dayssofar - 1].growth;
+    lastgrowthrate = infections[dayssofar - 1].growth;
+    const totaldays = predictionMoreDaysTilFlat + predictionsMoreDaysOfGrowth;
     let lastamount = infections[dayssofar - 1].amount;
     let yesterday;
-    for (let i = 1; i < predictionMoreDaysTilFlat; i++) {
-        let predictedrate = lastgrowthrate;
-        if (i > predictionsMoreDaysOfGrowth) {
-            predictedrate = lerp(0, lastgrowthrate, 1 - (i / predictionMoreDaysTilFlat));
+    for (let i = 1; i < totaldays; i++) {
+
+        let predictedrate = lastgrowthrate; // days with constant growth
+        if (i > predictionsMoreDaysOfGrowth) { // days with slowering growth
+            predictedrate = lerp(0, lastgrowthrate, 1 - ((i - predictionsMoreDaysOfGrowth) / predictionMoreDaysTilFlat));
         }
         lastamount = lastamount * ((100 + predictedrate) / 100);
         const newinfection = (new Infection(lastamount, dayssofar + i - 1, true));
@@ -218,17 +220,16 @@ function draw() {
 
 
 
-    if (frameCount % 2 == 1) {
-        addVisibleInfection();
-    }
-
-    // // ?frameRate(2);
+    fill(255);
+    noStroke()
+    text(`Prediction with  ${predictionsMoreDaysOfGrowth}  days of growth at ${lastgrowthrate}% `, border, border - 20);
 
 
 
     // graph of growth rates
     translate(border * 2, border * 2);
     stroke(100);
+    noFill();
     strokeWeight(1);
     beginShape();
     let gx, gy, gr;
@@ -238,13 +239,28 @@ function draw() {
             gx = map(index, 0, infections.length - 1, 0, growthchartwidth);
             gy = map(gr, 40, 00, 0, growthchartheight);
             vertex(gx, gy);
+
+            if (infection.highlighted) {
+                ellipse(gx, gy, 5, 5);
+            }
         }
     });
     endShape();
     text(`${gr}%`, gx + 5, gy + 3);
     text('Growth rate', 0, growthchartheight + 12);
     stroke(50);
+
     rect(0, 0, growthchartwidth, growthchartheight);
+
+
+
+
+    if (frameCount % 2 == 1) {
+        addVisibleInfection();
+    }
+
+
+
 
 
 }

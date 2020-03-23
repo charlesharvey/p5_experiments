@@ -31,6 +31,23 @@ class Infection {
     }
 
 
+    formattedNumber(num) {
+        if (num >= 10000) {
+            const ss = num.toString().split("");
+            let r = '';
+            for (let i = ss.length - 1; i >= 0; i--) {
+                r = `${ss[i]}${r}`;
+                if ((ss.length - i) % 3 == 0 && i != 0) {
+                    r = `,${r}`;
+                }
+            }
+            return r;
+        }
+        return num;
+
+    }
+
+
     setPos() {
         let y = this.ypos();
         let x = this.xpos();
@@ -63,7 +80,7 @@ class Infection {
                 fill(255, 255, 0);
                 this.rad = 8;
             } else if (this.isPrediction) {
-                fill(255, 0, 0);
+                fill(255, 0, 100);
             } else {
                 fill(200);
             }
@@ -75,8 +92,9 @@ class Infection {
 
 
 
-            if ((this.index % howmanylabels == (infections.length - 1) % howmanylabels) || this.highlighted) {
-                text(Math.round(this.amount), this.pos.x + 10, this.pos.y + 10);
+            if ((this.index % howmanylabels == (data.length - 1) % howmanylabels) || this.highlighted || this.index == infections.length - 1) {
+                const t = this.formattedNumber(Math.round(this.amount));
+                text(t, this.pos.x + 10, this.pos.y + 10);
 
             }
 
