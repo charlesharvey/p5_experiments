@@ -16,7 +16,7 @@ class Particle {
     attracted(target) {
         const force = p5.Vector.sub(target, this.pos);
         let dir2 = force.magSq(); // square the distance between the target and current position;
-        dir2 = constrain(dir2, 10, 500);
+        dir2 = constrain(dir2, 0, 500);
         const g = 9.987;
         const strength = g / dir2;
         force.setMag(strength);
@@ -28,7 +28,7 @@ class Particle {
     update() {
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.vel.limit(20);
+        this.vel.limit(10);
         this.acc.mult(0); // createVector(0, 0);
 
 
