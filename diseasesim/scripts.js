@@ -118,8 +118,13 @@ function drawGraph() {
 
     }
     textSize(15);
-    text('Click to toggle social distancing', width / 2 + 30, height / 2 + 20);
+    text('White - uninfected people', width / 2 + 30, height / 2 + 60);
+    text('Red - infected people', width / 2 + 30, height / 2 + 80);
+    text('Green - recovered people', width / 2 + 30, height / 2 + 100);
 
+
+    fill(255);
+    text('Click to toggle social distancing', width / 2 + 30, height / 2 + 20);
 
 }
 
