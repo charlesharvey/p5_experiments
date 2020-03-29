@@ -108,15 +108,17 @@ function drawGraph() {
     drawLine('amountr', red);
 
 
-    fill(255, 50);
+    fill(255, 90);
     noStroke();
     textSize(30);
     if (withSocialDistancing) {
-        text('With social distancing', width / 2 + 30, height / 2)
+        text('With social distancing', width / 2 + 30, height / 2);
     } else {
         text('Without social distancing', width / 2 + 30, height / 2)
 
     }
+    textSize(15);
+    text('Click to toggle social distancing', width / 2 + 30, height / 2 + 20);
 
 
 }
