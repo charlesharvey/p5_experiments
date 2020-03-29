@@ -1,6 +1,6 @@
 
 let people;
-let populationSize = 260;
+let populationSize;
 
 let graphHeight, graphWidth, graphX, graphY;
 
@@ -13,6 +13,9 @@ function setup() {
 
     createCanvas(windowWidth - 20, windowHeight - 20);
 
+
+
+    populationSize = map(width * height, 100100, 3000000, 50, 410);
 
     graphHeight = height - 40;
     graphWidth = width / 2 - 60;
