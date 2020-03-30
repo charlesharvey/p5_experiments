@@ -7,8 +7,12 @@ let graphHeight, graphWidth, graphX, graphY;
 let results;
 
 let withSocialDistancing = false;
+let withPeopleShopping = false;
 
 let initalSickPercentage = 0.03;
+
+
+let shop;
 
 function setup() {
 
@@ -17,7 +21,7 @@ function setup() {
 
 
 
-    populationSize = map(width * height, 100100, 2000000, 50, 410);
+    populationSize = ((width / 2) * height) / 2500;
 
     graphHeight = height - 40;
     graphWidth = width / 2 - 60;
@@ -35,6 +39,12 @@ function setup() {
 function resetSimulation() {
     results = [];
     people = [];
+
+    if (withPeopleShopping) {
+        shop = createVector(random(width / 4, width / 2), random(height / 2, height / 4));
+    } else {
+        shop = null;
+    }
 
     for (let i = 0; i < populationSize; i++) {
         const person = new Person();
@@ -67,6 +77,11 @@ function draw() {
         const person = people[i];
 
         person.update();
+
+        if (withPeopleShopping) {
+            person.goToShop(people);
+        }
+
         if (withSocialDistancing) {
             person.socialDistancing(people);
         }
@@ -87,7 +102,10 @@ function draw() {
     results.push(result);
 
 
-
+    if (shop) {
+        fill(0, 0, 255);
+        ellipse(shop.x, shop.y, 10, 10);
+    }
 
 
     drawGraph();
