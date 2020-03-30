@@ -15,7 +15,7 @@ function setup() {
 
 
 
-    populationSize = map(width * height, 100100, 3000000, 50, 410);
+    populationSize = map(width * height, 100100, 2000000, 50, 410);
 
     graphHeight = height - 40;
     graphWidth = width / 2 - 60;

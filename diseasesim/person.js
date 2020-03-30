@@ -7,7 +7,7 @@ class Person {
         this.acc = createVector(0, 0);
 
         this.state = 'p';   // p  potential i   infected    r  removed   
-        this.infectionRadius = random(5, 25); // how close to an infected person before i get infected
+        this.infectionRadius = random(6, 35); // how close to an infected person before i get infected
 
         this.timeInfected = 0;
         this.timeToRecovered = random(50, 500);
