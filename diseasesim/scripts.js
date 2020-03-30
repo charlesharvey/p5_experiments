@@ -6,6 +6,8 @@ let graphHeight, graphWidth, graphX, graphY;
 
 let results;
 
+let run = 0;
+
 let withSocialDistancing = false;
 let withPeopleShopping = false;
 
@@ -40,6 +42,9 @@ function resetSimulation() {
     results = [];
     people = [];
 
+    withSocialDistancing = (run % 2 == 1)
+    withPeopleShopping = (run % 4 > 1)
+
     if (withPeopleShopping) {
         shop = createVector(random(width / 4, width / 2), random(height / 2, height / 4));
     } else {
@@ -56,11 +61,13 @@ function resetSimulation() {
         people[i].makeInfected();
     }
 
+
+
 }
 
 
 function mousePressed() {
-    withSocialDistancing = !withSocialDistancing;
+    run++;
     resetSimulation();
 }
 
@@ -137,23 +144,29 @@ function drawGraph() {
     drawLine('amountr', red);
 
 
-    fill(255, 90);
+    fill(255, 170);
     noStroke();
     textSize(30);
-    if (withSocialDistancing) {
-        text('With social distancing', width / 2 + 30, height / 2);
-    } else {
-        text('Without social distancing', width / 2 + 30, height / 2)
 
+    let info = 'Without social distancing';
+
+    if (withSocialDistancing) {
+        info = 'With social distancing'
     }
-    textSize(15);
+    text(info, width / 2 + 30, height / 2);
+
+    if (withPeopleShopping) {
+        text('With a central shop', width / 2 + 30, height / 2 - 30);
+    }
+
+    textSize(16);
     text('White - uninfected people', width / 2 + 30, height / 2 + 60);
     text('Red - infected people', width / 2 + 30, height / 2 + 80);
     text('Green - recovered people', width / 2 + 30, height / 2 + 100);
 
 
     fill(255);
-    text('Click to toggle social distancing', width / 2 + 30, height / 2 + 20);
+    text('Click to toggle social distancing and going shopping', width / 2 + 30, height / 2 + 20);
 
 }
 
@@ -170,7 +183,11 @@ function drawLine(property, color) {
         vertex(x, y);
     });
     const percentp = Math.round(results[results.length - 1][property] / populationSize * 100);
-    textSize(20);
-    text(percentp, x + 20, y);
     endShape();
+
+    textSize(20);
+    fill(color);
+    noStroke();
+    text(percentp, x + 20, y);
+
 }
