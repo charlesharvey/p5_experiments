@@ -8,6 +8,8 @@ let results;
 
 let withSocialDistancing = false;
 
+let initalSickPercentage = 0.03;
+
 function setup() {
 
 
@@ -38,6 +40,12 @@ function resetSimulation() {
         const person = new Person();
         people.push(person);
     }
+
+    const initalSickSize = Math.round(populationSize * initalSickPercentage);
+    for (let i = 0; i < initalSickSize; i++) {
+        people[i].makeInfected();
+    }
+
 }
 
 

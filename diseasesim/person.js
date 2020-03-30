@@ -19,11 +19,15 @@ class Person {
         this.offY = random(100000);
 
 
-        if (Math.random() > 0.95) {
-            this.state = 'i';
-        }
+        // if (Math.random() > 0.95) {
+        //   this.makeInfected();
+        // }
     }
 
+
+    makeInfected() {
+        this.state = 'i';
+    }
 
     show() {
 
