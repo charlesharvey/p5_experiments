@@ -11,9 +11,22 @@ class Person {
 
     move(other) {
         const otherscity = other.city;
-        const options = this.city.neighbours.filter(c => c != otherscity && c.fancycity == false);
-        const randomcity = random(options);
-        this.city = randomcity;
+
+        let newcity = null;
+        if (other.city.pos.y > (grid * 2.5)) {
+            // if other on third level, stay on the first level
+            const betteroptions = this.city.neighbours.filter(c => c != otherscity && c.fancycity == false && c.pos.y === this.city.pos.y);
+            if (betteroptions.length > 0) {
+                const randomcity = random(betteroptions);
+                newcity = randomcity;
+            }
+        }
+
+        if (!newcity) {
+            const options = this.city.neighbours.filter(c => c != otherscity && c.fancycity == false);
+            newcity = random(options);
+        }
+        this.city = newcity;
     }
 
 

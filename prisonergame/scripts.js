@@ -5,7 +5,8 @@ let guard;
 let guardsTurn = true;
 let prisonerMoving = false;
 let cities;
-
+let twoPlayer = false;
+let ptimeout;
 function setup() {
 
 
@@ -19,6 +20,7 @@ function setup() {
 
 function reset() {
     guardsTurn = true;
+    prisonerMoving = false;
 
     cities = [];
 
@@ -65,19 +67,18 @@ function reset() {
     cities[7].addNeighbour(cities[8]);
     cities[8].addNeighbour(cities[7]);
 
-
-    cities[9].addNeighbour(cities[10]);
-
-    cities[10].addNeighbour(cities[9]);
-
     cities[4].addNeighbour(cities[9]);
     cities[9].addNeighbour(cities[4]);
 
     cities[8].addNeighbour(cities[9]);
     cities[9].addNeighbour(cities[8]);
+
     cities[8].addNeighbour(cities[10]);
     cities[10].addNeighbour(cities[8]);
 
+
+    cities[9].addNeighbour(cities[10]);
+    cities[10].addNeighbour(cities[9]);
 
 
     prisoner = new Person(true, cities[0]);
@@ -99,7 +100,11 @@ function mouseMoved() {
         }
     })
 
-    closestcity.highlighted = true;
+    if (closestcity) {
+        closestcity.highlighted = true;
+    }
+
+
 }
 
 function mousePressed() {
@@ -141,18 +146,22 @@ function draw() {
         // guard.move();
         text(' Guards turn', 20, 30);
     } else {
-
+        console.log('prisoner moving');
         text(' Prisoners turn', 20, 30);
 
-        if (!prisonerMoving) {
-            prisonerMoving = true;
-            setTimeout(() => {
-                prisoner.move(guard);
-                guardsTurn = !guardsTurn;
-                prisonerMoving = false;
+        if (twoPlayer == false) {
+            if (!prisonerMoving) {
+                prisonerMoving = true;
+                ptimeout = setTimeout(() => {
+                    prisoner.move(guard);
+                    guardsTurn = !guardsTurn;
+                    prisonerMoving = false;
 
-            }, 300);
+                }, 300);
+            }
         }
+
+
 
 
 
@@ -172,6 +181,8 @@ function draw() {
     if (guard.city === prisoner.city) {
         // reset();
         alert('prisoner has been caught');
+        guardsTurn = true;
+        clearTimeout(ptimeout);
         reset();
     }
 
