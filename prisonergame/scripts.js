@@ -7,6 +7,7 @@ let prisonerMoving = false;
 let cities;
 let twoPlayer = false;
 let ptimeout;
+let numberofmoves;
 function setup() {
 
 
@@ -21,6 +22,7 @@ function setup() {
 function reset() {
     guardsTurn = true;
     prisonerMoving = false;
+    numberofmoves = 0;
 
     cities = [];
 
@@ -116,6 +118,7 @@ function mousePressed() {
             let movedcity = guard.movedCity(highlightedCity);
             if (movedcity) {
                 guardsTurn = !guardsTurn;
+                numberofmoves++;
             }
         } else {
             let movedcity = prisoner.movedCity(highlightedCity);
@@ -160,12 +163,9 @@ function draw() {
                 }, 300);
             }
         }
-
-
-
-
-
     }
+
+    text('Moves: ' + numberofmoves, 20, height - 60);
 
 
     textSize(15);

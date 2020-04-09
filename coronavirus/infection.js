@@ -1,7 +1,8 @@
 class Infection {
 
-    constructor(amount, index, isPrediction) {
+    constructor(amount, date, index, isPrediction) {
         this.amount = amount;
+        this.date = date;
         this.index = index;
         this.pos;
         this.rad = 4;
@@ -107,6 +108,7 @@ class Infection {
                 line(this.pos.x, this.pos.y, px, this.pos.y);
                 line(px, py, px, this.pos.y);
                 text(`${this.growth}%`, px - 10, this.pos.y - 10)
+                text(`${this.date}`, border + 20, border + 20)
             }
 
             if (this.index == data.length - 1) {
