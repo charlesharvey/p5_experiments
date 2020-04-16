@@ -1,5 +1,5 @@
 
-let sidesAmount = 6;
+let sidesAmount;
 let quadpoints;
 let shortestmidpoints;
 let shortestMidLength;
@@ -34,6 +34,7 @@ function mousePressed() {
 
 function reset() {
 
+    sidesAmount = 4; // Math.floor(random(3, 6));
     quadpoints = [];
     shortestmidpoints = [];
     shortestMidLength = 9999999;
@@ -85,7 +86,6 @@ function quadLength(points) {
 function draw() {
     background(0);
 
-    midpoints = [];
 
 
     noFill();
@@ -95,12 +95,93 @@ function draw() {
     drawQuad(quadpoints);
 
 
+    // const a = quadpoints[0];
+    // const b = quadpoints[1];
+    // reflectQuad(quadpoints, a, b);
+    // noLoop();
+
+
+    randomizePointsOnQuads();
+
+
+}
+
+
+
+function reflectQuad(points, a, b) {
+
+
+
+    const abv = p5.Vector.sub(b, a);
+
+    const midpoint = p5.Vector.lerp(a, b, 0.5);
+    fill(255, 255, 0);
+    noStroke();
+    ellipse(midpoint.x, midpoint.y, 4, 4);
+
+    strokeWeight(5);
+    stroke(255, 100, 100, 120);
+    line(a.x, a.y, b.x, b.y);
+
+    points.forEach(point => {
+        fill(255, 0, 0);
+        noStroke();
+        ellipse(point.x, point.y, 4, 4);
+
+
+        const dx = midpoint.x - point.x;
+        const dy = midpoint.y - point.y;
+
+
+        const ex = point.x + dx + dx;
+        const ey = point.y + dy + dy;
+
+        const d1x = point.x - a.x;
+        const d1y = point.y - a.y;
+
+        const d2x = point.x - b.x;
+        const d2y = point.y - b.y;
+
+
+        stroke(0, 0, 255);
+        strokeWeight(1);
+        // line(d1x, d1y, point.x, point.y);
+        // line(d2x, d2y, point.x, point.y);
+        // line(ex, ey, point.x, point.y);
+
+        const dd = dist(point.x, point.y, midpoint.x, midpoint.y);
+
+
+        const arrow = p5.Vector.sub(point, abv);
+        arrow.setMag(dd);
+        // arrow.add(midpoint);
+        console.log(arrow.mag(), arrow.heading())
+
+
+        // const arrow = point.copy();
+        // arrow.reflect(midpoint);
+
+        // arrow.setMag(1);
+        fill(0, 0, 255);
+        // ellipse(arrow.x, arrow.y, 4, 4);
+
+
+
+        line(arrow.x, arrow.y, point.x, point.y);
+
+
+    });
+
+
+}
+
+function randomizePointsOnQuads() {
+    midpoints = [];
+
     for (let i = 0; i < quadpoints.length; i++) {
         const v = quadpoints[i];
         const next = quadpoints[(i + 1) % quadpoints.length];
-
         // let percent = map( noise(theta + (i * 1000)), 0, 1, 0, 1);
-
         let percent = map(sin(v.z + 1), -1, 1, 0.02, 0.98);
         if (i == 0) {
             percent = 0.5
@@ -133,7 +214,6 @@ function draw() {
     drawGraph();
 
     theta += 0.03;
-
 }
 
 
