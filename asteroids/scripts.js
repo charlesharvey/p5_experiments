@@ -17,7 +17,7 @@ function setup() {
 
     getHighScore();
 
-    createCanvas(windowWidth - 20, windowHeight - 20);
+    createCanvas(windowWidth - 10, windowHeight - 10);
 
     reset();
 
