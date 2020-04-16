@@ -1,7 +1,7 @@
 
 
-const numberOfAsteroids = 5;
-const numberOfStars = 50;
+let numberOfAsteroids;
+let numberOfStars;
 
 let ship;
 let asteroids;
@@ -24,6 +24,8 @@ function setup() {
 
 function reset() {
     score = 0;
+    numberOfStars = 50;
+    numberOfAsteroids = 5;
     ship = new Ship();
     asteroids = [];
     for (let i = 0; i < numberOfAsteroids; i++) {
@@ -118,7 +120,10 @@ function draw() {
     }
 
 
-
+    // make more difficult as time goes on
+    if (frameCount % 800 == 0) {
+        numberOfAsteroids++;
+    }
 
 
     ship.show();
