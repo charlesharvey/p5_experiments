@@ -54,7 +54,7 @@ class Ship extends Spaceobject {
 
     addForce(force) {
         this.vel.add(force);
-        this.vel.limit(4);
+        this.vel.limit(6);
     }
 
 
@@ -79,6 +79,13 @@ class Ship extends Spaceobject {
         vertex(-this.r, this.r * 1.5);
         vertex(this.r, this.r * 1.5);
         endShape(CLOSE);
+
+        if (this.isThrusting) {
+            strokeWeight(this.r / 2);
+            stroke(128, 50);
+            line(0, this.r * 2.5, 0, this.r * 1.5);
+        }
+
         pop();
 
 

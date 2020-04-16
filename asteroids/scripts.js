@@ -112,10 +112,10 @@ function draw() {
                 if (asteroid.r > 25) {
                     newasteroids = asteroid.splitApart();
                     newasteroids.forEach(na => asteroids.push(na));
-                } else {
-                    if (asteroids.length < numberOfAsteroids) {
-                        addAsteroid();
-                    }
+                }
+
+                if (asteroids.length < numberOfAsteroids) {
+                    addAsteroid();
                 }
 
                 updateScore(10);
@@ -129,7 +129,7 @@ function draw() {
 
 
     // make more difficult as time goes on
-    if (frameCount % 800 == 0) {
+    if (frameCount % 500 == 0) {
         numberOfAsteroids++;
     }
 
@@ -155,6 +155,9 @@ function showScore() {
     textSize(20);
     text(`Score: ${score}`, 20, 20);
     text(`High Score: ${highScore}`, 20, height - 20);
+    textSize(10);
+    fill(128);
+    text(`# Asteroids: ${asteroids.length}`, 20, height - 5);
 
 }
 
