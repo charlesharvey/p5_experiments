@@ -11,6 +11,8 @@ class Ship extends Spaceobject {
         this.isRotating = false;
         this.isThrusting = false;
         this.rotateDirection;
+
+        this.lasers = [];
     }
 
 
@@ -45,24 +47,32 @@ class Ship extends Spaceobject {
     }
 
     shoot() {
-        alert('shoot')
+        const laser = new Laser(this.pos, this.heading);
+        this.lasers.push(laser);
     }
 
 
     addForce(force) {
         this.vel.add(force);
-        this.vel.limit(8);
+        this.vel.limit(4);
     }
 
 
     show() {
+
+
+        this.lasers.forEach(laser => {
+            laser.show();
+            laser.update();
+        })
+
 
         push();
         translate(this.pos.x, this.pos.y);
         rotate(this.heading)
         stroke(255);
         strokeWeight(2);
-        noFill();
+        fill(0);
 
         beginShape();
         vertex(0, -this.r);
@@ -71,6 +81,7 @@ class Ship extends Spaceobject {
         endShape(CLOSE);
         pop();
 
+
     }
 
 
@@ -78,6 +89,7 @@ class Ship extends Spaceobject {
     thrust() {
         this.isThrusting = true;
     }
+
     rotateRight() {
         this.rotateDirection = 'right';
         this.isRotating = true;
