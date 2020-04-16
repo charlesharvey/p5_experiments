@@ -52,8 +52,7 @@ function reset() {
 function addAsteroid() {
 
     let asteroid = new Asteroid();
-    if (asteroid.collided(ship)) {
-        console.log('collided');
+    if (asteroid.collided(ship, 240)) {
         addAsteroid();
     } else {
         asteroids.push(asteroid);
@@ -93,7 +92,7 @@ function draw() {
     asteroids.forEach(asteroid => {
         asteroid.show();
         asteroid.update();
-        if (asteroid.collided(ship)) {
+        if (asteroid.collided(ship, 10)) {
             reset();
         };
     })

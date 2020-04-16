@@ -63,12 +63,13 @@ class Asteroid extends Spaceobject {
         return [ast1, ast2];
     }
 
-    collided(ship) {
+    collided(ship, offset) {
         const d = dist(ship.pos.x, ship.pos.y, this.pos.x, this.pos.y);
-        if (d < this.r + 10) {
+        if (d < this.r + offset) {
             return true;
         }
         return false;
     }
+
 
 }

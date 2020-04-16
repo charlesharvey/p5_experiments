@@ -10,6 +10,7 @@ class Ship extends Spaceobject {
         this.heading = 0;
         this.isRotating = false;
         this.isThrusting = false;
+        this.friction = 0.95;
         this.rotateDirection;
 
         this.lasers = [];
@@ -19,7 +20,7 @@ class Ship extends Spaceobject {
     update() {
 
         this.pos.add(this.vel);
-        this.vel.mult(0.98); // add friction to slow down
+        this.vel.mult(this.friction); // add friction to slow down
 
         this.rotateShip();
         this.thrustShip();
@@ -41,7 +42,7 @@ class Ship extends Spaceobject {
     thrustShip() {
         if (this.isThrusting) {
             const force = p5.Vector.fromAngle(this.heading - PI / 2);
-            force.setMag(2);
+            force.setMag(3);
             this.addForce(force);
         }
     }
