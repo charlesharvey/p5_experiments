@@ -15,11 +15,19 @@ let highScore;
 
 function setup() {
 
-    highScore = 0;
+    getHighScore();
+
     createCanvas(windowWidth - 20, windowHeight - 20);
 
     reset();
 
+}
+
+function getHighScore() {
+    highScore = localStorage.getItem('chasteroids');
+    if (highScore == null) {
+        highScore = 0;
+    }
 }
 
 function reset() {
@@ -155,5 +163,7 @@ function updateScore(points) {
     score += points;
     if (score > highScore) {
         highScore = score;
+
+        localStorage.setItem('chasteroids', highScore);
     }
 }
