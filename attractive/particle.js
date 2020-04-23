@@ -5,6 +5,7 @@ class Particle {
         this.pos = createVector(x, y);
         this.vel = createVector(random(), random());
         this.acc = createVector(0, 0);
+        this.hue = random(255);
     }
 
 
@@ -13,13 +14,32 @@ class Particle {
     }
 
 
-    attracted(target) {
+    // repel(target) {
+    //     const d = dist(target.x, target.y, this.pos.x, this.pos.y);
+    //     if (d < width / 8) {
+    //         const force = p5.Vector.sub(target, this.pos);
+    //         let dir2 = force.magSq(); // square the distance between the target and current position;
+    //         dir2 = constrain(dir2, 0, 500);
+    //         const g = 9.987;
+    //         const strength = g / dir2;
+    //         force.setMag(strength);
+    //         force.mult(-100);
+    //         this.applyForce(force);
+    //     }
+    // }
+
+    attracted(target, repelDistance) {
         const force = p5.Vector.sub(target, this.pos);
         let dir2 = force.magSq(); // square the distance between the target and current position;
         dir2 = constrain(dir2, 0, 500);
-        const g = 9.987;
+        const g = 2.987;
         const strength = g / dir2;
         force.setMag(strength);
+
+        const d = dist(target.x, target.y, this.pos.x, this.pos.y);
+        if (d < repelDistance) {
+            force.mult(-100);
+        }
 
         this.applyForce(force);
         // this.acc = force.copy();
@@ -36,7 +56,7 @@ class Particle {
 
     show() {
         noStroke();
-        fill(100, 200, 250);
+        fill(150, 255 - this.hue, this.hue);
         ellipse(this.pos.x, this.pos.y, 5, 5);
     }
 }

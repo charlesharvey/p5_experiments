@@ -15,14 +15,18 @@ function setup() {
 
     target = createVector(width / 2, height / 2);
 
-    for (let i = 0; i < 80; i++) {
-        const particle = new Particle(random(width), random(height));
-        particles.push(particle);
+    for (let i = 0; i < 8; i++) {
 
+        addParticle();
     }
 
 
 
+}
+
+function addParticle() {
+    const particle = new Particle(random(width), random(height));
+    particles.push(particle);
 }
 
 
@@ -42,8 +46,10 @@ function draw() {
 
         particles.forEach((p, pi) => {
             if (pi != i) {
-                particle.attracted(p.pos);
-                particle.attracted(target);
+                particle.attracted(p.pos, 50);
+                particle.attracted(target, width / 8);
+
+
             }
         })
 
@@ -56,6 +62,10 @@ function draw() {
     }
 
 
+
+    if (frameRate() > 40) {
+        addParticle();
+    };
 
 
 
