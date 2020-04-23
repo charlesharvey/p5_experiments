@@ -28,6 +28,17 @@ class Particle {
     //     }
     // }
 
+
+    quantumTunnel() {
+        if (Math.random() > 0.999) {
+            const force = p5.Vector.random2D();
+            force.mult(width);
+            this.pos.add(force);
+            // this.applyForce(force);
+        }
+
+    }
+
     attracted(target, repelDistance) {
         const force = p5.Vector.sub(target, this.pos);
         let dir2 = force.magSq(); // square the distance between the target and current position;
@@ -48,14 +59,14 @@ class Particle {
     update() {
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.vel.limit(10);
+        this.vel.limit(8);
         this.acc.mult(0); // createVector(0, 0);
 
 
     }
 
     show() {
-        noStroke();
+
         fill(150, 255 - this.hue, this.hue);
         ellipse(this.pos.x, this.pos.y, 5, 5);
     }

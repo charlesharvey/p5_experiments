@@ -20,7 +20,7 @@ function setup() {
         addParticle();
     }
 
-
+    noStroke();
 
 }
 
@@ -36,6 +36,7 @@ function draw() {
     background(0);
 
 
+
     // fill(255, 255, 0);
     // ellipse(target.x, target.y, 5, 5);
 
@@ -47,14 +48,14 @@ function draw() {
         particles.forEach((p, pi) => {
             if (pi != i) {
                 particle.attracted(p.pos, 50);
-                particle.attracted(target, width / 8);
+                particle.attracted(target, width / 9);
 
 
             }
         })
 
 
-
+        particle.quantumTunnel();
         particle.update();
         particle.show();
 
