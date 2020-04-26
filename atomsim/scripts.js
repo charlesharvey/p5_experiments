@@ -52,7 +52,7 @@ function draw() {
 
                 if (nucleus.eletrobonded(other)) {
                     nucleuses.splice(j, 1);
-                } else if (nucleus.weakforcebonded(other)) {
+                } else if (nucleus.strongforcebonded(other)) {
                     nucleuses.splice(j, 1);
                 }
 

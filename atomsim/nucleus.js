@@ -74,7 +74,7 @@ class Nucleus {
 
 
 
-    weakforcebonded(other) {
+    strongforcebonded(other) {
 
         const other_neut_number = other.quarks.filter(q => q.type === 'neutron').length;
         const other_prot_number = other.quarks.filter(q => q.type === 'proton').length;
