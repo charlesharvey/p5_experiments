@@ -4,6 +4,8 @@
 
 let nucleuses = [];
 
+let showTrails = false;
+
 
 function setup() {
 
@@ -18,6 +20,10 @@ function setup() {
 
     noStroke();
 
+
+    background(0);
+
+
 }
 
 function addNucleus() {
@@ -31,10 +37,15 @@ function addNucleus() {
 }
 
 
+function mousePressed() {
+    showTrails = !showTrails;
+}
 
 function draw() {
 
-    background(0);
+    if (!showTrails) {
+        background(0);
+    }
 
 
     newnucleusestoadd = [];
@@ -73,7 +84,7 @@ function draw() {
     newnucleusestoadd.forEach(nm => nucleuses.push(nm));
 
 
-    if (frameRate() > 40) {
+    if (frameRate() > 35) {
         addNucleus();
     };
 

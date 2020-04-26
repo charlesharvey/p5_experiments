@@ -33,9 +33,7 @@ class Nucleus {
 
     addParticle(particle) {
         if (particle.type == 'electron') {
-            particle.inAtom = true;
             this.electrons.push(particle);
-
         } else {
             this.quarks.push(particle);
 
@@ -226,7 +224,7 @@ class Nucleus {
         pop();
 
 
-        if (this.label) {
+        if (this.label && !showTrails) {
 
             fill(255);
             noStroke();

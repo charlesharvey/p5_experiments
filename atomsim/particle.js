@@ -10,7 +10,7 @@ class Particle {
         this.pos = createVector(0, 0);
         this.vel = createVector(random(), random());
         this.acc = createVector(0, 0);
-        this.size = 15;
+        this.size = 12;
         this.type = type;   // gloopton   blargon zeptron
         this.charge = 0;
 
@@ -42,7 +42,7 @@ class Particle {
 
         push();
 
-        let rad = this.size * 0.5;
+        let rad = this.size * 0.6;
         if (this.type == 'electron') {
             rad += 15;
             if (this.index >= 2) {
