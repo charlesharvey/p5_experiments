@@ -5,7 +5,8 @@
 let nucleuses = [];
 
 let showTrails = false;
-
+let biggestElement = '';
+let biggestAtomicNumber = 0;
 
 function setup() {
 
@@ -54,7 +55,6 @@ function draw() {
 
 
 
-
         for (let j = nucleuses.length - 1; j > 0; j--) {
             if (j != i) {
                 const other = nucleuses[j];
@@ -77,6 +77,12 @@ function draw() {
 
 
 
+        if (nucleus.atomicnumber > biggestAtomicNumber) {
+            biggestAtomicNumber = nucleus.atomicnumber;
+            biggestElement = nucleus.label;
+        }
+
+
 
     }
 
@@ -90,6 +96,8 @@ function draw() {
 
 
 
+    fill(255);
+    text('Biggest: ' + biggestElement, 20, height - 20);
 
 
 }

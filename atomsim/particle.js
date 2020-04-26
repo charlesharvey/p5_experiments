@@ -6,6 +6,7 @@ class Particle {
 
     constructor(type) {
         this.index = 0;
+        this.companions = 1;
         this.angle = 0;
         this.pos = createVector(0, 0);
         this.vel = createVector(random(), random());
@@ -42,12 +43,14 @@ class Particle {
 
         push();
 
-        let rad = this.size * 0.6;
+        let rad = this.size * 0.3;
         if (this.type == 'electron') {
-            rad += 15;
+            rad += 15 + (this.companions / 2);
             if (this.index >= 2) {
-                rad += 20;
+                rad += 15;
             }
+        } else {
+            rad += (this.companions * 0.6);
         }
 
         const x = sin(this.angle) * rad;

@@ -10,11 +10,13 @@ class Nucleus {
         this.charge = 0;
         this.theta = 0;
         this.label = '';
+        this.atomicnumber = 0;
     }
 
 
     updateAngles() {
         const el = (this.electrons.length);
+        const ql = (this.quarks.length);
         this.electrons.forEach((p, i) => {
             if (i < 2) {
                 p.angle = (i % 2) / 2 * TWO_PI;
@@ -23,10 +25,12 @@ class Nucleus {
             }
 
             p.index = i;
+            p.companions = el;
         })
         this.quarks.forEach((p, i) => {
-            p.angle = i / this.quarks.length * TWO_PI;
+            p.angle = i / ql * TWO_PI;
             p.index = i;
+            p.companions = ql;
         })
     }
 
@@ -54,10 +58,10 @@ class Nucleus {
         });
         this.charge = t;
 
-        const prot = this.quarks.filter(q => q.type == 'proton').length;
-        if (prot > 0) {
+        this.atomicnumber = this.quarks.filter(q => q.type == 'proton').length;
+        if (this.atomicnumber > 0) {
             const labels = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne']
-            this.label = labels[prot - 1]
+            this.label = labels[this.atomicnumber - 1]
         }
 
 
@@ -75,14 +79,15 @@ class Nucleus {
     strongforcebonded(other) {
 
         const other_neut_number = other.quarks.filter(q => q.type === 'neutron').length;
-        const other_prot_number = other.quarks.filter(q => q.type === 'proton').length;
+        const other_prot_number = other.atomicnumber;
         const this_neut_number = this.quarks.filter(q => q.type === 'neutron').length;
-        const this_prot_number = this.quarks.filter(q => q.type === 'proton').length;
+        const this_prot_number = this.atomicnumber;
         const nn = Math.abs(other_neut_number + this_neut_number - this_prot_number - other_prot_number);
 
-        if (this.charge == 0 && other.charge == 0) {
+        const totch = Math.abs(this.charge + other.charge);
+        if (totch < 1) {
 
-            if (this_prot_number + this_neut_number < 12 && other_neut_number + other_prot_number < 12) {
+            if (this_prot_number + this_neut_number < 22 && other_neut_number + other_prot_number < 22) {
                 if (this_prot_number > 0 || other_prot_number > 0) {
                     if (this_neut_number == 1 || other_neut_number == 1) {
                         if (nn == 0 || nn == 1) {
@@ -113,6 +118,10 @@ class Nucleus {
         this.pos.div(2);
         this.vel.add(other.vel);
         this.vel.div(2);
+
+        // if (this.quarks.filter(q => q.type == 'proton').length > 1) {
+        //     console.log(this.label);
+        // }
 
     }
 
@@ -209,8 +218,18 @@ class Nucleus {
     }
 
     show() {
+
+
+
         push();
         translate(this.pos.x, this.pos.y);
+
+        const ql = this.quarks.length;
+        if (ql >= 6) {
+            fill(200, 55, 100);
+            ellipse(0, 0, 10 + ql, 10 + ql);
+        }
+
         this.quarks.forEach(p => {
             p.show();
         })
