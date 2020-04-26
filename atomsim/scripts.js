@@ -42,6 +42,19 @@ function mousePressed() {
     showTrails = !showTrails;
 }
 
+
+function increaseAtom() {
+    const biggest = nucleuses.sort((a, b) => {
+        if (a.atomicnumber < b.atomicnumber) {
+            return 1;
+        }
+    })[0];
+    const proton = new Particle('proton');
+    const electron = new Particle('electron');
+    biggest.addParticle(proton);
+    biggest.addParticle(electron);
+}
+
 function draw() {
 
     if (!showTrails) {

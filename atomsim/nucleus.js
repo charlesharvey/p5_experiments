@@ -21,7 +21,10 @@ class Nucleus {
             if (i < 2) {
                 p.angle = (i % 2) / 2 * TWO_PI;
             } else {
-                p.angle = (i % (el - 2)) / (el - 2) * TWO_PI + PI / 2;
+                p.angle = (i % 4 / 4) * TWO_PI + PI / 2;
+                if (i >= 6) {
+                    p.angle += 0.23;
+                }
             }
 
             p.index = i;
