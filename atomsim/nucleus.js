@@ -14,11 +14,19 @@ class Nucleus {
 
 
     updateAngles() {
+        const el = (this.electrons.length);
         this.electrons.forEach((p, i) => {
-            p.angle = i / this.electrons.length * TWO_PI;
+            if (i < 2) {
+                p.angle = (i % 2) / 2 * TWO_PI;
+            } else {
+                p.angle = (i % (el - 2)) / (el - 2) * TWO_PI + PI / 2;
+            }
+
+            p.index = i;
         })
         this.quarks.forEach((p, i) => {
             p.angle = i / this.quarks.length * TWO_PI;
+            p.index = i;
         })
     }
 
@@ -164,7 +172,7 @@ class Nucleus {
         let repelling = (oc < 0 && tc < 0) || (oc > 0 && tc > 0);
 
         if (attracting) {
-
+            force.mult(3);
         } else if (repelling) {
             force.mult(-0.4);
         } else {
@@ -172,7 +180,7 @@ class Nucleus {
             if (d > 30) {
                 force.mult(0.001);
             } else {
-                force.mult(-3);
+                force.mult(-30);
             }
         }
 

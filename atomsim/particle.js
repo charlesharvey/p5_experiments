@@ -44,9 +44,12 @@ class Particle {
 
         let rad = this.size * 0.5;
         if (this.type == 'electron') {
-            rad += 30;
-
+            rad += 15;
+            if (this.index >= 2) {
+                rad += 20;
+            }
         }
+
         const x = sin(this.angle) * rad;
         const y = cos(this.angle) * rad;
         translate(x, y);
