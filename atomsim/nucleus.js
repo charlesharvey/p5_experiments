@@ -21,7 +21,16 @@ class Nucleus {
             if (i < 2) {
                 p.angle = (i % 2) / 2 * TWO_PI;
             } else {
-                p.angle = (i % 4 / 4) * TWO_PI + PI / 2;
+
+                let m = 4;
+                if (el == 3) {
+                    m = 1
+                } else if (el == 4) {
+                    m = 2;
+                } else if (el == 5) {
+                    m = 3;
+                }
+                p.angle = (((i % m) / m) * TWO_PI) + PI / 2;
                 if (i >= 6) {
                     p.angle += 0.23;
                 }
@@ -90,7 +99,7 @@ class Nucleus {
         const totch = Math.abs(this.charge + other.charge);
         if (totch < 1) {
 
-            if (this_prot_number + this_neut_number < 22 && other_neut_number + other_prot_number < 22) {
+            if (this_prot_number + other_prot_number <= 10) {
                 if (this_prot_number > 0 || other_prot_number > 0) {
                     if (this_neut_number == 1 || other_neut_number == 1) {
                         if (nn == 0 || nn == 1) {
@@ -208,7 +217,7 @@ class Nucleus {
 
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.vel.limit(5);
+        this.vel.limit(4);
         this.acc.mult(0); // createVector(0, 0);
 
         // this.pushawayfromedges();
@@ -216,7 +225,7 @@ class Nucleus {
 
 
         if (this.electrons.length > 0 && this.quarks.length > 0) {
-            this.theta += 0.1;
+            this.theta += 0.05;
         }
     }
 

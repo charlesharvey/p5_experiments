@@ -9,8 +9,7 @@ class Particle {
         this.companions = 1;
         this.angle = 0;
         this.pos = createVector(0, 0);
-        this.vel = createVector(random(), random());
-        this.acc = createVector(0, 0);
+
         this.size = 12;
         this.type = type;   // gloopton   blargon zeptron
         this.charge = 0;
@@ -26,11 +25,6 @@ class Particle {
             this.charge = 1;
 
         }
-    }
-
-    update() {
-
-
     }
 
 
