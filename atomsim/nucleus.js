@@ -193,7 +193,7 @@ class Nucleus {
         if (attracting) {
             force.mult(3);
         } else if (repelling) {
-            force.mult(-1.5);
+            force.mult(-0.8);
         } else {
             const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
             if (d > 20) {
