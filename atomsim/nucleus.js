@@ -11,6 +11,9 @@ class Nucleus {
         this.theta = 0;
         this.label = '';
         this.atomicnumber = 0;
+
+
+        this.partner;
     }
 
 
@@ -89,24 +92,25 @@ class Nucleus {
 
 
     strongforcebonded(other) {
+        if (this.partner == null && other.partner == null) {
+            const other_neut_number = other.quarks.filter(q => q.type === 'neutron').length;
+            const other_prot_number = other.atomicnumber;
+            const this_neut_number = this.quarks.filter(q => q.type === 'neutron').length;
+            const this_prot_number = this.atomicnumber;
+            const nn = Math.abs(other_neut_number + this_neut_number - this_prot_number - other_prot_number);
 
-        const other_neut_number = other.quarks.filter(q => q.type === 'neutron').length;
-        const other_prot_number = other.atomicnumber;
-        const this_neut_number = this.quarks.filter(q => q.type === 'neutron').length;
-        const this_prot_number = this.atomicnumber;
-        const nn = Math.abs(other_neut_number + this_neut_number - this_prot_number - other_prot_number);
+            const totch = Math.abs(this.charge + other.charge);
+            if (totch < 1) {
 
-        const totch = Math.abs(this.charge + other.charge);
-        if (totch < 1) {
-
-            if (this_prot_number + other_prot_number <= 10) {
-                if (this_prot_number > 0 || other_prot_number > 0) {
-                    if (this_neut_number == 1 || other_neut_number == 1) {
-                        if (nn == 0 || nn == 1) {
-                            const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
-                            if (d < 20) {
-                                this.joinParticles(other);
-                                return true;
+                if (this_prot_number + other_prot_number <= 10) {
+                    if (this_prot_number > 0 || other_prot_number > 0) {
+                        if (this_neut_number == 1 || other_neut_number == 1) {
+                            if (nn == 0 || nn == 1) {
+                                const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
+                                if (d < 20) {
+                                    this.joinParticles(other);
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -138,17 +142,45 @@ class Nucleus {
     }
 
 
+    addPartner(other) {
+
+        this.partner = other;
+        this.partner.pos = createVector(15, 0);
+        this.partner.vel = createVector(0, 0);
+        this.partner.acc = createVector(0, 0);
+    }
+
+    covalentlyBond(other) {
+        if (this.partner == null && other.partner == null) {
+            if (other.atomicnumber === this.atomicnumber) {
+                if (other.atomicnumber == 8 || other.atomicnumber == 9) {
+                    if (other.charge == 0 && this.charge == 0) {
+                        const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
+                        if (d < 20) {
+                            this.addPartner(other);
+                            return true;
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
 
     eletrobonded(other) {
-        if (this.oppositeCharge(other)) {
+        if (this.partner == null && other.partner == null) {
+            if (this.oppositeCharge(other)) {
 
-            const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
-            if (d < 15) {
-                this.joinParticles(other);
-                return true;
+                const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
+                if (d < 15) {
+                    this.joinParticles(other);
+                    return true;
+
+                }
 
             }
-
         }
 
     }
@@ -193,7 +225,7 @@ class Nucleus {
         if (attracting) {
             force.mult(3);
         } else if (repelling) {
-            force.mult(-0.8);
+            force.mult(-2);
         } else {
             const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
             if (d > 20) {
@@ -235,6 +267,12 @@ class Nucleus {
 
         push();
         translate(this.pos.x, this.pos.y);
+
+
+        if (this.partner) {
+            this.partner.theta += 0.05;
+            this.partner.show();
+        }
 
         const ql = this.quarks.length;
         if (ql >= 6) {

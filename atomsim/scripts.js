@@ -8,6 +8,15 @@ let showTrails = false;
 let biggestElement = '';
 let biggestAtomicNumber = 0;
 
+let types = ['electron', 'proton', 'neutron'];
+
+let counts = {
+    proton: 0,
+    neutron: 0,
+    electron: 0
+}
+let t = 0;
+
 function setup() {
 
 
@@ -29,12 +38,14 @@ function setup() {
 
 function addNucleus() {
 
-    let types = ['electron', 'proton', 'neutron'];
 
-    const particle = new Particle(random(types));
+    const tt = types[t % 3];
+    counts[tt] = counts[tt] + 1;
+    const particle = new Particle(tt);
     const nucleus = new Nucleus(random(width), random(height));
     nucleus.addParticle(particle);
     nucleuses.push(nucleus);
+    t++;
 }
 
 
@@ -78,6 +89,9 @@ function draw() {
                     nucleuses.splice(j, 1);
                 } else if (nucleus.strongforcebonded(other)) {
                     nucleuses.splice(j, 1);
+                } else if (nucleus.covalentlyBond(other)) {
+                    nucleuses.splice(j, 1);
+
                 }
 
             }
