@@ -3,7 +3,8 @@
 class Fenton {
 
     constructor() {
-        this.pos = createVector(random(width), random(-200, -100));
+        this.x = random(width)
+        this.y = random(-200, -100);
         this.theta = random(0, TWO_PI);
         this.speed = random(0.5, 3);
         this.wobbliness = random(0.1, 5);
@@ -11,14 +12,14 @@ class Fenton {
 
     update() {
         this.theta += 0.1;
-        this.pos.y += this.speed;
-        this.pos.x += sin(this.theta) * this.wobbliness;
+        this.y += this.speed;
+        this.x += sin(this.theta) * this.wobbliness;
     }
 
 
     show() {
         push();
-        translate(this.pos.x, this.pos.y);
+        translate(this.x, this.y);
         fill(255);
         noStroke();
         // rect(0, 0, 50, 50 * (298 / 210));
@@ -31,7 +32,7 @@ class Fenton {
     }
 
     offscreen() {
-        return (this.pos.y > height);
+        return (this.y > height);
     }
 
 }
