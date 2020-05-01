@@ -71,6 +71,9 @@ function reset() {
 function draw() {
     background(0);
 
+    image(fentonimage, 0, 0, width, height);
+
+    background(0, 100);
 
     fentons.forEach((f, i) => {
 
@@ -87,5 +90,8 @@ function draw() {
     if (frameRate() < 30) {
         createFenton();
     }
+
+
+
 
 }
