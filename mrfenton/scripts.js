@@ -39,7 +39,7 @@ class Fenton {
 let fentons;
 
 function preload() {
-    // fentonimage = loadImage('fenton.png');
+    fentonimage = loadImage('fenton.png');
 
 }
 
