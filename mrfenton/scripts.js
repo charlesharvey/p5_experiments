@@ -64,7 +64,7 @@ function mouseClicked() {
 
 function reset() {
     fentons = [];
-    numberoffentons = Math.floor(width / 40);
+    numberoffentons = Math.floor(width / 20);
 
 
     for (let i = 0; i < numberoffentons; i++) {
