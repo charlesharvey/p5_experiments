@@ -39,6 +39,7 @@ class Fenton {
 
 let fentons;
 let fentonimage;
+let numberoffentons;
 function preload() {
     fentonimage = loadImage('fenton.png');
 
@@ -51,16 +52,22 @@ function createFenton() {
 
 function setup() {
 
-
     createCanvas(windowWidth - 20, windowHeight - 20);
+
     reset();
 }
 
 
+function mouseClicked() {
+    reset();
+}
+
 function reset() {
     fentons = [];
+    numberoffentons = Math.floor(width / 40);
 
-    for (let i = 0; i < 50; i++) {
+
+    for (let i = 0; i < numberoffentons; i++) {
         createFenton();
     }
 
@@ -88,9 +95,9 @@ function draw() {
     });
 
 
-    if (frameRate() > 30) {
-        createFenton();
-    }
+    // if (frameRate() > 30) {
+    //     createFenton();
+    // }
 
 
 
