@@ -73,7 +73,7 @@ function draw() {
 
     image(fentonimage, 0, 0, width, height);
 
-    background(0, 100);
+    background(0, 200);
 
     fentons.forEach((f, i) => {
 
