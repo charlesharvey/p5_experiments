@@ -87,7 +87,7 @@ function draw() {
     });
 
 
-    if (frameRate() < 30) {
+    if (frameRate() > 30) {
         createFenton();
     }
 
