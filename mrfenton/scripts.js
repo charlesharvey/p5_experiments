@@ -37,7 +37,7 @@ class Fenton {
 }
 
 let fentons;
-
+let fentonimage;
 function preload() {
     fentonimage = loadImage('fenton.png');
 
