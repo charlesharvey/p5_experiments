@@ -14,7 +14,7 @@ class Charles {
         this.theta = random(0, TWO_PI);
         this.wobbliness = random(0.1, 1);
 
-        this.width = random(30, 60);
+        this.width = random(30, 120);
         this.height = this.width * (147 / 100)
     }
 
