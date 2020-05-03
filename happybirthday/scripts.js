@@ -6,15 +6,13 @@ class Charles {
 
         const x = random(width)
         const y = random(-200, -100);
-        const speed = random(1, 4);
+        const speed = random(1, 6);
         this.pos = createVector(x, y);
         this.vel = createVector(0, speed);
         this.acc = createVector(0, 0);
 
-        this.theta = random(0, TWO_PI);
-        this.wobbliness = random(0.1, 1);
 
-        this.width = random(30, 120);
+        this.width = random(30, 110);
         this.height = this.width * (147 / 100)
     }
 
@@ -30,10 +28,8 @@ class Charles {
 
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        // this.vel.limit(8);
+        this.vel.limit(8);
         this.acc.mult(0); // createVector(0, 0);
-
-        this.theta += 0.1;
 
     }
 
@@ -41,8 +37,8 @@ class Charles {
     attracted(target, repelDistance) {
         const force = p5.Vector.sub(target, this.pos);
         let dir2 = force.magSq(); // square the distance between the target and current position;
-        dir2 = constrain(dir2, 0, 1500);
-        const g = 2.987;
+        dir2 = constrain(dir2, 0, 800);
+        const g = 1.987;
         const strength = g / dir2;
         force.setMag(strength);
 
@@ -50,7 +46,7 @@ class Charles {
         if (d < repelDistance) {
             force.mult(-100);
         } else {
-            force.mult(5);
+            force.mult(6);
         }
 
         this.applyForce(force);
@@ -63,9 +59,6 @@ class Charles {
         fill(255);
         noStroke();
         // rect(0, 0, this.width, this.height);
-
-
-
         image(charlesimage, 0, 0, this.width, this.height);
         pop();
 
