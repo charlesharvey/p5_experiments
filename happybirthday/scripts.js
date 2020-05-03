@@ -164,7 +164,7 @@ function draw() {
     const text2start = 50;
     const texttime = 100;
     if (frameCount > text1start) {
-        textSize(30);
+        textSize(40);
         const f1 = map(frameCount, text1start, text1start + texttime, 0, 255);
         fill(255, f1);
         text('HAPPY BIRTHDAY MUM', width / 2, height / 2)
