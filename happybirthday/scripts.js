@@ -28,7 +28,7 @@ class Charles {
 
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.vel.limit(8);
+        this.vel.limit(13);
         this.acc.mult(0); // createVector(0, 0);
 
     }
@@ -37,8 +37,8 @@ class Charles {
     attracted(target, repelDistance) {
         const force = p5.Vector.sub(target, this.pos);
         let dir2 = force.magSq(); // square the distance between the target and current position;
-        dir2 = constrain(dir2, 0, 800);
-        const g = 1.987;
+        dir2 = constrain(dir2, 0, 1000);
+        const g = 3.987;
         const strength = g / dir2;
         force.setMag(strength);
 
@@ -56,10 +56,16 @@ class Charles {
     show() {
         push();
         translate(this.pos.x, this.pos.y);
-        fill(255);
-        noStroke();
-        // rect(0, 0, this.width, this.height);
-        image(charlesimage, 0, 0, this.width, this.height);
+
+
+        if (useImage) {
+            image(charlesimage, 0, 0, this.width, this.height);
+        } else {
+            fill(255);
+            noStroke();
+            rect(0, 0, this.width, this.height);
+        }
+
         pop();
 
     }
@@ -69,13 +75,18 @@ class Charles {
     }
 
 }
+
+let useImage = true;
 let target;
 let charleses;
 let charlesimage;
 let numberofcharleses;
 let colorangle = 0;
 function preload() {
-    charlesimage = loadImage('charles1.png');
+    if (useImage) {
+        charlesimage = loadImage('charles1.png');
+
+    }
 
 }
 
