@@ -100,7 +100,7 @@ function setup() {
     createCanvas(windowWidth - 20, windowHeight - 20);
 
 
-    colorMode(HSB);
+
     reset();
 }
 function mouseMoved() {
@@ -125,6 +125,7 @@ function reset() {
 
 
 function draw() {
+    colorMode(HSB);
     const b = map(sin(colorangle), -1, 1, 0, 255);
     background(b, 120, 60);
 
@@ -166,13 +167,14 @@ function draw() {
     if (frameCount > text1start) {
         textSize(40);
         const f1 = map(frameCount, text1start, text1start + texttime, 0, 255);
+        colorMode(RGB);
         fill(255, f1);
         text('HAPPY BIRTHDAY MUM', width / 2, height / 2)
     }
     if (frameCount > text2start) {
         textSize(25);
         const f1 = map(frameCount, text2start, text2start + texttime, 0, 255);
-        fill(255, f1);
+        fill(255, 255, 255, f1);
         text('LOVE CHARLES', width / 2, height / 2 + 50)
     }
 
