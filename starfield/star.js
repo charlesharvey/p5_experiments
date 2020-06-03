@@ -3,13 +3,15 @@ class Star {
     constructor() {
         this.pos = createVector(random(width), random(height));
         this.age = 0;
+
         // this.vel = this.pos.copy(); 
         // this.vel.setMag(3);
 
 
 
-
-        this.r = random(minStarSize, maxStarSize);
+        this.z = random(minStarZ, maxStarZ);
+        this.r = map(this.z, minStarZ, maxStarZ, minStarSize, maxStarSize);
+        // this.r = random(minStarSize, maxStarSize);
 
 
 
@@ -23,8 +25,7 @@ class Star {
         const x = map(this.pos.x, 0, width, -globalMag, globalMag);
         const y = map(this.pos.y, 0, height, -globalMag, globalMag);
         const vel = createVector(x + tx, y + ty);
-
-
+        vel.mult(this.z);
         this.pos.add(vel);
 
         this.age++;
