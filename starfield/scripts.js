@@ -2,7 +2,7 @@
 
 let stars;
 
-const numberOfStars = 250;
+const numberOfStars = 100;
 const lateralSpeed = 3;
 const globalMag = 2;
 
@@ -10,6 +10,8 @@ const minStarSize = 0.5;
 const maxStarSize = 5;
 const minStarZ = 0.5;
 const maxStarZ = 3;
+const borderSize = 30;
+let starShape;
 
 let tx = 0;
 let ty = 0;
@@ -27,6 +29,7 @@ function setup() {
 
 function reset() {
     stars = [];
+    starShape = (Math.random() > 0.5) ? 'circle' : 'star';
 
     for (let i = 0; i < numberOfStars; i++) {
         createStar();
