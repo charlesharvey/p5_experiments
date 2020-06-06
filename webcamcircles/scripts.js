@@ -136,20 +136,23 @@ function draw() {
                 np.dot.setHue(np.hue)
             }
         });
+
+
+
     } // end if frame count mod 10 = 0 
 
 
 
     // MOVE ANY UNUSED DOT TO LAST DOT POS BEING USED
-    // const dotsbeingused = dots.filter(d => d.beingused);
-    // if (dotsbeingused.length > 0) {
-    //     const lastdotbeingused = dotsbeingused[dotsbeingused.length - 1];
-    //     dots.forEach(dot => {
-    //         if (dot.beingused === false) {
-    //             dot.setHome(lastdotbeingused.home.x, lastdotbeingused.home.y);
-    //         }
-    //     })
-    // }
+    const dotsbeingused = dots.filter(d => d.beingused);
+    if (dotsbeingused.length > 0) {
+        const lastdotbeingused = dotsbeingused[dotsbeingused.length - 1];
+        dots.forEach(dot => {
+            if (dot.beingused === false) {
+                dot.setHome(lastdotbeingused.home.x, lastdotbeingused.home.y);
+            }
+        })
+    }
 
     // SET ANY UNUSED DOTS BLACK
     dots.forEach(dot => {
@@ -157,6 +160,8 @@ function draw() {
             dot.setHue(0);
         }
     })
+
+
 
     dots.forEach(dot => {
 
