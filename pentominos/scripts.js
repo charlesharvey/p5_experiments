@@ -117,6 +117,13 @@ function reset() {
     const pb = new Piece(11, 14, 9, [bb1, bb2, bb3, bb4, bb5]);
     pieces.push(pb);
 
+    const bc1 = new Block(0, 0);
+    const bc2 = new Block(0, 1);
+    const bc3 = new Block(1, 0);
+    const bc4 = new Block(1, 1);
+    const pc = new Piece(12, 7, 7, [bc1, bc2, bc3, bc4]);
+    pieces.push(pc);
+
 }
 
 

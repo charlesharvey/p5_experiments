@@ -13,7 +13,7 @@ class Piece {
         this.highlighted = false;
         this.selected = false;
         this.width = squaresize;
-        this.hue = map(label, 0, 11, 0, 255);
+        this.hue = map(label, 0, 12, 0, 255);
 
         this.setIntitalBlockPos();
 
