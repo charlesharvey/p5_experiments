@@ -40,8 +40,10 @@ class Particle {
         let rad = this.size * 0.3;
         if (this.type == 'electron') {
             rad += 15 + (this.companions / 2);
-            if (this.index >= 2) {
-                rad += 15;
+            if (this.index >= 10) {
+                rad += 25;
+            } else if (this.index >= 2) {
+                rad += 15
             }
         } else {
             rad += (this.companions * 0.6);

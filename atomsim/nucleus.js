@@ -37,6 +37,9 @@ class Nucleus {
                 if (i >= 6) {
                     p.angle += 0.23;
                 }
+                if (i >= 10) {
+                    p.angle += 0.14;
+                }
             }
 
             p.index = i;
@@ -75,7 +78,6 @@ class Nucleus {
 
         this.atomicnumber = this.quarks.filter(q => q.type == 'proton').length;
         if (this.atomicnumber > 0) {
-            const labels = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne']
             this.label = labels[this.atomicnumber - 1]
         }
 
@@ -102,7 +104,7 @@ class Nucleus {
             const totch = Math.abs(this.charge + other.charge);
             if (totch < 1) {
 
-                if (this_prot_number + other_prot_number <= 10) {
+                if (this_prot_number + other_prot_number <= labels.length) {
                     if (this_prot_number > 0 || other_prot_number > 0) {
                         if (this_neut_number == 1 || other_neut_number == 1) {
                             if (nn == 0 || nn == 1) {

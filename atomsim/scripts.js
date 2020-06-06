@@ -9,6 +9,8 @@ let biggestElement = '';
 let biggestAtomicNumber = 0;
 
 let types = ['electron', 'proton', 'neutron'];
+const labels = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne'];
+// 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar'];
 
 let counts = {
     proton: 0,
@@ -89,9 +91,8 @@ function draw() {
                     nucleuses.splice(j, 1);
                 } else if (nucleus.strongforcebonded(other)) {
                     nucleuses.splice(j, 1);
-                } else if (nucleus.covalentlyBond(other)) {
-                    nucleuses.splice(j, 1);
-
+                    // } else if (nucleus.covalentlyBond(other)) {
+                    //     nucleuses.splice(j, 1);
                 }
 
             }
