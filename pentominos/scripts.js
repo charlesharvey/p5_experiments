@@ -149,8 +149,8 @@ function mouseDragged() {
     x2 = mouseX;
     y2 = mouseY;
 
-    dx = Math.floor((x2 - x1) / squaresize);
-    dy = Math.floor((y2 - y1) / squaresize);
+    dx = Math.round((x2 - x1) / squaresize);
+    dy = Math.round((y2 - y1) / squaresize);
 
     pieces.forEach(piece => {
         if (piece.selected) {
