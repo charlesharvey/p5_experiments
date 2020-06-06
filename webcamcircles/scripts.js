@@ -3,6 +3,7 @@ let w, h, grid;
 
 let dots, points, target;
 const numberofdots = 700;
+const updateFreq = 5; // lower is faster
 
 function setup() {
 
@@ -75,7 +76,11 @@ function draw() {
             let j = index(x, y, 1);  // 0 = red, 1 = green 2 = blue 3 = alpha
             let k = index(x, y, 2);  // 0 = red, 1 = green 2 = blue 3 = alpha
 
-            let cpi = (capture.pixels[i] + capture.pixels[j] + capture.pixels[k]) / 3;
+
+            let r = capture.pixels[i];
+            let g = capture.pixels[j];
+            let b = capture.pixels[k];
+            let cpi = (r + g + b) / 3;
             // const cpi = capture.pixels[i];
 
 
@@ -85,7 +90,7 @@ function draw() {
                 // pixels[k] = cpi;
 
                 if (x < width / 2) { // wierd bug where pix is duplicated
-                    neededpositions.push({ x: x * 2, y: y, hue: cpi });
+                    neededpositions.push({ x: x * 2, y: y, hue: [r, g, b] });
                     currentdot++;
                 }
 
@@ -107,7 +112,7 @@ function draw() {
     });
 
     // MOVE DOTS TO CLOSEST POINT REQUIRED
-    if (frameCount % 5 == 0) {
+    if (frameCount % updateFreq == 0) {
 
         dots.forEach(d => d.beingused = false);
 
@@ -136,22 +141,26 @@ function draw() {
 
 
     // MOVE ANY UNUSED DOT TO LAST DOT POS BEING USED
-    const dotsbeingused = dots.filter(d => d.beingused);
-    if (dotsbeingused.length > 0) {
-        const lastdotbeingused = dotsbeingused[dotsbeingused.length - 1];
-        dots.forEach(dot => {
-            if (dot.beingused === false) {
-                dot.setHome(lastdotbeingused.home.x, lastdotbeingused.home.y);
-            }
-        })
-    }
+    // const dotsbeingused = dots.filter(d => d.beingused);
+    // if (dotsbeingused.length > 0) {
+    //     const lastdotbeingused = dotsbeingused[dotsbeingused.length - 1];
+    //     dots.forEach(dot => {
+    //         if (dot.beingused === false) {
+    //             dot.setHome(lastdotbeingused.home.x, lastdotbeingused.home.y);
+    //         }
+    //     })
+    // }
+
+    // SET ANY UNUSED DOTS BLACK
+    dots.forEach(dot => {
+        if (dot.beingused === false) {
+            dot.setHue(0);
+        }
+    })
 
     dots.forEach(dot => {
 
 
-        // if (dot.beingused === false) {
-        //     dot.setHue(0);
-        // }
 
         dot.moveTo(dot.home);
         dot.update();

@@ -14,7 +14,7 @@ class Dot {
         // this.distAwayFromHome = 0;
         this.hue = 255;
         this.calcDist();
-        this.maxSpeed = 7;
+        this.maxSpeed = 17;
         this.beingused = false;
     }
 
