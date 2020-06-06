@@ -42,7 +42,7 @@ class Block {
         } else if (this.parentHighlighted) {
             fill(this.hue, 85, 85);
         } else {
-            fill(this.hue, 50, 50);
+            fill(this.hue, 70, 70);
         }
         stroke(20);
         strokeWeight(3);

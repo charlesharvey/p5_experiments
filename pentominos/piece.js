@@ -2,7 +2,7 @@ class Piece {
 
 
     constructor(label, x, y, blocks) {
-        this.label = label;
+        this.label = `p${label}`;
         this.coordx = x;
         this.coordy = y;
         this.origx = x;
@@ -13,7 +13,7 @@ class Piece {
         this.highlighted = false;
         this.selected = false;
         this.width = squaresize;
-        this.hue = random(0, 250);
+        this.hue = map(label, 0, 11, 0, 255);
 
         this.setIntitalBlockPos();
 
