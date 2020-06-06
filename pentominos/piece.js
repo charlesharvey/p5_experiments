@@ -127,18 +127,15 @@ class Piece {
 
     show() {
 
-        // push();
-        // translate(this.pos.x, this.pos.y);
+
         this.blocks.forEach(block => {
             block.show();
         });
-        // pop();
-
 
 
         // noStroke();
         // fill(255);
-        // text(this.label, this.coordx * this.width, this.coordy * this.width);
+        // text(`${this.label}-${this.origx}-${this.origy}`, this.coordx * this.width, this.coordy * this.width);
 
 
     }
