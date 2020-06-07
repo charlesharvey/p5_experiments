@@ -3,7 +3,7 @@ class Key {
     constructor(index, freq) {
         this.index = index;
         this.freq = freq;
-        this.duration = 500; // ms to play note
+        this.duration = 400; // ms to play note
         this.color = 'white';
         this.h = keyHeight;
         this.w = keyWidth;
@@ -34,14 +34,9 @@ class Key {
         }
 
 
-        this.context = new AudioContext()
-        this.o = this.context.createOscillator()
-        this.g = this.context.createGain()
-        this.o.frequency.value = this.freq;
-        this.g.connect(this.context.destination);
-        this.o.start();
 
     }
+
 
 
 
@@ -58,9 +53,19 @@ class Key {
     play() {
         if (!this.sounding) {
             this.sounding = true;
-            this.o.connect(this.g)
+
+            const o = context.createOscillator();
+            o.connect(g)
+            o.type = 'sine';
+            o.frequency.setValueAtTime(this.freq, context.currentTime);
+            o.start();
+            g.gain.exponentialRampToValueAtTime(1, context.currentTime + 0.1);
+
             setTimeout(() => {
-                this.o.disconnect(this.g);
+
+                g.gain.setTargetAtTime(1 / 1000, context.currentTime, 0.02);
+                o.stop(context.currentTime);
+
                 this.sounding = false;
             }, this.duration);
         }
@@ -72,7 +77,6 @@ class Key {
         this.context.resume().then(() => {
             console.log('Playback resumed successfully');
         });
-
     }
 
     show() {

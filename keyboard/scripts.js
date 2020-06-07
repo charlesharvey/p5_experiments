@@ -1,6 +1,6 @@
 const lowA = 110; /// two octave below middle A
 const twelthrootoftwo = Math.pow(2, 1 / 12);
-const keysToShow = 49;
+const keysToShow = 25;
 const keys = [];
 const offset = 100;
 const keyHeight = 200;
@@ -18,11 +18,29 @@ document.getElementById('allow').addEventListener('click', function () {
 
 function allowAudio() {
     document.getElementById('allow').style.display = 'none';
+    setUpAudio();
     reset();
-    keys.forEach(key => {
-        key.allowAudio();
-    })
+    // keys.forEach(key => {
+    //     key.allowAudio();
+    // })
+    context.resume();
 }
+
+let a, context, g, o;
+function setUpAudio() {
+
+    a = window.AudioContext || window.webkitAudioContext;
+    context = new a;
+    g = context.createGain();
+    g.connect(context.destination);
+    // o = context.createOscillator();
+    // o.connect(g)
+    // o.type = 'sine';
+    // o.start();
+
+
+}
+
 
 
 
