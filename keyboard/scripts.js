@@ -1,10 +1,10 @@
-const lowA = 220; /// one octave below middle A
+const lowA = 110; /// two octave below middle A
 const twelthrootoftwo = Math.pow(2, 1 / 12);
-const keysToShow = 25;
+const keysToShow = 49;
 const keys = [];
 const offset = 100;
 const keyHeight = 200;
-const keyWidth = 30;
+const keyWidth = 20;
 const blackIndices = [1, 3, 6, 8, 10];
 let curX, curY;
 
@@ -48,14 +48,14 @@ function draw() {
     background(21);
 
 
-    // fill(200);
-    // noStroke();
-    // rect(offset - 10, offset - 10, keyWidth * (keys.length + 1) + 20, keyHeight + 10);
-
-    keys.forEach(key => {
+    keys.filter(k => k.color === 'white').forEach(key => {
         key.highlight(curX, curY);
         key.show();
     })
 
+    keys.filter(k => k.color === 'black').forEach(key => {
+        key.highlight(curX, curY);
+        key.show();
+    })
 
 }

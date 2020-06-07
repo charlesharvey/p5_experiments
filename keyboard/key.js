@@ -10,13 +10,28 @@ class Key {
         this.highlighted = false;
         this.sounding = false;
 
-        if (blackIndices.includes(this.index % 12)) {
+        const modin12 = this.index % 12;
+
+        if (blackIndices.includes(modin12)) {
             this.color = 'black';
             this.h = keyHeight - 50;
         }
 
+
+
         this.x = (index * 1.05) * this.w + offset;
         this.y = offset;
+
+
+        if (this.color === 'white') {
+            this.w = keyWidth * (1.5);
+        }
+        if (modin12 == 2 || modin12 == 7 || modin12 == 9) {
+            this.w = keyWidth * 2;
+            this.x -= (keyWidth * 0.5);
+        } else if (modin12 == 4 || modin12 == 11) {
+            this.x -= (keyWidth * 0.5);
+        }
 
 
         this.context = new AudioContext()
