@@ -9,6 +9,21 @@ const blackIndices = [1, 3, 6, 8, 10];
 let curX, curY;
 
 
+document.getElementById('allow').addEventListener('click', function () {
+    allowAudio();
+
+});
+
+
+
+function allowAudio() {
+    document.getElementById('allow').style.display = 'none';
+    reset();
+    keys.forEach(key => {
+        key.allowAudio();
+    })
+}
+
 
 
 function setup() {
@@ -18,13 +33,17 @@ function setup() {
     textAlign(CENTER);
 
 
+
+
+}
+
+function reset() {
     for (let i = 0; i < keysToShow; i++) {
         // + 3 is to get from A to C;
         const fr = lowA * (Math.pow(twelthrootoftwo, i + 3))
         const key = new Key(i, fr);
         keys.push(key);
     }
-
 
 }
 

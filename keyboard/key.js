@@ -68,6 +68,12 @@ class Key {
     }
 
 
+    allowAudio() {
+        this.context.resume().then(() => {
+            console.log('Playback resumed successfully');
+        });
+
+    }
 
     show() {
 
