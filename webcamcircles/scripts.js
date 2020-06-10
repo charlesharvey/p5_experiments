@@ -7,13 +7,16 @@ const updateFreq = 5; // lower is faster
 const threshold = 100; // lower is darker
 const dottiness = 20; // lower is more dots
 const grid = 4; // lower is more resolution;
+let pixeldensity = 1; // get pixel density from p5
 function setup() {
+
+
 
 
 
     createCanvas(320, 240);
 
-
+    pixeldensity = displayDensity();
     numberofdots = Math.floor((width / grid) * (height / grid) / dottiness);
 
     dots = [];
@@ -92,8 +95,8 @@ function draw() {
                 // pixels[j] = cpi;
                 // pixels[k] = cpi;
 
-                if (x < width / 2) { // wierd bug where pix is duplicated
-                    neededpositions.push({ x: x * 2, y: y, hue: [r, g, b] });
+                if (x < width / pixeldensity) { // wierd bug where pix is duplicated
+                    neededpositions.push({ x: x * pixeldensity, y: y, hue: [r, g, b] });
 
                 }
 
