@@ -16,8 +16,8 @@ function setup() {
 
     createCanvas(320, 240);
 
-    pixeldensity = displayDensity();
-    alert(pixeldensity);
+    pixeldensity = Math.ceil(displayDensity());
+
     numberofdots = Math.floor((width / grid) * (height / grid) / dottiness);
 
     dots = [];
