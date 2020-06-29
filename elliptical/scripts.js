@@ -19,15 +19,17 @@ function setup() {
 }
 
 function reset() {
-    noofballs = Math.floor(random(3, 50));
+    noofballs = Math.floor(random(3, 33));
 
     a = random(200, 300);
     b = (a / (random(2.001, 3))) * 2;
 
     c = Math.sqrt(((a * a) - (b * b)));
 
-    f1 = createVector(-c, 0);
-    f2 = createVector(c, 0);
+
+    const switchs = (Math.random() > 0.5) ? 1 : -1;
+    f1 = createVector(c * switchs, 0);
+    f2 = createVector(c * (switchs * -1), 0);
 
     paths = [];
     const ranang = random(0, 0.1);
