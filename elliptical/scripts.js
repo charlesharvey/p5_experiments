@@ -7,7 +7,6 @@ let f1, f2;
 
 let paths;
 let noofballs;
-let percentage;
 
 
 
@@ -15,15 +14,15 @@ function setup() {
 
 
     createCanvas(windowWidth - 20, windowHeight - 20);
-
+    colorMode(HSB);
     reset();
 }
 
 function reset() {
     noofballs = Math.floor(random(3, 50));
-    percentage = 0;
+
     a = random(200, 300);
-    b = a / (random(1.001, 1.7));
+    b = (a / (random(2.001, 3))) * 2;
 
     c = Math.sqrt(((a * a) - (b * b)));
 
@@ -31,8 +30,10 @@ function reset() {
     f2 = createVector(c, 0);
 
     paths = [];
+    const ranang = random(0, 0.1);
+    console.log(ranang);
     for (let i = 0; i < noofballs; i++) {
-        const theta = TWO_PI / noofballs * i;
+        const theta = TWO_PI / noofballs * i + ranang;
         const path = new Path(theta);
         paths.push(path);
     }
@@ -48,15 +49,11 @@ function draw() {
 
 
     translate(width / 2, height / 2);
+
+
     stroke(255);
     strokeWeight(1);
     noFill();
-
-
-    // foci
-    ellipse(f1.x, f1.y, 5, 5);
-    ellipse(f2.x, f2.y, 5, 5);
-
 
     // draw ellipse
     beginShape();
@@ -65,11 +62,16 @@ function draw() {
         const x = r * sin(theta);
         const y = r * cos(theta);
         vertex(x, y);
-
-
-
     }
     endShape(CLOSE);
+
+    // foci
+    fill(100);
+    noStroke();
+    ellipse(f1.x, f1.y, 8, 8);
+    ellipse(f2.x, f2.y, 8, 8);
+
+
 
 
     // noLoop();
@@ -79,13 +81,10 @@ function draw() {
     });
 
 
-
-
-    percentage += 0.004;
-    if (percentage > 1) {
-
+    if (paths.every(p => p.finished)) {
         reset();
     }
+
 
 
 
