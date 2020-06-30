@@ -33,7 +33,6 @@ function reset() {
 
     paths = [];
     const ranang = random(0, 0.1);
-    console.log(ranang);
     for (let i = 0; i < noofballs; i++) {
         const theta = TWO_PI / noofballs * i + ranang;
         const path = new Path(theta);
