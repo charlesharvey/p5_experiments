@@ -4,19 +4,14 @@ let rotation = 0;
 
 let r = 2;
 let R = 4;
-let sca = 100;
-let resolution = 40;
+let sca = 100; // scale factor
+let resolution = 50;
+let shapetype;
 
 function setup() {
 
-
-    createCanvas(windowWidth - 20, windowHeight - 20, WEBGL);
-
-
-
+    createCanvas(windowWidth - 20, windowHeight - 50, WEBGL);
     reset();
-
-
 
 }
 
@@ -24,13 +19,15 @@ function setup() {
 
 
 function makeCube() {
-    let sca = 100;
+
+    const res = resolution / 3;
+    let spacing = width / res * 0.25;
     points = [];
     // CUBE
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            for (let k = 0; k < 9; k++) {
-                const point = createVector(i * 35, j * 35, k * 35);
+    for (let i = 0; i < res; i++) {
+        for (let j = 0; j < res; j++) {
+            for (let k = 0; k < res; k++) {
+                const point = createVector(i * spacing, j * spacing, k * spacing);
                 points.push(point);
             }
         }
@@ -41,8 +38,9 @@ function makeBottle() {
     points = [];
     // KLEIN BOTTLE
     sca = 80;
-    for (let gamma = 0; gamma < TWO_PI; gamma += (PI / resolution)) {
-        for (let theta = 0; theta < TWO_PI; theta += (PI / resolution)) {
+    const res = resolution;
+    for (let gamma = 0; gamma < TWO_PI; gamma += (PI / res)) {
+        for (let theta = 0; theta < TWO_PI; theta += (PI / res)) {
 
             const x = (-2 / 15) * cos(gamma) * (3 * cos(theta) - 30 * sin(gamma) + 90 * Math.pow(cos(gamma), 4) * sin(gamma) - 60 * Math.pow(cos(gamma), 6) * sin(gamma) + 5 * cos(gamma) * cos(theta) * sin(gamma));
 
@@ -63,8 +61,10 @@ function makeFigureEight() {
 
     // // The figure 8 immersion 
     sca = 100;
-    for (let gamma = 0; gamma < TWO_PI; gamma += (PI / resolution)) {
-        for (let theta = 0; theta < TWO_PI; theta += (PI / resolution)) {
+
+    const res = resolution;
+    for (let gamma = 0; gamma < TWO_PI; gamma += (PI / res)) {
+        for (let theta = 0; theta < TWO_PI; theta += (PI / res)) {
             const p1 = (r + (cos(theta / 2) * sin(gamma)) - (sin(theta / 2) * sin(2 * gamma)))
             const x = p1 * cos(theta);
             const y = p1 * sin(theta);
@@ -80,8 +80,9 @@ function makeMobius() {
     // // 3d PINCHED MOBIUS STRIPE
     points = [];
     sca = 30;
-    for (let gamma = 0; gamma < TWO_PI; gamma += (PI / resolution)) {
-        for (let theta = 0; theta < TWO_PI; theta += (PI / resolution)) {
+    const res = resolution;
+    for (let gamma = 0; gamma < TWO_PI; gamma += (PI / res)) {
+        for (let theta = 0; theta < TWO_PI; theta += (PI / res)) {
 
             const x = (R + (r * cos(theta))) * cos(gamma);
             const y = (R + (r * cos(theta))) * sin(gamma);
@@ -92,16 +93,25 @@ function makeMobius() {
     }
 }
 function reset() {
-    const r = Math.random();
 
-    if (r < 0.25) {
-        makeCube();
-    } else if (r < 0.5) {
+
+    if (Math.random() > 0.5) {
+        shapetype = POINTS;
+        resolution = 50;
+    } else {
+        shapetype = TRIANGLE_STRIP;
+        resolution = 25;
+    }
+
+    const r = Math.random();
+    if (r < 0.3) {
+        makeMobius();
+    } else if (r < 0.6) {
         makeBottle();
-    } else if (r < 0.75) {
+    } else if (r < 0.9) {
         makeFigureEight();
     } else {
-        makeMobius();
+        makeCube();
     }
 }
 
@@ -122,11 +132,17 @@ function draw() {
     stroke(200, 100);
     noFill();
 
-    beginShape(POINTS);
+    beginShape(shapetype);
     points.forEach((point, i) => {
+
+
+        if (i % resolution === 0) { //  resolution - 1
+            endShape();
+            beginShape(shapetype);
+        }
         vertex(point.x, point.y, point.z);
     })
-    endShape();
+    endShape(CLOSE);
 
 
     rotation += 0.04;
