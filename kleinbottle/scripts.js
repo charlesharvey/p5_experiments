@@ -95,7 +95,7 @@ function makeMobius() {
 function reset() {
 
 
-    if (Math.random() > 0.5) {
+    if (Math.random() > 0.25) {
         shapetype = POINTS;
         resolution = 50;
     } else {
@@ -104,11 +104,11 @@ function reset() {
     }
 
     const r = Math.random();
-    if (r < 0.3) {
+    if (r < 0.33) {
         makeMobius();
-    } else if (r < 0.6) {
+    } else if (r < 0.66) {
         makeBottle();
-    } else if (r < 0.9) {
+    } else if (r < 0.99) {
         makeFigureEight();
     } else {
         makeCube();
@@ -146,5 +146,10 @@ function draw() {
 
 
     rotation += 0.04;
+
+
+    if (frameCount % 100 == 0) {
+        reset();
+    }
 
 }
