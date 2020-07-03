@@ -70,7 +70,9 @@ class Person {
     }
 
     setMessage(message) {
-        this.message = Math.round(random(120, 500000));
+        this.message = random([1032745, 5443, 144, 2011064]);
+        //  badchef, feed, bee, cabbage;
+        // Math.round(random(120, 500000));
 
 
         this.message_letters = this.setMessageAsLetters(this.message);
