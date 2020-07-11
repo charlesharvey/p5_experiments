@@ -123,7 +123,7 @@ function mouseMoved() {
         julianes.forEach((j, i) => {
             const d = dist(j.pos.x, j.pos.y, target.x, target.y);
             if (j.hovered === false) {
-                j.hovered = d < 30;
+                j.hovered = d < 100;
             }
 
         });
