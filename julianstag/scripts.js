@@ -12,6 +12,8 @@ class Julian {
         this.acc = createVector(0, 0);
 
 
+        this.hovered = false;
+
         this.width = random(30, 110);
         this.height = this.width * (147 / 100)
     }
@@ -59,7 +61,12 @@ class Julian {
 
 
         if (useImage) {
-            image(julianimage, 0, 0, this.width, this.height);
+            if (this.hovered) {
+                image(julianimagehands, 0, 0, this.width, this.height);
+            } else {
+                image(julianimage, 0, 0, this.width, this.height);
+            }
+
         } else {
             fill(255);
             noStroke();
@@ -80,11 +87,13 @@ let useImage = true;
 let target;
 let julianes;
 let julianimage;
+let julianimagehands;
 let numberofjulianes;
 let colorangle = 0;
 function preload() {
     if (useImage) {
         julianimage = loadImage('julian_no_hands.png');
+        julianimagehands = loadImage('julian_hands.png');
 
     }
 
@@ -99,15 +108,20 @@ function setup() {
 
     createCanvas(windowWidth - 20, windowHeight - 20);
 
-
-
     reset();
 }
+
+
 function mouseMoved() {
     if (target) {
         target.x = mouseX;
         target.y = mouseY;
     }
+
+    julianes.forEach((j, i) => {
+        const d = dist(j.pos.x, j.pos.y, target.x, target.y);
+        j.hovered = d < 20;
+    });
 
 }
 
