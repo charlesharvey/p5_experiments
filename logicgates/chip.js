@@ -7,7 +7,7 @@ class Chip {
         this.ax, this.ay, this.bx, this.by, this.ox, this.oy;
 
 
-        this.width = 90;
+        this.width = 70;
         this.w4 = this.width / 4;
 
         this.type = type;
@@ -19,6 +19,9 @@ class Chip {
         this.huea;
         this.hueb;
         this.hueo;
+
+        this.selected = false;
+        this.highlighted = false;
 
         this.setPositions();
         this.setOutput();
@@ -114,7 +117,15 @@ class Chip {
 
         }
 
-        fill(190);
+        if (this.selected) {
+            fill(0, 0, 100);
+        } else if (this.highlighted) {
+            fill(0, 0, 90);
+        } else {
+            fill(0, 0, 50);
+        }
+
+
         noStroke();
 
         if (this.type == 'AND') {
@@ -136,7 +147,7 @@ class Chip {
         }
 
 
-        fill(0, 0, 50);
+        fill(0, 0, 20);
         text(this.type, w4 * 2, w4 * 2);
 
 
@@ -168,6 +179,35 @@ class Chip {
 
 
 
+
+    select() {
+        this.selected = true;
+        this.origx = this.x;
+        this.origy = this.y;
+
+    }
+
+    unselect() {
+        this.selected = false;
+
+    }
+
+
+
+    moveTo(newx, newy) {
+        this.x = newx + this.origx;
+        this.y = newy + this.origy;
+        this.setPositions();
+    }
+
+
+
+    highlight(mx, my) {
+        this.highlighted = false;
+        const d = dist(mx, my, this.x, this.y);
+        this.highlighted = (d < this.width - 10)
+
+    }
 
 
 

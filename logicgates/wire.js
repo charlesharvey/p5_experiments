@@ -6,7 +6,10 @@ class Wire {
         this.posb = posb;
 
         this.hue, this.val;
+        this.setPositions();
+    }
 
+    setPositions() {
         this.x1 = this.chipa.x;
         this.y1 = this.chipa.y;
 
@@ -36,8 +39,6 @@ class Wire {
             this.x2 += this.chipb.bx2;
             this.y2 += this.chipb.by;
         }
-
-
     }
 
 
