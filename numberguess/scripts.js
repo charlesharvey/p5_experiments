@@ -6,6 +6,7 @@ const slideViewer = document.getElementById('slide');
 const yes = document.getElementById('yes');
 const no = document.getElementById('no');
 const reset = document.getElementById('reset');
+const maxnumber = document.getElementById('maxnumber');
 
 
 
@@ -15,7 +16,7 @@ let gameEnded = false;
 let type = 'binary';
 let slides;
 let visibleSlide;
-let maxNumber = 30;
+let maxNumber = 50;
 
 
 form.addEventListener('submit', (e) => {
@@ -46,6 +47,7 @@ reset.addEventListener('click', (e) => {
     e.preventDefault();
     resetGame();
 });
+maxnumber.innerHTML = maxNumber;
 
 
 resetGame();
@@ -59,12 +61,13 @@ function startGame() {
 
     slides = [];
 
-    for (let i = 1; i < 6; i++) {
+    const maxI = Math.ceil(Math.log2(maxNumber));
+
+    for (let i = 1; i <= maxI; i++) {
 
         const p2 = Math.pow(2, i);
         const numbers = [];
         for (let n = 1; n <= maxNumber; n++) {
-
             if ((n % p2) >= (p2 / 2)) {
                 numbers.push(n);
             }
@@ -73,7 +76,7 @@ function startGame() {
             includedInAnswer: false,
             visible: false,
             answered: false,
-            numbers: numbers,
+            numbers: numbers, // .sort(() => Math.random() - 0.5),
             p2: i - 1
         };
 
