@@ -203,7 +203,7 @@ class Chip {
                 strokeWeight(3);
                 line(-w4, 0, 0, this.width / 2);
                 line(-w4, this.width, 0, this.width / 2);
-
+                noStroke();
             }
 
 
@@ -218,7 +218,7 @@ class Chip {
 
 
         fill(0, 0, 20);
-        text(this.type, w4 * 2, w4 * 2);
+        text(this.type, w4 * 2 - 5, w4 * 2 + 5);
 
 
 

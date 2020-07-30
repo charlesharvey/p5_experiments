@@ -43,8 +43,8 @@ function reset() {
     results = [];
 
     for (let i = 0; i < sidesAmount; i++) {
-        const x = sin(TWO_PI / sidesAmount * i) * 200 + 300 + random(230);
-        const y = cos(TWO_PI / sidesAmount * i) * 200 + 300 + random(230);
+        const x = sin(TWO_PI / sidesAmount * i) * 150 + 120 + random(130);
+        const y = cos(TWO_PI / sidesAmount * i) * 150 + 120 + random(130);
         const vector = createVector(x, y, i / sidesAmount);
         quadpoints.push(vector)
 
@@ -107,6 +107,38 @@ function draw() {
 }
 
 
+function newReflectQuad(points, a, b) {
+    text('a', a.x, a.y + 20);
+    text('b', b.x, b.y + 20);
+
+    const gradient = (b.x - a.x) / (b.y - a.y);
+    console.log(gradient);
+
+    const newpoints = [a, b];
+
+    points.forEach(point => {
+        const t = `${round(point.x)}, ${round(point.y)}`;
+        noStroke();
+        fill(255);
+        text(t, point.x - 30, point.y + 40);
+
+        if (point == a) {
+
+        } else if (point !== b) {
+
+        } else {
+            const da = dist(point.x, point.y, a.x, a.y);
+            const db = dist(point.x, point.y, b.x, b.y);
+
+
+
+        }
+
+
+    })
+
+
+}
 
 function reflectQuad(points, a, b) {
 

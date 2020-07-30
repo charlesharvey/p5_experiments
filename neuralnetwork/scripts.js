@@ -19,7 +19,7 @@ let b2;
 let w1x, a1, w2a1, a2;
 
 const scale = 250;
-let grid = 7;
+let grid = 5;
 let theta = Math.random();
 const graphsize = 300;
 const diagramsize = 240;
@@ -184,24 +184,24 @@ function draw() {
     w1 = w1.map((v, i, a) => {
         const index = i[1] * hiddensize + i[0];
         //  text(`W1-${index}: ${v}`, graphsize + 30, index * 20 + 30);
-        return w1sliders[index].value();
-        // const val = sin(index + theta * 2);
-        // w1sliders[index].elt.value = val;
-        // return val;
+        // return w1sliders[index].value();
+        const val = sin(index + theta * 2);
+        w1sliders[index].elt.value = val;
+        return val;
     });
 
     w2 = w2.map((v, i, a) => {
         const index = i[1] * outputsize + i[0];
         //  text(`W2-${index}: ${v}`, graphsize + 30, index * 20 + 190);
-        return w2sliders[index].value();
-        // const val = sin(index + theta);
-        // w2sliders[index].elt.value = val;
-        // return val;
+        // return w2sliders[index].value();
+        const val = sin(index + theta);
+        w2sliders[index].elt.value = val;
+        return val;
     });
 
 
 
-    // theta += 0.01;
+    theta += 0.01;
 
 
 

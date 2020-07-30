@@ -1,11 +1,13 @@
 
 
-let GREEN;
-
+let GREEN, RED, GREY;
+const gateTypes = ['AND', 'OR', 'XOR', 'NOT'];
 let chips;
 let wires;
 let powerrails;
 let curX, curY, x1, y1, x2, y2, dx, dy;
+
+
 
 let wantingToToggle = false;
 let wireToDraw;
@@ -170,16 +172,8 @@ function reset() {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            const r = Math.random();
-            let t = 'NOT';
-            if (r > 0.75) {
-                t = 'AND'
-            } else if (r > 0.5) {
-                t = 'OR'
-            } else if (r > 0.25) {
-                t = 'XOR';
-            }
 
+            const t = gateTypes[(i + j * 3) % gateTypes.length];
             const x = 350 * (i + 0.5);
             const y = 200 * (j + 0.5)
             const chip = new Chip(t, x, y);
