@@ -172,10 +172,12 @@ function reset() {
         for (let j = 0; j < 3; j++) {
             const r = Math.random();
             let t = 'NOT';
-            if (r > 0.7) {
+            if (r > 0.75) {
                 t = 'AND'
-            } else if (r > 0.3) {
+            } else if (r > 0.5) {
                 t = 'OR'
+            } else if (r > 0.25) {
+                t = 'XOR';
             }
 
             const x = 350 * (i + 0.5);

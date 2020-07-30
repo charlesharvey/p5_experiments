@@ -30,7 +30,7 @@ class Chip {
 
 
     toggleInputs() {
-        if (this.type == 'AND' || this.type == 'OR') {
+        if (!this.type == 'NOT') {
             if (this.a == 0 && this.b == 0) {
                 this.a = 0;
                 this.b = 1;
@@ -91,6 +91,9 @@ class Chip {
             this.o = (this.a == 1 && this.b == 1) ? 1 : 0
         } else if (this.type == 'OR') {
             this.o = (this.a == 1 || this.b == 1) ? 1 : 0;
+        } else if (this.type == 'XOR') {
+            this.o = (this.a + this.b == 1) ? 1 : 0;
+
         } else if (this.type == 'NOT') {
             this.o = (this.a == 0) ? 1 : 0;
         } else {
@@ -142,7 +145,7 @@ class Chip {
         line(this.ox, this.oy, this.ox2, this.oy);
 
 
-        if (this.type == 'AND' || this.type == 'OR') {
+        if (this.type == 'AND' || this.type == 'OR' || this.type == 'XOR') {
             stroke(this.hueb);
             line(this.bx, this.by, this.bx2, this.by);
 
@@ -155,7 +158,7 @@ class Chip {
         fill(this.hueo);
         text(this.o, this.ox2 - 5, this.oy - 5);
 
-        if (this.type == 'AND' || this.type == 'OR') {
+        if (this.type == 'AND' || this.type == 'OR' || this.type == 'XOR') {
             fill(this.hueb);
             text(this.b, this.bx2 + 5, this.by - 5);
         };
@@ -167,7 +170,7 @@ class Chip {
         } else if (this.highlighted) {
             fill(0, 0, 90);
         } else {
-            fill(0, 0, 50);
+            fill(GREY);
         }
 
 
@@ -178,7 +181,7 @@ class Chip {
             rect(0, 0, this.width * 0.5, this.width);
             arc(this.width / 2, this.width / 2, this.width, this.width, 3 * PI / 2, PI / 2);
 
-        } else if (this.type == 'OR') {
+        } else if (this.type == 'OR' || this.type == 'XOR') {
 
             const h = this.width;
             beginShape();
@@ -189,6 +192,21 @@ class Chip {
             vertex(this.width, this.width / 2);
             vertex(this.width - w4 - w4, 0);
             endShape(CLOSE);
+
+            if (this.type == 'XOR') {
+                stroke(0, 0, 0);
+                strokeWeight(10);
+                line(-w4, 0, 0, this.width / 2);
+                line(-w4, this.width, 0, this.width / 2);
+
+                stroke(GREY);
+                strokeWeight(3);
+                line(-w4, 0, 0, this.width / 2);
+                line(-w4, this.width, 0, this.width / 2);
+
+            }
+
+
         } else if (this.type == 'NOT') {
             beginShape();
             vertex(0, 0);
