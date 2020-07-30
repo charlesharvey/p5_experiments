@@ -48,8 +48,16 @@ class Chip {
                 this.b = 0;
 
             }
-            this.setOutput();
+
+        } else if (this.type == 'NOT') {
+            if (this.a == 1) {
+                this.a = 0;
+            } else {
+                this.a = 1;
+            }
         }
+
+        this.setOutput();
 
 
     }
@@ -83,6 +91,8 @@ class Chip {
             this.o = (this.a == 1 && this.b == 1) ? 1 : 0
         } else if (this.type == 'OR') {
             this.o = (this.a == 1 || this.b == 1) ? 1 : 0;
+        } else if (this.type == 'NOT') {
+            this.o = (this.a == 0) ? 1 : 0;
         } else {
             this.o = 0;
         }
@@ -120,30 +130,37 @@ class Chip {
         translate(this.x, this.y);
 
 
+
+
+        noFill();
+        strokeWeight(3);
+
+        stroke(this.huea);
+        line(this.ax, this.ay, this.ax2, this.ay);
+
+        stroke(this.hueo);
+        line(this.ox, this.oy, this.ox2, this.oy);
+
+
         if (this.type == 'AND' || this.type == 'OR') {
-
-            noFill();
-            strokeWeight(3);
-
-            stroke(this.huea);
-            line(this.ax, this.ay, this.ax2, this.ay);
             stroke(this.hueb);
             line(this.bx, this.by, this.bx2, this.by);
-            stroke(this.hueo);
-            line(this.ox, this.oy, this.ox2, this.oy);
 
+        };
 
-            noStroke();
-            fill(this.huea);
-            text(this.a, this.ax2 + 5, this.ay - 5);
+        noStroke();
+        fill(this.huea);
+        text(this.a, this.ax2 + 5, this.ay - 5);
 
+        fill(this.hueo);
+        text(this.o, this.ox2 - 5, this.oy - 5);
+
+        if (this.type == 'AND' || this.type == 'OR') {
             fill(this.hueb);
             text(this.b, this.bx2 + 5, this.by - 5);
+        };
 
-            fill(this.hueo);
-            text(this.o, this.ox2 - 5, this.oy - 5);
 
-        }
 
         if (this.selected) {
             fill(0, 0, 100);
@@ -172,6 +189,13 @@ class Chip {
             vertex(this.width, this.width / 2);
             vertex(this.width - w4 - w4, 0);
             endShape(CLOSE);
+        } else if (this.type == 'NOT') {
+            beginShape();
+            vertex(0, 0);
+            vertex(0, this.width);
+            vertex(this.width, w4 * 2);
+            endShape(CLOSE);
+            ellipse(this.width + 4, w4 * 2, w4 - 4, w4 - 4);
         }
 
 
@@ -211,6 +235,12 @@ class Chip {
         this.by = w4 * 3;
 
         this.bx2 = this.width * -0.5;
+
+
+        if (this.type == 'NOT') {
+            this.ay = w4 * 2;
+            this.by = 1238091;
+        }
 
 
         this.ox = this.width;

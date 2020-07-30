@@ -170,7 +170,14 @@ function reset() {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            const t = (Math.random() > 0.5) ? 'AND' : 'OR';
+            const r = Math.random();
+            let t = 'NOT';
+            if (r > 0.7) {
+                t = 'AND'
+            } else if (r > 0.3) {
+                t = 'OR'
+            }
+
             const x = 350 * (i + 0.5);
             const y = 200 * (j + 0.5)
             const chip = new Chip(t, x, y);
