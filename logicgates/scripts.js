@@ -1,7 +1,7 @@
 
 
 let GREEN, RED, GREY;
-const gateTypes = ['AND', 'OR', 'XOR', 'NOT'];
+const gateTypes = ['AND', 'OR', 'XOR', 'NOT', 'SWITCH'];
 let chips;
 let wires;
 let powerrails;
@@ -46,6 +46,8 @@ function mousePressed() {
                 x1 = mouseX;
                 y1 = mouseY;
                 noChipsSelected = false;
+
+                chip.toggleActivated();
             }
         }
     });
@@ -170,7 +172,7 @@ function reset() {
     wires = [];
     powerrails = [];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 3; j++) {
 
             const t = gateTypes[(i + j * 3) % gateTypes.length];
@@ -183,6 +185,7 @@ function reset() {
 
     powerrails.push(new Powerrail(1));
     powerrails.push(new Powerrail(0));
+
 
     // wires.push(new Wire(chips[0], 'O', chips[3], 'A'));
     // wires.push(new Wire(chips[1], 'O', chips[3], 'B'));
@@ -220,6 +223,7 @@ function draw() {
     powerrails.forEach(powerrail => {
         powerrail.show();
     })
+
 
 
 

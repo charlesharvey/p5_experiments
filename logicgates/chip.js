@@ -22,6 +22,7 @@ class Chip {
 
         this.selected = false;
         this.highlighted = false;
+        this.activated = true;
 
         this.setPositions();
         this.setOutput();
@@ -30,7 +31,7 @@ class Chip {
 
 
     toggleInputs() {
-        if (!this.type == 'NOT') {
+        if (this.type == 'OR' || this.type == 'XOR' || this.type == 'AND') {
             if (this.a == 0 && this.b == 0) {
                 this.a = 0;
                 this.b = 1;
@@ -55,6 +56,8 @@ class Chip {
             } else {
                 this.a = 1;
             }
+        } else if (this.type == 'SWITCH') {
+            this.toggleActivated();
         }
 
         this.setOutput();
@@ -62,6 +65,12 @@ class Chip {
 
     }
 
+
+    toggleActivated() {
+        if (this.type == 'SWITCH') {
+            this.activated = !this.activated;
+        }
+    }
 
 
     setA(a) {
@@ -93,11 +102,17 @@ class Chip {
             this.o = (this.a == 1 || this.b == 1) ? 1 : 0;
         } else if (this.type == 'XOR') {
             this.o = (this.a + this.b == 1) ? 1 : 0;
-
         } else if (this.type == 'NOT') {
             this.o = (this.a == 0) ? 1 : 0;
+        } else if (this.type == 'SWITCH') {
+            if (this.activated) {
+                this.o = this.a;
+            } else {
+                this.o = 0;
+            }
         } else {
             this.o = 0;
+
         }
         this.setHues();
     }
@@ -214,6 +229,15 @@ class Chip {
             vertex(this.width, w4 * 2);
             endShape(CLOSE);
             ellipse(this.width + 4, w4 * 2, w4 - 4, w4 - 4);
+        } else if (this.type == 'SWITCH') {
+            if (this.activated) {
+                rect(0, 13, this.width, w4);
+            } else {
+                rect(0, -5, this.width, w4);
+            }
+
+            rect(0, w4 * 2 - 6, this.width, w4);
+
         }
 
 
@@ -255,7 +279,7 @@ class Chip {
         this.bx2 = this.width * -0.5;
 
 
-        if (this.type == 'NOT') {
+        if (this.type == 'NOT' || this.type == 'SWITCH') {
             this.ay = w4 * 2;
             this.by = 1238091;
         }
