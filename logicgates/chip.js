@@ -12,8 +12,8 @@ class Chip {
 
         this.type = type;
 
-        this.a = (Math.random() > 0.5) ? 1 : 0;
-        this.b = (Math.random() > 0.5) ? 1 : 0;
+        this.a = 0; // (Math.random() > 0.5) ? 1 : 0;
+        this.b = 0; // (Math.random() > 0.5) ? 1 : 0;
         this.o;
 
         this.huea;
@@ -28,6 +28,31 @@ class Chip {
 
     }
 
+
+    toggleInputs() {
+        if (this.type == 'AND' || this.type == 'OR') {
+            if (this.a == 0 && this.b == 0) {
+                this.a = 0;
+                this.b = 1;
+
+            } else if (this.a == 0 && this.b == 1) {
+                this.a = 1;
+                this.b = 0;
+
+            } else if (this.a == 1 && this.b == 0) {
+                this.a = 1;
+                this.b = 1;
+
+            } else if (this.a == 1 && this.b == 1) {
+                this.a = 0;
+                this.b = 0;
+
+            }
+            this.setOutput();
+        }
+
+
+    }
 
 
 
@@ -67,24 +92,27 @@ class Chip {
 
     setHues() {
         if (this.a == 1) {
-            this.huea = color(100, 100, 100);
+            this.huea = GREEN;
         } else {
-            this.huea = color(0, 100, 100);
+            this.huea = RED;
         }
         if (this.b == 1) {
-            this.hueb = color(100, 100, 100);
+            this.hueb = GREEN;
         } else {
-            this.hueb = color(0, 100, 100);
+            this.hueb = RED;
         }
         if (this.o == 1) {
-            this.hueo = color(100, 100, 100);
+            this.hueo = GREEN;
         } else {
-            this.hueo = color(0, 100, 100);
+            this.hueo = RED;
         }
     }
 
 
     show() {
+
+
+
 
         const w4 = this.w4;
 
@@ -156,6 +184,20 @@ class Chip {
     }
 
 
+
+
+    distA(x, y) {
+        return dist(x, y, this.x + this.ax2, this.y + this.ay);
+    }
+    distB(x, y) {
+        return dist(x, y, this.x + this.bx2, this.y + this.by);
+    }
+    distO(x, y) {
+        return dist(x, y, this.x + this.ox2, this.y + this.oy);
+    }
+
+
+
     setPositions() {
         const w4 = this.w4;
 
@@ -163,18 +205,18 @@ class Chip {
         this.ay = w4;
 
 
-        this.ax2 = this.width * -1;
+        this.ax2 = this.width * -0.5;
 
         this.bx = 0;
         this.by = w4 * 3;
 
-        this.bx2 = this.width * -1;
+        this.bx2 = this.width * -0.5;
 
 
         this.ox = this.width;
         this.oy = w4 * 2;
 
-        this.ox2 = this.width * 2;
+        this.ox2 = this.width * 1.5;
     }
 
 

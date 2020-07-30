@@ -1,30 +1,50 @@
 class Wire {
-    constructor(chipa, posa, chipb, posb) {
+    constructor(chipa, posa, chipb, posb, powerrail = null, powerx = null) {
         this.chipa = chipa;
         this.posa = posa;
         this.chipb = chipb;
         this.posb = posb;
 
-        this.hue, this.val;
+        this.powerrail = powerrail;
+        this.powerx = powerx;
+
+
+        this.x1, this.x2, this.y1, this.y2;
+
+        this.theta = Math.random();
+        this.hue = GREY;
+        this.val;
         this.setPositions();
     }
 
     setPositions() {
-        this.x1 = this.chipa.x;
-        this.y1 = this.chipa.y;
 
-        if (this.posa == 'O') {
-            this.x1 += this.chipa.ox2;
-            this.y1 += this.chipa.oy;
-
-        } else if (this.posa == 'A') {
-            this.x1 += this.chipa.ax2;
-            this.y1 += this.chipa.ay;
-
-        } else if (this.posa == 'B') {
-            this.x1 += this.chipa.bx2;
-            this.y1 += this.chipa.by;
+        if (this.chipa) {
+            this.setPositionsForStartChip();
+        } else if (this.powerrail) {
+            this.setPositionsForPowerrail();
         }
+
+        this.setPositionsForEndChip();
+
+    }
+
+
+    setPositionsForPowerrail() {
+        this.x1 = this.powerx;
+        this.y1 = this.powerrail.y;
+
+        if (this.powerrail.charge == 1) {
+            this.hue = GREEN;
+        } else {
+            this.hue = RED;
+
+        }
+        this.val = this.powerrail.charge;
+    }
+
+
+    setPositionsForEndChip() {
 
         this.x2 = this.chipb.x;
         this.y2 = this.chipb.y;
@@ -41,21 +61,48 @@ class Wire {
         }
     }
 
+    setPositionsForStartChip() {
+
+        this.x1 = this.chipa.x;
+        this.y1 = this.chipa.y;
+
+        if (this.posa == 'O') {
+            this.x1 += this.chipa.ox2;
+            this.y1 += this.chipa.oy;
+
+        } else if (this.posa == 'A') {
+            this.x1 += this.chipa.ax2;
+            this.y1 += this.chipa.ay;
+
+        } else if (this.posa == 'B') {
+            this.x1 += this.chipa.bx2;
+            this.y1 += this.chipa.by;
+        }
+
+    }
+
 
     update() {
 
 
-        if (this.posa == 'O') {
-            this.hue = this.chipa.hueo;
-            this.val = this.chipa.o;
-        } else if (this.posa == 'A') {
-            this.hue = this.chipa.huea;
-            this.val = this.chipa.a;
-        } else if (this.posa == 'B') {
-            this.hue = this.chipa.hueb;
-            this.val = this.chipa.b;
-        }
+        if (this.powerrail) {
 
+        } else {
+
+
+            if (this.posa == 'O') {
+                this.hue = this.chipa.hueo;
+                this.val = this.chipa.o;
+            } else if (this.posa == 'A') {
+                this.hue = this.chipa.huea;
+                this.val = this.chipa.a;
+            } else if (this.posa == 'B') {
+                this.hue = this.chipa.hueb;
+                this.val = this.chipa.b;
+            }
+
+
+        }
 
         if (this.posb == 'A') {
             this.chipb.setA(this.val);
@@ -63,12 +110,32 @@ class Wire {
             this.chipb.setB(this.val);
         }
 
+
+        if (this.val == 1) {
+            this.theta += 0.005;
+
+        }
+
+
+
     }
 
     show() {
         strokeWeight(3);
         stroke(this.hue);
         line(this.x1, this.y1, this.x2, this.y2);
+
+
+        if (this.val == 1) { // ON
+            // DRAW ELECTRONS
+            for (let i = 0; i < 1; i += 0.1) {
+                fill(this.hue);
+                const x = lerp(this.x1, this.x2, (i + this.theta) % 1);
+                const y = lerp(this.y1, this.y2, (i + this.theta) % 1);
+                ellipse(x, y, 3, 3);
+            }
+        }
+
 
     }
 
