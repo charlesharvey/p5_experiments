@@ -1,7 +1,7 @@
 
 
 let GREEN, RED, GREY;
-const gateTypes = ['AND', 'OR', 'XOR', 'NOT', 'SWITCH'];
+const gateTypes = ['CLOCK', 'SWITCH', 'NOR', 'AND', 'OR', 'XOR', 'NOT']
 let chips;
 let wires;
 let powerrails;
@@ -172,12 +172,12 @@ function reset() {
     wires = [];
     powerrails = [];
 
-    for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 3; j++) {
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 4; j++) {
 
             const t = gateTypes[(i + j * 3) % gateTypes.length];
-            const x = 350 * (i + 0.5);
-            const y = 200 * (j + 0.5)
+            const x = 200 * (i + 0.5);
+            const y = 170 * (j + 0.5)
             const chip = new Chip(t, x, y);
             chips.push(chip);
         }
@@ -225,6 +225,15 @@ function draw() {
     })
 
 
+    if (frameCount % 20 == 0) {
+        chips.filter(c => c.type === 'CLOCK').forEach(c => {
+            // const d = new Date();
+            // const s = d.getSeconds();
+            // this.o = (s % 2 == 0) ? 1 : 0;
+            c.tick();
+        })
+
+    }
 
 
 

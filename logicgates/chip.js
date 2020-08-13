@@ -7,7 +7,7 @@ class Chip {
         this.ax, this.ay, this.bx, this.by, this.ox, this.oy;
 
 
-        this.width = 70;
+        this.width = 60;
         this.w4 = this.width / 4;
 
         this.type = type;
@@ -31,7 +31,8 @@ class Chip {
 
 
     toggleInputs() {
-        if (this.type == 'OR' || this.type == 'XOR' || this.type == 'AND') {
+        if (this.type == 'OR' || this.type == 'NOR' || this.type == 'XOR' || this.type == 'AND') {
+
             if (this.a == 0 && this.b == 0) {
                 this.a = 0;
                 this.b = 1;
@@ -98,6 +99,10 @@ class Chip {
     setOutput() {
         if (this.type == 'AND') {
             this.o = (this.a == 1 && this.b == 1) ? 1 : 0
+        } else if (this.type == 'NAND') {
+            this.o = (this.a == 1 && this.b == 1) ? 0 : 1;
+        } else if (this.type == 'NOR') {
+            this.o = (this.a == 0 && this.b == 0) ? 1 : 0;
         } else if (this.type == 'OR') {
             this.o = (this.a == 1 || this.b == 1) ? 1 : 0;
         } else if (this.type == 'XOR') {
@@ -110,6 +115,9 @@ class Chip {
             } else {
                 this.o = 0;
             }
+        } else if (this.type == 'CLOCK') {
+
+
         } else {
             this.o = 0;
 
@@ -154,13 +162,17 @@ class Chip {
         strokeWeight(3);
 
         stroke(this.huea);
-        line(this.ax, this.ay, this.ax2, this.ay);
+
+        if (this.type !== 'CLOCK') {
+            line(this.ax, this.ay, this.ax2, this.ay);
+        }
+
 
         stroke(this.hueo);
         line(this.ox, this.oy, this.ox2, this.oy);
 
 
-        if (this.type == 'AND' || this.type == 'OR' || this.type == 'XOR') {
+        if (this.type == 'AND' || this.type == 'NOR' || this.type == 'OR' || this.type == 'XOR') {
             stroke(this.hueb);
             line(this.bx, this.by, this.bx2, this.by);
 
@@ -168,12 +180,14 @@ class Chip {
 
         noStroke();
         fill(this.huea);
-        text(this.a, this.ax2 + 5, this.ay - 5);
+        if (this.type !== 'CLOCK') {
+            text(this.a, this.ax2 + 5, this.ay - 5);
+        }
 
         fill(this.hueo);
         text(this.o, this.ox2 - 5, this.oy - 5);
 
-        if (this.type == 'AND' || this.type == 'OR' || this.type == 'XOR') {
+        if (this.type == 'AND' || this.type == 'NAND' || this.type == 'OR' || this.type == 'XOR') {
             fill(this.hueb);
             text(this.b, this.bx2 + 5, this.by - 5);
         };
@@ -191,12 +205,12 @@ class Chip {
 
         noStroke();
 
-        if (this.type == 'AND') {
+        if (this.type == 'AND' || this.type == 'NAND') {
 
             rect(0, 0, this.width * 0.5, this.width);
             arc(this.width / 2, this.width / 2, this.width, this.width, 3 * PI / 2, PI / 2);
 
-        } else if (this.type == 'OR' || this.type == 'XOR') {
+        } else if (this.type == 'OR' || this.type == 'NOR' || this.type == 'XOR') {
 
             const h = this.width;
             beginShape();
@@ -228,7 +242,7 @@ class Chip {
             vertex(0, this.width);
             vertex(this.width, w4 * 2);
             endShape(CLOSE);
-            ellipse(this.width + 4, w4 * 2, w4 - 4, w4 - 4);
+
         } else if (this.type == 'SWITCH') {
             if (this.activated) {
                 rect(0, 13, this.width, w4);
@@ -238,6 +252,16 @@ class Chip {
 
             rect(0, w4 * 2 - 6, this.width, w4);
 
+        } else if (this.type == 'CLOCK') {
+            rect(-10, 0, this.width + 10, this.width);
+
+            fill(60);
+            ellipse(w4 * 2 - 5, w4 * 2, w4 * 3, w4 * 3);
+
+        }
+
+        if (this.type == 'NOT' || this.type == 'NOR' || this.type == 'NAND') {
+            ellipse(this.width + 4, w4 * 2, w4 - 4, w4 - 4);
         }
 
 
@@ -306,6 +330,11 @@ class Chip {
 
     }
 
+
+    tick() {
+        this.o = (this.o == 1) ? 0 : 1;
+        this.setHues();
+    }
 
 
     moveTo(newx, newy) {
