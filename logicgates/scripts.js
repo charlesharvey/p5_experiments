@@ -1,12 +1,13 @@
 
 
 let GREEN, RED, GREY;
-const gateTypes = ['CLOCK', 'SWITCH', 'NOR', 'AND', 'OR', 'XOR', 'NOT']
+const gateTypes = ['NOR', 'XOR', 'SWITCH', 'CLOCK', 'OR', 'AND', 'NAND', 'NOT']
 let chips;
 let wires;
 let powerrails;
 let curX, curY, x1, y1, x2, y2, dx, dy;
 
+let size = 50;
 
 
 let wantingToToggle = false;
@@ -168,13 +169,14 @@ function addNewWireIfNeccessary() {
 
 function reset() {
 
+    size = 50;
+
     chips = [];
     wires = [];
     powerrails = [];
 
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 4; j++) {
-
             const t = gateTypes[(i + j * 3) % gateTypes.length];
             const x = 200 * (i + 0.5);
             const y = 170 * (j + 0.5)
@@ -183,19 +185,73 @@ function reset() {
         }
     }
 
+
     powerrails.push(new Powerrail(1));
     powerrails.push(new Powerrail(0));
 
 
-    // wires.push(new Wire(chips[0], 'O', chips[3], 'A'));
-    // wires.push(new Wire(chips[1], 'O', chips[3], 'B'));
-    // wires.push(new Wire(chips[2], 'O', chips[4], 'A'));
-    // wires.push(new Wire(chips[2], 'O', chips[4], 'B'));
-    // wires.push(new Wire(chips[4], 'O', chips[7], 'B'));
-    // wires.push(new Wire(chips[5], 'O', chips[8], 'B'));
-    // wires.push(new Wire(chips[3], 'O', chips[6], 'A'));
-    // wires.push(new Wire(chips[3], 'O', chips[6], 'B'));
-    // wires.push(new Wire(chips[6], 'O', chips[7], 'A'));
+
+}
+
+
+function keyPressed() {
+    if (key == ' ') {
+        makeAdders();
+    }
+}
+
+function makeAdders() {
+    size = 28;
+    chips = [];
+    wires = [];
+
+
+    makeAdder(80);
+    makeAdder(600);
+}
+
+
+function makeAdder(xoff) {
+
+    const c0 = new Chip('XOR', xoff + (size * 4), 200); // 0
+    chips.push(c0);
+    const c1 = new Chip('NAND', xoff + (size * 4), 300); // 1
+    chips.push(c1);
+    const c2 = new Chip('NAND', xoff + (size * 7), 125); // 2
+    chips.push(c2);
+    const c3 = new Chip('NOT', xoff + (size * 7), 250); // 3
+    chips.push(c3);
+    const c4 = new Chip('NOT', xoff + (size * 9), 175); // 4
+    chips.push(c4);
+    const c5 = new Chip('NOR', xoff + (size * 11), 275); // 5
+    chips.push(c5);
+    const c6 = new Chip('NOT', xoff + (size * 13), 200); // 6
+    chips.push(c6);
+    const c7 = new Chip('XOR', xoff + (size * 13), 75); // 7
+    chips.push(c7);
+    const c8 = new Chip('SWITCH', xoff + (size * 0), 200); // 8
+    chips.push(c8);
+    const c9 = new Chip('SWITCH', xoff + (size * 0), 300); // 9
+    chips.push(c9);
+    const c10 = new Chip('SWITCH', xoff + (size * 0), 100); // 9
+    chips.push(c10);
+
+    wires.push(new Wire(c0, 'O', c7, 'B'));
+    wires.push(new Wire(c0, 'O', c2, 'B'));
+    wires.push(new Wire(c1, 'O', c3, 'A'));
+    wires.push(new Wire(c3, 'O', c5, 'B'));
+    wires.push(new Wire(c2, 'O', c4, 'A'));
+    wires.push(new Wire(c4, 'O', c5, 'A'));
+    wires.push(new Wire(c5, 'O', c6, 'A'));
+    wires.push(new Wire(c8, 'O', c0, 'A'));
+    wires.push(new Wire(c8, 'O', c1, 'A'));
+    wires.push(new Wire(c9, 'O', c0, 'B'));
+    wires.push(new Wire(c9, 'O', c1, 'B'));
+    wires.push(new Wire(c10, 'O', c2, 'A'));
+    wires.push(new Wire(c10, 'O', c7, 'A'));
+
+    wires.push(new Wire(null, null, c8, 'A', powerrails[0], c8.x - 30));
+    wires.push(new Wire(null, null, c9, 'A', powerrails[0], c8.x - 60));
 
 }
 
