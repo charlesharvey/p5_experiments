@@ -9,7 +9,7 @@ let curX, curY, x1, y1, x2, y2, dx, dy;
 
 let size = 50;
 
-
+let showAdder = false;
 let wantingToToggle = false;
 let wireToDraw;
 
@@ -106,6 +106,26 @@ function mouseReleased() {
 }
 
 
+function removeWire() {
+    // if drawing line through wire, see if center poitns are 50 pixels or less away. if so delete
+    let cx = (wireToDraw.x1 + wireToDraw.x2) / 2;
+    let cy = (wireToDraw.y1 + wireToDraw.y2) / 2;
+
+    for (let i = wires.length - 1; i >= 0; i--) {
+        const wire = wires[i];
+        let wire_cx = (wire.x1 + wire.x2) / 2;
+        let wire_cy = (wire.y1 + wire.y2) / 2;
+        const d = dist(cx, cy, wire_cx, wire_cy);
+        if (d < 50) {
+            wire.resetChips();
+            wires.splice(i, 1);
+        }
+
+    }
+
+
+}
+
 function addNewWireIfNeccessary() {
 
     if (wireToDraw) {
@@ -160,7 +180,9 @@ function addNewWireIfNeccessary() {
                     wires.push(newwire);
                 }
             } // if no startchip
-        } // end if have endchip
+        } else {// end if have endchip
+            removeWire();
+        }
 
     }
     wireToDraw = null;
@@ -169,11 +191,38 @@ function addNewWireIfNeccessary() {
 
 function reset() {
 
+    powerrails = [];
+    powerrails.push(new Powerrail(1));
+    powerrails.push(new Powerrail(0));
+
+
+    makeChips();
+
+
+
+}
+
+
+function keyPressed() {
+    if (key == ' ') {
+        showAdder = !showAdder;
+
+        if (showAdder) {
+            makeAdders();
+        } else {
+            makeChips();
+        }
+    }
+}
+
+function makeChips() {
+
+
     size = 50;
 
     chips = [];
     wires = [];
-    powerrails = [];
+
 
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 4; j++) {
@@ -185,19 +234,6 @@ function reset() {
         }
     }
 
-
-    powerrails.push(new Powerrail(1));
-    powerrails.push(new Powerrail(0));
-
-
-
-}
-
-
-function keyPressed() {
-    if (key == ' ') {
-        makeAdders();
-    }
 }
 
 function makeAdders() {

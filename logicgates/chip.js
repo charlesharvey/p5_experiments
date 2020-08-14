@@ -24,6 +24,11 @@ class Chip {
         this.highlighted = false;
         this.activated = true;
 
+        if (this.type == 'SWITCH') {
+            this.activated = (Math.random() > 0.5);
+        }
+
+
         this.setPositions();
         this.setOutput();
 
@@ -367,7 +372,7 @@ class Chip {
     highlight(mx, my) {
         this.highlighted = false;
         const d = dist(mx, my, this.x, this.y);
-        this.highlighted = (d < this.width - 10)
+        this.highlighted = (d < this.width + 15)
 
     }
 

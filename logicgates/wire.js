@@ -120,6 +120,24 @@ class Wire {
 
     }
 
+    resetChips() {
+
+        if (this.chipa) {
+            if (this.posa == 'A') {
+                this.chipa.setA(0);
+            } else if (this.posa == 'B') {
+                this.chipa.setB(0);
+            }
+        }
+        if (this.chipb) {
+            if (this.posb == 'A') {
+                this.chipb.setA(0);
+            } else if (this.posb == 'B') {
+                this.chipb.setB(0);
+            }
+        }
+    }
+
     show() {
         strokeWeight(3);
         stroke(this.hue);
