@@ -1,6 +1,6 @@
 
-const fieldOfView = 45;
-const numberOfRays = 120;
+const fieldOfView = 60;
+const numberOfRays = 240;
 const numberOfBarriers = 6;
 
 
@@ -9,7 +9,7 @@ let barriers;
 let rays;
 let columns;
 let theta = 0;
-
+// let floors;
 
 
 
@@ -102,7 +102,7 @@ function draw() {
             columns[r] = d;
 
 
-            stroke(255, 100);
+            stroke(255, 40);
             line(pt.x, pt.y, ray.pos.x, ray.pos.y);
         }
 
@@ -122,18 +122,51 @@ function draw() {
     });
 
 
+
+
+
     // 3d view
+
+    // floor
+    fill(30, 60, 10);
+    noStroke();
+    beginShape();
+    vertex(width / 2, height);
+    vertex(width / 2, height / 2);
+    // floors.forEach(v => {
+    //     // ellipse(v.x, v.y, 10, 10);
+    //     // text(v.x, v.x, v.y);
+    //     vertex(v[0], v[1])
+    // });
+    vertex(width, height / 2);
+    vertex(width, height);
+    endShape(CLOSE);
+
+
+
+
+
     columns.forEach((column, ci) => {
         const w2 = width / 2;
         const w = w2 / numberOfRays;
         const x = w2 + (ci * w) + w / 2;
+        const y = height / 2;
         const h = map(column, 0, w2, height, 90);
         // inverse square law of brightness
-        const hue = map(column * column, 0, w2 * w2, 210, 10);
+        const hue = map(column * column, 0, w2 * w2, 210, 30);
         fill(hue);
         noStroke();
-        rect(x, height / 2, w + 1, h);
-    })
+        rect(x, y, w + 1, h);
+
+        const hue2 = map(column * column, 0, w2 * w2, 230, 30);
+        fill(hue2);
+        rect(x, y, w + 1, h / 6);
+
+        // const fx = x;
+        // const fy = y + h / 2;
+        // floors.push([fx, fy]);
+    });
+
 
 
 
