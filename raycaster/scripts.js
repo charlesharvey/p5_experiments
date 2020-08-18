@@ -1,7 +1,7 @@
 
-const fieldOfView = 60;
-const numberOfRays = 180;
-const numberOfBarriers = 5;
+const fieldOfView = 45;
+const numberOfRays = 120;
+const numberOfBarriers = 6;
 
 
 
@@ -96,7 +96,7 @@ function draw() {
         if (pt) {
 
             let d = dist(pt.x, pt.y, ray.pos.x, ray.pos.y); // fish eye effect for 3d;
-            const a = ray.dir.heading();
+            const a = ray.heading.heading() - ray.theta;
             d *= cos(a);
 
             columns[r] = d;
@@ -126,9 +126,10 @@ function draw() {
     columns.forEach((column, ci) => {
         const w2 = width / 2;
         const w = w2 / numberOfRays;
-        const x = w2 + (ci * w);
-        const h = map(column, 0, w2, height, 0);
-        const hue = map(column * column, 0, w2 * w2, 255, 0);
+        const x = w2 + (ci * w) + w / 2;
+        const h = map(column, 0, w2, height, 90);
+        // inverse square law of brightness
+        const hue = map(column * column, 0, w2 * w2, 210, 10);
         fill(hue);
         noStroke();
         rect(x, height / 2, w + 1, h);
