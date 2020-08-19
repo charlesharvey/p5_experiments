@@ -8,6 +8,7 @@ let ball;
 let ballSize = 20;
 let paddleThickness = 20;
 let paddleHeight = 100;
+let k;
 
 
 function setup() {
@@ -23,8 +24,8 @@ function setup() {
 
 
 function keyPressed(e) {
-
-    player1.move(e.key);
+    k = e.key;
+    // player1.move(e.key);
 }
 
 
@@ -35,6 +36,12 @@ function draw() {
 
     player1.show();
     player2.show();
+
+
+    if (keyIsPressed === true) {
+        player1.move(k);
+    }
+
 
 
     player2.ai(ball);

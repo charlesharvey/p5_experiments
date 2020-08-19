@@ -38,12 +38,12 @@ class Ball {
         if (x < paddleThickness) {
 
             if (y < (player2.y + player2.height) && y > (player2.y)) {
-                this.bounceX();
+                this.bounceX(player2.y);
             }
 
         } else if (x > (width - paddleThickness - this.size)) {
             if (y < (player1.y + player1.height) && y > (player1.y)) {
-                this.bounceX();
+                this.bounceX(player1.y);
             }
         }
 
@@ -65,10 +65,15 @@ class Ball {
         }
     }
 
-    bounceX() {
+    bounceX(ypos) {
         if (this.bouncing == false) {
             this.bouncing = true;
-            this.vel.x *= -1;
+
+            // change the angle of the ball based on
+            // where it hit the paddle
+            const newy = map(this.pos.y, ypos, ypos + paddleHeight, -5, 5);
+            this.vel.y = newy;
+            this.vel.x *= -1.07; // get a bit faster each time
         }
     }
 
@@ -89,6 +94,8 @@ class Ball {
 
     show() {
         fill(255, 255, 100);
-        rect(this.pos.x, this.pos.y, this.size, this.size);
+
+        rect(this.pos.x - this.size / 2, this.pos.y - this.size / 2, this.size, this.size);
+        // ellipse(this.pos.x, this.pos.y, this.size, this.size);
     }
 }

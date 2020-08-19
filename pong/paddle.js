@@ -8,7 +8,7 @@ class Paddle {
         this.width = paddleThickness;
 
         this.score = 0;
-        this.movement = 10;
+        this.movement = 7;
     };
 
 
@@ -33,15 +33,15 @@ class Paddle {
 
     ai(ball) {
 
+        if (Math.random() > 0.15) {
 
+            if (ball.pos.y > this.y + this.height) {
+                this.move('ArrowDown');
+            } else if (ball.pos.y < (this.y + (this.height / 2))) {
+                this.move('ArrowUp');
+            }
 
-        if (ball.pos.y > this.y + this.height) {
-            this.move('ArrowDown');
-        } else if (ball.pos.y < (this.y + (this.height / 2))) {
-            this.move('ArrowUp');
         }
-
-
 
 
     }
