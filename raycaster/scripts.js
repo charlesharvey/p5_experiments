@@ -22,6 +22,9 @@ function setup() {
     mx = width / 2;
     my = height / 2;
 
+    rectMode(CENTER);
+
+
 
 
     randomBarriers();
@@ -88,19 +91,25 @@ function keyPressed() {
 
 function draw() {
     background(0);
-    rectMode(CENTER);
+
+
 
 
     rays.forEach((ray, r) => {
-        let pt = ray.cast(barriers);
-        if (pt) {
+        let result = ray.cast(barriers);
+        if (result) {
 
-            let d = dist(pt.x, pt.y, ray.pos.x, ray.pos.y); // fish eye effect for 3d;
+            const pt = result.pt;
+            let d = result.d;
+            // let d =     dist(pt.x, pt.y, ray.pos.x, ray.pos.y); 
+            //  dont multiply by cos(a) for fish eye effect for 3d ; 
             const a = ray.heading.heading() - ray.theta;
             d *= cos(a);
 
             columns[r] = d;
 
+
+            result.barrier.shadow.push([r, d]);
 
             stroke(255, 40);
             line(pt.x, pt.y, ray.pos.x, ray.pos.y);
@@ -115,10 +124,11 @@ function draw() {
 
 
     barriers.forEach(barrier => {
-
         strokeWeight(1);
         stroke(255);
         line(barrier.a.x, barrier.a.y, barrier.b.x, barrier.b.y);
+
+
     });
 
 
@@ -143,6 +153,11 @@ function draw() {
     endShape(CLOSE);
 
 
+    // barriers.forEach(barrier => {
+
+    //     barrier.drawShadow();
+    //     barrier.resetShadow();
+    // });
 
 
 
@@ -166,6 +181,8 @@ function draw() {
         // const fy = y + h / 2;
         // floors.push([fx, fy]);
     });
+
+
 
 
 

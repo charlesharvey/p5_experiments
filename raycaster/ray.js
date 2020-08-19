@@ -35,6 +35,7 @@ class Ray {
     cast(walls) {
 
         let recordPoint = null;
+        let recordWall = null;
         let recordDist = 99999999;
         walls.forEach(wall => {
             const pt = this.getIntersectionPoint(wall);
@@ -44,11 +45,15 @@ class Ray {
                 if (d < recordDist) {
                     recordDist = d;
                     recordPoint = pt;
+                    recordWall = wall;
                 }
             }
         });
 
-        return recordPoint;
+        if (recordPoint) {
+            return { pt: recordPoint, d: recordDist, barrier: recordWall };
+        }
+
 
     }
 
