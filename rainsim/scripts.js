@@ -1,18 +1,17 @@
 
 let cols, rows;
 const grid = 40;  // size of grid
-const numberOfDrops = 2200;
+const numberOfDrops = 3200;
 const groundHeight = 36;
+const windStrength = 0.08;
+const cloudThreshold = 8; // droplets per grid square needed for a cloud to form
+const cloudMinHeight = 5;
 
 let gravity, wind;
 
 let windTheta = 0;
 
-
 let humidity; // 2d array of all the humidities in the scene.
-
-let cloudThreshold = 4;
-let cloudMinHeight = 5;
 
 let drops;
 
@@ -27,7 +26,10 @@ function setup() {
     cols = Math.ceil(width / grid);
     rows = Math.ceil(height / grid);
     gravity = createVector(0, 0.02);
-    wind = createVector(0, 0);
+
+    windTheta = random(1000, 10000);
+    wind = createVector(0.03, 0);
+    negativewind = createVector(-0.03, 0);
 
     humidity = [];
     for (let i = 0; i < cols; i++) {
@@ -71,14 +73,35 @@ function draw() {
     // }
 
 
-    wind.x = map(noise(windTheta), 0, 1, -0.005, 0.005);
+    wind.x = map(noise(windTheta), 0, 1, -windStrength, windStrength);
+    negativewind.x = map(noise(windTheta + 1000), 0, 1, windStrength, -windStrength);
+
+
+
+    marchingSquareRain();
 
 
 
 
     drops.forEach(drop => {
 
-        drop.applyForce(wind);
+
+        if (drop.pos.x > width * 2 / 3) {
+            drop.applyForce(wind);
+        } else if (drop.pos.x < width / 3) {
+            drop.applyForce(negativewind);
+        }
+
+        if (drop.pos.y > (height * 2 / 3)) {
+            drop.applyForce(wind);
+        } else if (drop.pos.y < height / 3) {
+            drop.applyForce(negativewind);
+        }
+
+
+
+
+
 
         drop.applyForce(gravity);
         drop.turbulence();
@@ -89,8 +112,6 @@ function draw() {
 
 
 
-
-    marchingSquareRain();
 
 
 
@@ -149,7 +170,7 @@ function marchingSquareRain() {
 
 
                 noStroke();
-                fill(255);
+                fill(200, 50, 90);
 
                 beginShape();
 
