@@ -56,30 +56,14 @@ function draw() {
     noStroke();
 
 
-
-    // how many drops per grid square
-    calculateHumidity();
+    marchingSquareRain();
 
 
 
-    // for (let i = 0; i < cols; i++) {
-    //     for (let j = 0; j < rows; j++) {
-    //         const sa = map(humidity[i][j], 0, 10, 0, 100);
-    //         fill(200, sa, 100);
-    //         rect(i * grid, j * grid, grid, grid);
-
-
-    //     }
-    // }
 
 
     wind.x = map(noise(windTheta), 0, 1, -windStrength, windStrength);
     negativewind.x = map(noise(windTheta + 1000), 0, 1, windStrength, -windStrength);
-
-
-
-    marchingSquareRain();
-
 
 
 
@@ -116,7 +100,7 @@ function draw() {
 
 
     // draw ground
-    fill(100, 100, 90)
+    fill(100, 80, 70)
     rect(0, height - groundHeight, width, groundHeight);
 
 
@@ -140,6 +124,13 @@ function calculateHumidity() {
 
 function marchingSquareRain() {
 
+
+    // how many drops per grid square
+    calculateHumidity();
+
+
+
+    noStroke();
 
 
     for (let i = 0; i < cols - 1; i++) {
@@ -167,10 +158,9 @@ function marchingSquareRain() {
                 const d1 = createVector(i * grid, (j + 1) * grid);
 
 
-
-
-                noStroke();
-                fill(200, 50, 90);
+                const br = map(state, 0, 15, 90, 100);
+                const sa = map(state, 0, 15, 100, 30);
+                fill(200, sa, br);
 
                 beginShape();
 

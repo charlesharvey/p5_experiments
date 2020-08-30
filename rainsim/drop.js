@@ -39,8 +39,10 @@ class Drop {
         }
 
 
-        this.acc.limit(this.m);
+
         this.vel.limit(this.m);
+        this.acc.limit(this.m);
+
 
         this.i = this.whichI(this.pos.x);
         this.j = this.whichJ(this.pos.y);
