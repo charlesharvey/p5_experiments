@@ -3,7 +3,7 @@ let cols, rows;
 const grid = 40;  // size of grid
 const numberOfDrops = 3200;
 const groundHeight = 36;
-const windStrength = 0.08;
+const windStrength = 0.04;
 const cloudThreshold = 8; // droplets per grid square needed for a cloud to form
 const cloudMinHeight = 5;
 
