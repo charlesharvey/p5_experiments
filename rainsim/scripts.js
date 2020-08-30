@@ -25,7 +25,7 @@ function setup() {
 
     cols = Math.ceil(width / grid);
     rows = Math.ceil(height / grid);
-    gravity = createVector(0, 0.02);
+    gravity = createVector(0, 0.024);
 
     windTheta = random(1000, 10000);
     wind = createVector(0.03, 0);

@@ -10,7 +10,7 @@ class Drop {
         this.i = this.whichI(this.pos.x);
         this.j = this.whichJ(this.pos.y);
 
-        this.r = 2;
+
         this.m = random(2.1, 5.1);
 
         this.theta = random(1000, 100000);
@@ -26,7 +26,7 @@ class Drop {
 
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        // this.acc.mult(0);
+
 
         if (this.pos.y > height - groundHeight) {
             this.pos.y = height - groundHeight;
@@ -42,6 +42,8 @@ class Drop {
 
         this.vel.limit(this.m);
         this.acc.limit(this.m);
+
+        this.acc.mult(0.999);
 
 
         this.i = this.whichI(this.pos.x);
