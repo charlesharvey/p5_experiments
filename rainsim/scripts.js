@@ -3,13 +3,19 @@ let cols, rows;
 const grid = 40;  // size of grid
 const numberOfDrops = 3200;
 const groundHeight = 36;
-const windStrength = 0.04;
+
 const cloudThreshold = 8; // droplets per grid square needed for a cloud to form
 const cloudMinHeight = 5;
+
+const gravityStrength = 0.154;
+const maxConvectionStrength = 0.7034;
+const windStrength = 0.0714;
 
 let gravity, wind;
 
 let windTheta = 0;
+let convectionTheta = 0;
+let convectionStrength;
 
 let humidity; // 2d array of all the humidities in the scene.
 
@@ -25,8 +31,9 @@ function setup() {
 
     cols = Math.ceil(width / grid);
     rows = Math.ceil(height / grid);
-    gravity = createVector(0, 0.024);
+    gravity = createVector(0, gravityStrength);
 
+    convectionTheta = random(1000, 10000);
     windTheta = random(1000, 10000);
     wind = createVector(0.03, 0);
     negativewind = createVector(-0.03, 0);
@@ -62,29 +69,17 @@ function draw() {
 
 
 
-    wind.x = map(noise(windTheta), 0, 1, -windStrength, windStrength);
-    negativewind.x = map(noise(windTheta + 1000), 0, 1, windStrength, -windStrength);
-
+    wind.x = map(noise(windTheta), 0, 1, 0, windStrength);
+    negativewind.x = map(noise(windTheta + 1000), 0, 1, 0, -windStrength);
+    convectionStrength = map(noise(convectionTheta), 0, 1, maxConvectionStrength / 3, maxConvectionStrength);
 
 
     drops.forEach(drop => {
 
 
-        if (drop.pos.x > width * 2 / 3) {
-            drop.applyForce(wind);
-        } else if (drop.pos.x < width / 3) {
-            drop.applyForce(negativewind);
-        }
-
-        if (drop.pos.y > (height * 2 / 3)) {
-            drop.applyForce(wind);
-        } else if (drop.pos.y < height / 3) {
-            drop.applyForce(negativewind);
-        }
 
 
-
-
+        drop.wind();
 
 
         drop.applyForce(gravity);
@@ -106,6 +101,7 @@ function draw() {
 
 
     windTheta += 0.01;
+    convectionTheta += 0.04;
     // noLoop();
 
 

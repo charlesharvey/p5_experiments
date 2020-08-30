@@ -12,8 +12,11 @@ class Cell {
         this.r = grid / 2;
 
 
+        this.heading = 0; // this.vel.heading();
 
-        this.maxSpeed = 1;  // how fast can cell go
+
+
+        this.maxSpeed = cellMaxSpeed;  // how fast can cell go
 
 
         this.senseRange = cellSenseRange;
@@ -29,17 +32,19 @@ class Cell {
         this.i = this.whichI(this.pos.x);
         this.j = this.whichJ(this.pos.y);
 
+        // this.heading = this.vel.heading();
+
 
         // if about to go off board, bounce them;
         if (this.pos.x < 0) {
             this.pos.x = width;
         } else if (this.pos.x > width) {
-            this.vel.x = 0;
+            this.pos.x = 0;
         }
         if (this.pos.y < 0) {
-            this.vel.y = height;
+            this.pos.y = height;
         } else if (this.pos.y > height) {
-            this.vel.y = 0;
+            this.pos.y = 0;
         }
     }
 
@@ -79,15 +84,18 @@ class Cell {
         let recordtheta;
         let recordAmount = -1;
 
-        for (let theta = 0; theta < TWO_PI; theta += (TWO_PI / this.sensePrecision)) {
+
+        const starttheta = this.heading;
+        for (let theta = starttheta; theta < TWO_PI + starttheta; theta += (TWO_PI / this.sensePrecision)) {
 
             // another loop to check different positions away at a specif angle;
             // ie check 90 degrees , but at 1m 2m 3m and 4m away. add them all up
 
             let amountAtThisAngle = 0;
             for (let d = 1; d <= this.distancesToCheck; d++) {
-                const x = sin(theta) * (this.senseRange * (d / this.distancesToCheck));
-                const y = cos(theta) * (this.senseRange * (d / this.distancesToCheck));
+                const r = (this.senseRange * (d / this.distancesToCheck))
+                const x = sin(theta) * r;
+                const y = cos(theta) * r;
                 const ti = this.whichI(this.pos.x + x);
                 const tj = this.whichJ(this.pos.y + y);
                 if (ti && tj) {

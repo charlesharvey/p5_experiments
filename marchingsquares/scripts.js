@@ -2,7 +2,7 @@
 
 
 
-const grid = 30;
+const grid = 20;
 const threshold = 0.5;
 let rows, cols;
 
@@ -14,14 +14,14 @@ function setup() {
 
     createCanvas(windowWidth - 20, windowHeight - 20);
 
-    rows = Math.floor(height / grid) + 1;
-    cols = Math.floor(width / grid) + 1;
+    rows = Math.floor(height / grid) + 2;
+    cols = Math.floor(width / grid) + 2;
 
     field = [];
     for (let i = 0; i < cols; i++) {
         field[i] = [];
         for (let j = 0; j < rows; j++) {
-            field[i][j] = 0;
+            field[i][j] = noise(theta + ((j * cols + i)));
         }
     }
 
@@ -29,19 +29,36 @@ function setup() {
 }
 
 
+function mouseMoved() {
+
+    const xx = Math.floor(mouseX / grid);
+    const yy = Math.floor(mouseY / grid);
+
+    const r = 5;
+    const diff = random(-0.05, 0.05);
+
+    if (xx > r && yy > r && xx < cols - r && yy < rows - r) {
+        for (let i = -r; i < r; i++) {
+            for (let j = -r; j < r; j++) {
+                field[i + xx][j + yy] += diff;
+            }
+        }
+    }
+}
+
 
 function draw() {
     background(0);
     noStroke();
 
 
-    for (let i = 0; i < cols; i++) {
-        field[i] = [];
-        for (let j = 0; j < rows; j++) {
-            const ind = j * cols + i;
-            field[i][j] = noise(theta + ((ind)));
-        }
-    }
+    // for (let i = 0; i < cols; i++) {
+    //     field[i] = [];
+    //     for (let j = 0; j < rows; j++) {
+    //         const ind = j * cols + i;
+    //         field[i][j] = noise(theta + ((ind)));
+    //     }
+    // }
 
 
 

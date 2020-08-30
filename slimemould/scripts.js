@@ -9,9 +9,10 @@ let pheremones;
 
 const numberOfCells = 1000;
 const grid = 4;  // size of grid
-const degredationSpeed = 0.92;            // pheremones degrade over time
-const cellSenseRange = 50;       // how far can they sense pheremone
-const cellSensePrecision = 15;         // how many angles does the cell check around it
+const degredationSpeed = 0.93;            // pheremones degrade over time
+const cellSenseRange = 40;       // how far can they sense pheremone
+const cellSensePrecision = 10;         // how many angles does the cell check around it
+const cellMaxSpeed = 1.3;         // how many angles does the cell check around it
 
 function setup() {
 
@@ -83,7 +84,7 @@ function draw() {
         cell.update();
         cell.sensePheremone();
         cell.depositPheremone();
-        //   cell.show();
+        // cell.show();
     });
 
 
@@ -101,13 +102,14 @@ function diffusePheremones() {
     }
     for (let i = 1; i < cols - 1; i++) {
         for (let j = 1; j < rows - 1; j++) {
-            let amount = 0;
+            let amount = pheremones[i][j];
+            // add the center one twice so diffusion is less storng
             for (let x = -1; x <= 1; x++) {
                 for (let y = -1; y <= 1; y++) {
                     amount += pheremones[i + x][j + y];
                 }
             }
-            newpheremones[i][j] = amount / 9;
+            newpheremones[i][j] = amount / 10;
         }
     }
     for (let i = 0; i < cols; i++) {
