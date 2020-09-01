@@ -9,7 +9,7 @@ const cloudMinHeight = 5;
 
 const gravityStrength = 0.154;
 const maxConvectionStrength = 0.7034;
-const windStrength = 0.0714;
+const windStrength = 0.1114;
 
 let gravity, wind;
 
@@ -77,11 +77,7 @@ function draw() {
     drops.forEach(drop => {
 
 
-
-
         drop.wind();
-
-
         drop.applyForce(gravity);
         drop.turbulence();
         drop.convect();

@@ -2,7 +2,7 @@ class Drop {
 
 
     constructor() {
-        this.pos = createVector(random(width), random(0, height / 2));
+        this.pos = createVector(random(width), random(height));
 
         this.vel = createVector(0, 0);
         this.acc = createVector(0, 0);
@@ -85,9 +85,9 @@ class Drop {
 
 
     wind() {
-        if (this.pos.y > (height * 2 / 3)) {
+        if (this.pos.y > (height / 2)) {
             this.applyForce(wind);
-        } else if (this.pos.y < height / 3) {
+        } else if (this.pos.y < height / 2) {
             this.applyForce(negativewind);
         }
     }
