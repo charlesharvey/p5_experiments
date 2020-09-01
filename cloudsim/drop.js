@@ -85,9 +85,9 @@ class Drop {
 
 
     wind() {
-        if (this.pos.y > (height / 2)) {
+        if (this.pos.y > (height * 2 / 3)) {
             this.applyForce(wind);
-        } else if (this.pos.y < height / 2) {
+        } else if (this.pos.y < height / 3) {
             this.applyForce(negativewind);
         }
     }
