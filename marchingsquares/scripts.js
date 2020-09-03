@@ -2,17 +2,23 @@
 
 
 
-const grid = 20;
-const threshold = 0.5;
+const grid = 25;
+const threshold = 0.54;
 let rows, cols;
-
 let field;
 let theta = 0;
+
+let cx, cy;
 
 function setup() {
 
 
     createCanvas(windowWidth - 20, windowHeight - 20);
+
+
+    cx = width / 2;
+    cy = height / 2;
+
 
     rows = Math.floor(height / grid) + 2;
     cols = Math.floor(width / grid) + 2;
@@ -29,21 +35,27 @@ function setup() {
 }
 
 
-function mouseMoved() {
-
-    const xx = Math.floor(mouseX / grid);
-    const yy = Math.floor(mouseY / grid);
+function changeSquares(x, y) {
+    const xx = Math.floor(x / grid);
+    const yy = Math.floor(y / grid);
 
     const r = 5;
-    const diff = random(-0.05, 0.05);
+    const diff = random(0.05, 0.15);
 
     if (xx > r && yy > r && xx < cols - r && yy < rows - r) {
         for (let i = -r; i < r; i++) {
             for (let j = -r; j < r; j++) {
-                field[i + xx][j + yy] += diff;
+                field[i + xx][j + yy] = (field[i + xx][j + yy] + diff) % 1;
             }
         }
     }
+}
+
+
+function mouseMoved() {
+
+    changeSquares(mouseX, mouseY);
+
 }
 
 
@@ -52,16 +64,12 @@ function draw() {
     noStroke();
 
 
-    // for (let i = 0; i < cols; i++) {
-    //     field[i] = [];
-    //     for (let j = 0; j < rows; j++) {
-    //         const ind = j * cols + i;
-    //         field[i][j] = noise(theta + ((ind)));
-    //     }
-    // }
+    1
 
 
-
+    changeSquares(cx, cy);
+    cx = (cx + random(-15, 15)) % width;
+    cy = (cy + random(-15, 15)) % height;
 
 
     for (let i = 0; i < cols - 1; i++) {
