@@ -1,12 +1,13 @@
 
 
 const r = 300;
-const numberOfCrossings = 250;
-let percentageToCover = 0.01;
-const detailInSquiggle = 120;
+const numberOfCrossings = 240;
+let percentageToCover = 0;
+const detailInSquiggle = 130;
 let zeta = 0;
 let rippyzeta = 0;
 let ripplyness;
+// let edges, otheredges;
 function setup() {
 
 
@@ -28,7 +29,8 @@ function draw() {
     noFill();
 
 
-
+    // let edges = [];
+    // let otheredges = [];
     ripplyness = map(sin(rippyzeta), -1, 1, 1, 10);
 
     let currentAngle = PI;
@@ -66,6 +68,8 @@ function draw() {
             beginShape();
             for (let d = 0; d <= detailInSquiggle; d++) {
 
+
+
                 const dd = Math.pow(d / detailInSquiggle, 1);
 
                 const bx = (ripplyness * 3) * map(Math.sin((j / (ripplyness + 20)) + (d / ripplyness + 2) + zeta), -1, 1, 0, 1);
@@ -73,6 +77,15 @@ function draw() {
 
                 let dx = lerp(x, prevX, dd) + bx;
                 let dy = lerp(y, prevY, dd) + by;
+
+                // if (d == detailInSquiggle - 1) {
+                //     if (j % 2 == 0) {
+                //         edges.push([dx, dy]);
+                //     } else {
+                //         otheredges.push([dx, dy]);
+                //     }
+
+                // }
 
 
 
@@ -93,6 +106,19 @@ function draw() {
 
     }
 
+
+    // fill(0, 255, 0, 30)
+    // noStroke();
+    // beginShape();
+    // edges.reverse();
+    // edges.forEach(edge => {
+    //     vertex(edge[0], edge[1]);
+    // });
+
+    // otheredges.forEach(edge => {
+    //     vertex(edge[0], edge[1]);
+    // });
+    // endShape();
 
 
     if (percentageToCover < 1) {

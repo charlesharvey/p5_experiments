@@ -13,13 +13,16 @@ class Particle {
         if (this.type == 'blargon') {
             this.hue = color(100, 100, 255);
             this.repelDistance = 10;
+            this.attractDistance = 100;
         } else if (this.type == 'zeptron') {
-            this.hue = color(100, 255, 100);
+            this.hue = color(255, 100, 100);
             this.repelDistance = 9;
+            this.attractDistance = 100;
 
         } else { //gloopton
-            this.hue = color(200, 55, 100);
+            this.hue = color(55, 200, 100);
             this.repelDistance = 3;
+            this.attractDistance = 100;
 
         }
     }
@@ -34,40 +37,47 @@ class Particle {
 
 
     attracted(other) {
-        const force = p5.Vector.sub(other.pos, this.pos);
-        let dir2 = force.magSq(); // square the distance between the other and current position;
-        dir2 = constrain(dir2, 0, 1000);
-        const g = 4.987;
-        const strength = g / dir2;
-        force.setMag(strength);
-
-
 
 
         const d = dist(other.pos.x, other.pos.y, this.pos.x, this.pos.y);
 
-        const multiplier = this.particleForce(this, other, d);
-        force.mult(multiplier);
+        if (d > this.attractDistance) {
 
-        //     if (d < this.repelDistance) {
-        //         //         force.mult(-100);
-        //     } else {
-        // }
+        } else {
 
-        // } else {
-        //     force.mult(-1);
-        // }
-
+            const force = p5.Vector.sub(other.pos, this.pos);
+            let dir2 = force.magSq(); // square the distance between the other and current position;
+            dir2 = constrain(dir2, 0, 1000);
+            const g = 4.987;
+            const strength = g / dir2;
+            force.setMag(strength);
 
 
-        this.applyForce(force);
+            const multiplier = this.particleForce(this, other, d);
+            force.mult(multiplier);
+
+            if (d < this.repelDistance) {
+                force.mult(0.1);
+                //     // } else {
+            }
+            // } else {
+            //     force.mult(-1);
+            // }
+
+
+
+            this.applyForce(force);
+        }
+
+
     }
 
     update() {
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.vel.limit(6);
+        this.vel.limit(4);
         this.acc.mult(0); // createVector(0, 0);
+        // this.acc.mult(0.9);
 
         this.edges();
     }
@@ -103,7 +113,7 @@ class Particle {
             if (distance < p1.repelDistance) {
                 return 3;
             } else {
-                return -10;
+                return 7;
             }
 
         }
@@ -113,7 +123,7 @@ class Particle {
             if (distance < p1.repelDistance) {
                 return 1;
             } else {
-                return 3;
+                return -3;
             }
         }
         if (
@@ -128,7 +138,7 @@ class Particle {
 
         if (p1.type == 'blargon' && p2.type == 'blargon') {
             if (distance < p1.repelDistance) {
-                return -100;
+                return -3;
             } else {
                 return 4;
             }
@@ -137,7 +147,7 @@ class Particle {
             p1.type == 'blargon' && p2.type == 'zeptron' ||
             p2.type == 'blargon' && p1.type == 'zeptron') {
             if (distance < p1.repelDistance) {
-                return -5;
+                return 5;
             } else {
                 return 0;
             }
