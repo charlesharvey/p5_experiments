@@ -26,7 +26,7 @@ class Car {
         this.acc.mult(0);
 
 
-        // this.edges();
+        this.edges();
 
 
 
@@ -138,16 +138,21 @@ class Car {
 
 
     edges() {
-        if (this.pos.x > width) {
-            this.pos.x = 0;
-        } else if (this.pos.x < 0) {
-            this.pos.x = width;
-        }
+        // if (this.pos.x > width) {
+        //     this.pos.x = 0;
+        // } else if (this.pos.x < 0) {
+        //     this.pos.x = width;
+        // }
 
-        if (this.pos.y > height) {
-            this.pos.y = 0;
-        } else if (this.pos.y < 0) {
-            this.pos.y = height;
+        // if (this.pos.y > height) {
+        //     this.pos.y = 0;
+        // } else if (this.pos.y < 0) {
+        //     this.pos.y = height;
+        // }
+
+
+        if (Math.abs(this.pos.x) > width * 2 || Math.abs(this.pos.y) > height * 2) {
+            this.pos.set(width / 2, height / 2);
         }
     }
 

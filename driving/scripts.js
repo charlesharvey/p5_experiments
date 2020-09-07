@@ -138,6 +138,8 @@ function draw() {
         fill(winner.hue, 255, 255);
         textSize(40);
         text(`game over`, width / 2, height / 2);
+        text(`wins`, width / 2 + 45, height / 2 + 40);
+        rect(width / 2 + 20, height / 2 + 30, 35, 35);
 
     }
 
