@@ -3,7 +3,7 @@
 
 let rows;
 let cols;
-const grid = 8;
+let grid = 15;
 const speed = 0.05;
 
 
@@ -59,6 +59,9 @@ function draw() {
     // mobile friendlyness
 
 
+    let previousshadow = [];
+    let shadow = [];
+
     for (let y = 0; y < rows; y++) {
 
         beginShape();
@@ -82,7 +85,7 @@ function draw() {
 
         let depthDistance = map(y, 0, rows, 0.5, 1);
 
-        let maxDepth = map(noise(y / 100 + depthNoise), 0, 1, 50, height * 2);
+        let maxDepth = map(noise(y / 100 + depthNoise), 0, 1, 50, height * 2.6);
         maxDepth *= depthDistance;
         const maxNoise = map(y, 0, rows, 1, 10);
 
@@ -93,6 +96,9 @@ function draw() {
         // mobile friendlyness
 
         let riverpoint;
+
+
+        shadow = [];
 
         for (let x = 0; x < width; x += grid) {
 
@@ -126,6 +132,12 @@ function draw() {
                 }
 
 
+                if (x > midPoint && x < endCliffPos) {
+                    shadow.push(createVector(x, yy))
+                }
+
+
+
             }
 
 
@@ -137,7 +149,20 @@ function draw() {
         endShape();
 
 
+        if (shadow && previousshadow) {
+            noStroke()
+            fill(10, 105, 30, 140);
 
+            beginShape();
+            shadow.forEach(s => {
+                vertex(s.x, s.y);
+            })
+            previousshadow.reverse().forEach(s => {
+                vertex(s.x, s.y);
+            })
+            endShape();
+        }
+        previousshadow = shadow;
 
 
         if (riverpoint) {
@@ -148,7 +173,6 @@ function draw() {
 
 
     }
-
 
 
 
@@ -172,4 +196,15 @@ function draw() {
     endCliffNoise += speed;
     canyonNoise += 0.001;
     depthNoise += 0.004;
+
+
+
+    if (frameRate() > 10 && grid > 8) {
+        grid--;
+        rows = height / grid;
+        cols = width / grid;
+
+    }
+
+
 }
