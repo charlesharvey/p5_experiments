@@ -2,11 +2,16 @@
 
 
 const inputsize = 2;
-const hiddensize = 3;
-const outputsize = 2;
+const hiddensize = 6;
+const outputsize = 1;
 
 const layer_sizes = [inputsize, hiddensize, outputsize];
 
+
+const randomSliding = false;
+const usingBrain = true;
+
+let brain;
 
 let b1sliders, b2sliders, w1sliders, w2sliders;
 
@@ -20,7 +25,7 @@ let w1x, a1, w2a1, a2;
 
 
 let maxgrid = 11;
-const scale = 250;
+let scale = 250;
 let grid = maxgrid;
 let theta = Math.random();
 const graphsize = 300;
@@ -38,6 +43,10 @@ function setup() {
 
     createCanvas(windowWidth - 20, windowHeight - 180);
 
+    if (usingBrain) {
+        brain = new Neuralnetwork(inputsize, hiddensize, outputsize);
+        scale = 1;
+    }
 
     reset();
 
@@ -57,13 +66,13 @@ function createSliders() {
     createP('Biases');
     b1sliders = [];
     b1.map((v, i, a) => {
-        b1sliders.push(createSlider(-scale, scale, v, 1));
+        b1sliders.push(createSlider(-scale, scale, v, scale / 100));
     });
 
 
     b2sliders = [];
     b2.map((v, i, a) => {
-        b2sliders.push(createSlider(-scale, scale, v, 1));
+        b2sliders.push(createSlider(-scale, scale, v, scale / 100));
     });
 
     createP('Weights');
@@ -134,38 +143,87 @@ function draw() {
     if (graphVisible) {
 
 
+        if (usingBrain) {
+
+            for (let i = 0; i < 150; i++) {
+                trainBrain();
+            }
+            changeSlidersUsingBrain();
+        }
+
 
 
         for (let x = 0; x < graphsize - grid; x += grid) {
             for (let y = 0; y < graphsize - grid; y += grid) {
 
 
-                const f1 = map(x, 0, graphsize, -scale, scale);
-                const f2 = map(y, 0, graphsize, -scale, scale);
-                const input = [f1, f2];
-
-                while (input.length < inputsize) {
-                    input.push(x);
-                }
-
-                let xx = math.matrix(input);
-
-                w1x = math.multiply(w1, xx)
-                a1 = math.add(w1x, b1).map((value, index, matrix) => activation(value));
 
 
-                w2a1 = math.multiply(w2, a1)
-                a2 = math.add(w2a1, b2).map((value, index, matrix) => activation(value));
+                let r = 0.5;
+                let p = 0.5;
+                if (usingBrain) {
+                    const f1 = map(x, 0, graphsize, 0, 1);
+                    const f2 = map(y, 0, graphsize, 1, 0);
+                    const input = [f1, f2];
 
-                const r = math.subset(a2, math.index(0));
-                const p = math.subset(a2, math.index(1));
+                    const output = brain.feedforward(input);
+                    r = output[0];
+                    p = 0.5;
+                    if (output.length > 1) {
+                        p = output[1];
+                        if (r < p) {
+                            fill(255, 0, 0);
+                        } else {
+                            fill(0, 255, 0);
+                        }
+                    } else {
+                        fill((1 - r) * 250)
 
-                if (r < p) {
-                    fill(255, 0, 0);
+                    }
+
+
+
+
+
+
                 } else {
-                    fill(0, 255, 0);
-                }
+
+                    const f1 = map(x, 0, graphsize, -scale, scale);
+                    const f2 = map(y, 0, graphsize, -scale, scale);
+                    const input = [f1, f2];
+
+                    while (input.length < inputsize) {
+                        input.push(x);
+                    }
+
+                    let xx = math.matrix(input);
+
+                    w1x = math.multiply(w1, xx)
+                    a1 = math.add(w1x, b1).map((value, index, matrix) => activation(value));
+
+
+                    w2a1 = math.multiply(w2, a1)
+                    a2 = math.add(w2a1, b2).map((value, index, matrix) => activation(value));
+
+                    r = math.subset(a2, math.index(0));
+                    p = 2;
+                    if (outputsize > 1) {
+                        p = math.subset(a2, math.index(1));
+                    }
+
+
+
+                    if (r < p) {
+                        fill(255, 0, 0);
+                    } else {
+                        fill(0, 255, 0);
+                    }
+
+
+                } // if not using brain
+
                 rect(x + grid, y + grid, grid, grid);
+
 
                 // console.log(r, p);
 
@@ -194,7 +252,7 @@ function draw() {
         const index = i[1] * hiddensize + i[0];
         //  text(`W1-${index}: ${v}`, graphsize + 30, index * 20 + 30);
         // 
-        if (automatic) {
+        if (randomSliding) {
             const val = sin(index + theta * 2);
             w1sliders[index].elt.value = val;
             return val;
@@ -208,7 +266,7 @@ function draw() {
         //  text(`W2-${index}: ${v}`, graphsize + 30, index * 20 + 190);
         // 
 
-        if (automatic) {
+        if (randomSliding) {
             const val = sin(index + theta);
             w2sliders[index].elt.value = val;
             return val;
@@ -293,36 +351,91 @@ function draw() {
 }
 
 
-    // x = [];
-    // for (let i = 0; i < inputsize; i++) {
-    //     x.push(Math.random());
-    // }
+// x = [];
+// for (let i = 0; i < inputsize; i++) {
+//     x.push(Math.random());
+// }
 
 
-    // w1 = [];
-    // for (let i = 0; i < hiddensize; i++) {
-    //     let neww = []
-    //     for (let j = 0; j < inputsize; j++) {
-    //         neww.push(Math.random());
-    //     }
-    //     w1.push(neww)
-    // }
+// w1 = [];
+// for (let i = 0; i < hiddensize; i++) {
+//     let neww = []
+//     for (let j = 0; j < inputsize; j++) {
+//         neww.push(Math.random());
+//     }
+//     w1.push(neww)
+// }
 
-    // b1 = [];
-    // for (let i = 0; i < hiddensize; i++) {
-    //     b1.push(Math.random());
-    // }
+// b1 = [];
+// for (let i = 0; i < hiddensize; i++) {
+//     b1.push(Math.random());
+// }
 
-    // w2 = [];
-    // for (let i = 0; i < outputsize; i++) {
-    //     let neww = []
-    //     for (let j = 0; j < hiddensize; j++) {
-    //         neww.push(Math.random());
-    //     }
-    //     w2.push(neww)
-    // }
+// w2 = [];
+// for (let i = 0; i < outputsize; i++) {
+//     let neww = []
+//     for (let j = 0; j < hiddensize; j++) {
+//         neww.push(Math.random());
+//     }
+//     w2.push(neww)
+// }
 
-    // b2 = [];
-    // for (let i = 0; i < hiddensize; i++) {
-    //     b2.push(Math.random());
-    // }
+// b2 = [];
+// for (let i = 0; i < hiddensize; i++) {
+//     b2.push(Math.random());
+// }
+
+
+
+function changeSlidersUsingBrain() {
+    let biases_h = brain.bias_h.toArray();
+    biases_h.forEach((b, i) => {
+        b1sliders[i].elt.value = b;
+    });
+
+    let biases_o = brain.bias_o.toArray();
+    biases_o.forEach((b, i) => {
+        b2sliders[i].elt.value = b;
+    });
+
+
+
+    let weights_h2 = brain.weights_ho.toArray();
+    weights_h2.forEach((w, i) => {
+        w2sliders[i].elt.value = w;
+    })
+    let weights_h1 = brain.weights_ih.toArray();
+    weights_h1.forEach((w, i) => {
+        w1sliders[i].elt.value = w;
+    })
+
+
+
+
+
+}
+function trainBrain() {
+    if (outputsize == 1) {
+
+        // XOR
+        brain.train([1, 1], [0]);
+        brain.train([1, 0], [1]);
+        brain.train([0, 1], [1]);
+        brain.train([0, 0], [0]);
+
+
+        // circle
+        // const x = Math.random();
+        // const y = Math.random();
+        // const d = dist(x, y, 0.5, 0.5);
+        // brain.train([x, y], [d]);
+
+
+    } else {
+        brain.train([1, 1], [1, 0]);
+        brain.train([1, 0], [0, 1]);
+        brain.train([0, 1], [0, 1]);
+        brain.train([0, 0], [0, 1]);
+    }
+
+}
