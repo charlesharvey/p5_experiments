@@ -18,12 +18,15 @@ let b2;
 
 let w1x, a1, w2a1, a2;
 
+
+let maxgrid = 11;
 const scale = 250;
-let grid = 5;
+let grid = maxgrid;
 let theta = Math.random();
 const graphsize = 300;
 const diagramsize = 240;
 let graphVisible = false;
+let automatic = false;
 
 
 function activation(n) {
@@ -76,7 +79,13 @@ function createSliders() {
 
 }
 
+function mousePressed() {
+    // grid = maxgrid;
+}
+
 function reset() {
+
+    grid = maxgrid;
 
     graphVisible = false;
 
@@ -184,19 +193,29 @@ function draw() {
     w1 = w1.map((v, i, a) => {
         const index = i[1] * hiddensize + i[0];
         //  text(`W1-${index}: ${v}`, graphsize + 30, index * 20 + 30);
-        // return w1sliders[index].value();
-        const val = sin(index + theta * 2);
-        w1sliders[index].elt.value = val;
-        return val;
+        // 
+        if (automatic) {
+            const val = sin(index + theta * 2);
+            w1sliders[index].elt.value = val;
+            return val;
+        } else {
+            return w1sliders[index].value();
+        }
     });
 
     w2 = w2.map((v, i, a) => {
         const index = i[1] * outputsize + i[0];
         //  text(`W2-${index}: ${v}`, graphsize + 30, index * 20 + 190);
-        // return w2sliders[index].value();
-        const val = sin(index + theta);
-        w2sliders[index].elt.value = val;
-        return val;
+        // 
+
+        if (automatic) {
+            const val = sin(index + theta);
+            w2sliders[index].elt.value = val;
+            return val;
+        } else {
+            return w2sliders[index].value();
+        }
+
     });
 
 
@@ -264,6 +283,11 @@ function draw() {
 
     }
 
+
+
+    // if (grid > 3 && frameRate() > 10) {
+    //     grid--;
+    // }
 
 
 }
