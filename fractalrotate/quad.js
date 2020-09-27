@@ -7,7 +7,7 @@ class Quad {
 
         this.width = bird.width / (Math.pow(2, level));
 
-
+        this.maxlevel = 5;
         this.x = x;
         this.y = y;
 
@@ -50,7 +50,7 @@ class Quad {
 
     splitIntoFour() {
         if (!this.moving) {
-            if (this.level < 6) {
+            if (this.level < this.maxlevel) {
                 if (this.children) {
                     this.children.forEach(quad => quad.splitIntoFour());
                 } else {
@@ -64,6 +64,23 @@ class Quad {
         }
 
 
+
+
+    }
+
+
+
+    finished() {
+        if (this.level == this.maxlevel && this.finishedmoving) {
+            return true;
+        }
+
+        if (this.children) {
+            if (this.children[3].finished() && this.children[0].finished) {
+                return true;
+            }
+        }
+        return false;
     }
 
     update() {
