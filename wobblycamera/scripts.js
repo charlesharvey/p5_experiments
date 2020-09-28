@@ -79,8 +79,7 @@ function randomize() {
     let maxy = -Infinity;
     for (let x = 0; x < width; x += 1) {
         for (let y = 0; y < height; y += 1) {
-            // const xx = Math.floor(map(x, 0, width, 0, vw));
-            // const yy = Math.floor(map(y, 0, height, 0, vh));
+
             const pt = new Point(x, y);
             points.push(pt);
 
