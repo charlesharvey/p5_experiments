@@ -50,7 +50,7 @@ function draw() {
 
 
 
-    let canyonPadding = map(noise(paddingNoise), 0, 1, 00, 300);
+    let canyonPadding = map(noise(paddingNoise), 0, 1, 0, 300);
 
     // mobile friendlyness
     if (windowWidth < 600) {
@@ -77,8 +77,17 @@ function draw() {
 
         const startCliffN = noise(startCliffNoise + (y / 30));
         const endCliffN = noise(endCliffNoise + (y / 30));
-        const startCliffPos = map(startCliffN, 0, 1, canyonPadding, width / 2 - (canyonPadding / 2));
-        const endCliffPos = map(endCliffN, 0, 1, width / 2 + (canyonPadding / 2), width - canyonPadding);
+
+        // NOT OVERLAPPING
+        // const startCliffPos = map(startCliffN, 0, 1, canyonPadding, width / 2 - (canyonPadding / 2));
+        // const endCliffPos = map(endCliffN, 0, 1, width / 2 + (canyonPadding / 2), width - canyonPadding);
+
+        // can overlap
+        const startCliffPos = map(startCliffN, 0, 1, canyonPadding, width / 2 + (canyonPadding / 2));
+        const endCliffPos = map(endCliffN, 0, 1, width / 2 - (canyonPadding / 2), width - canyonPadding);
+
+
+
 
         const midPoint = (endCliffPos + startCliffPos) / 2;
 
@@ -149,6 +158,29 @@ function draw() {
         endShape();
 
 
+        if (riverpoint) {
+            noStroke();
+            fill(50, 170, 255);
+            ellipse(riverpoint.x, riverpoint.y + grid, grid * 2, grid * 4);
+        }
+
+
+
+        if (y == 0) {
+            fill(200, 220, 255);
+            noStroke();
+            beginShape();
+            vertex(skypoints[0].x, skypoints[0].y - 30);
+            skypoints.forEach(rp => {
+                vertex(rp.x, rp.y);
+            });
+            vertex(skypoints[skypoints.length - 1].x, skypoints[skypoints.length - 1].y - 30);
+            endShape(CLOSE);
+        }
+
+
+
+
         if (shadow && previousshadow) {
             noStroke()
             fill(10, 105, 30, 140);
@@ -165,11 +197,8 @@ function draw() {
         previousshadow = shadow;
 
 
-        if (riverpoint) {
-            noStroke();
-            fill(50, 170, 255);
-            ellipse(riverpoint.x, riverpoint.y, grid * 2, grid * 4);
-        }
+
+
 
 
     }
@@ -177,15 +206,6 @@ function draw() {
 
 
 
-    fill(200, 220, 255);
-    noStroke();
-    beginShape();
-    vertex(skypoints[0].x, skypoints[0].y - 30);
-    skypoints.forEach(rp => {
-        vertex(rp.x, rp.y);
-    });
-    vertex(skypoints[skypoints.length - 1].x, skypoints[skypoints.length - 1].y - 30);
-    endShape(CLOSE);
 
 
     // noLoop();
