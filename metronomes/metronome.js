@@ -30,6 +30,9 @@ class Metronome {
         let sumOfSines = 0;
         others.forEach(other => {
             if (other !== this) {
+                // if you want them perfectly out of phase
+                // sumOfSines += sin( this.offset - other.offset );
+                // if you want them perfectly in phase
                 sumOfSines += sin(other.offset - this.offset);
             }
         });
