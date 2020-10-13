@@ -9,6 +9,9 @@ class Part {
         this.e = p5.Vector.lerp(this.a, this.b, 0.5);
 
 
+        this.cx = width / 2;
+        this.cy = height / 2;
+
     }
 
     splitInThree() {
@@ -40,8 +43,14 @@ class Part {
         stroke(255, 150);
         strokeWeight(1);
         noFill()
-        line(this.a.x, this.a.y, this.b.x, this.b.y);
+        line(this.a.x + this.cx, this.a.y + this.cy, this.b.x + this.cx, this.b.y + this.cy);
 
 
+    }
+
+
+    grow() {
+        // this.a.mult(1.001);
+        // this.b.mult(1.001);
     }
 }

@@ -33,12 +33,14 @@ function reset() {
         const x1 = sin(theta1) * w;
         const y1 = cos(theta1) * w;
 
-        const cx = width / 2;
-        const cy = height / 2;
+        const cx = 0;// width / 2;
+        const cy = 0;// height / 2;
         const p = new Part(x1 + cx, y1 + cy, x2 + cx, y2 + cy);
         parts.push(p);
 
     };
+
+
 }
 
 function draw() {
@@ -75,6 +77,9 @@ function draw() {
 
     parts.forEach(part => {
         part.show();
+
+
+        part.grow();
     });
 
 
@@ -104,6 +109,6 @@ function splitParts() {
 }
 
 function keyPressed() {
-    splitParts();
-
+    // splitParts();
+    reset();
 }
