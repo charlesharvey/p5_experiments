@@ -6,6 +6,9 @@ let rules;
 let ruleNumber;
 let h;
 
+
+const cool_rules = [150, 165, 237, 102, 78, 178, 109, 180, 182, 130, 134, 210, 105, 57];
+
 function setup() {
 
     createCanvas(windowWidth - 20, windowHeight - 20);
@@ -23,7 +26,8 @@ function setup() {
 
 
 function reset() {
-    ruleNumber = Math.floor(random(0, 255));
+    // ruleNumber = Math.floor(random(0, 255));
+    ruleNumber = random(cool_rules);
     rules = makeRuleSetFromNumber(ruleNumber);
     h = 0;
     generations = [];
