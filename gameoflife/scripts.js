@@ -83,6 +83,8 @@ function draw() {
     fill(0, 0, 255);
     textSize(30);
     text('Game of Earth', 40, 40);
+    textSize(15);
+    text('Drag to add land', 43, 63);
 
 
 }
