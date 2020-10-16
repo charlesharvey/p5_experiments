@@ -15,7 +15,7 @@ function setup() {
     createCanvas(windowWidth - 10, windowHeight - 10);
 
 
-    colorMode(HSB, 255, 255, 255);
+    colorMode(HSB, 255, 255, 255, 255);
 
 
 

@@ -3,9 +3,9 @@ class Cell {
         this.x = x;
         this.y = y;
         this.hue = random(255);
-        this.value = (Math.random() > 0.15) ? 0 : 1;
-        this.newvalue;
-        this.constancy = random(0, 255);
+        this.value = 0; //(Math.random() > 0.15) ? 0 : 1;
+        this.newvalue = this.value;
+        this.constancy = 300; //random(0, 255);
 
     }
 
@@ -56,8 +56,6 @@ class Cell {
 
     setTo(v) {
         this.value = v;
-        this.newvalue = v;
-        this.fakevalue = v;
     }
 
 
