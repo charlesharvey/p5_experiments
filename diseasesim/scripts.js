@@ -14,7 +14,7 @@ let withPeopleShopping = false;
 let initalSickPercentage = 0.03;
 
 
-let shop;
+let shops;
 
 function setup() {
 
@@ -41,14 +41,25 @@ function setup() {
 function resetSimulation() {
     results = [];
     people = [];
+    shops = [];
 
     withSocialDistancing = (run % 2 == 1)
     withPeopleShopping = (run % 4 > 1)
 
     if (withPeopleShopping) {
-        shop = createVector(random(width / 4, width / 2), random(height / 2, height / 4));
+
+        shops = [];
+        shopamount = Math.ceil(populationSize / 20);
+        for (let i = 0; i < shopamount; i++) {
+            // const s = createVector(random(width / 4, width / 2), random(height / 2, height / 4));
+            const s = createVector(random(0, width / 2), random(height));
+            shops.push(s);
+        }
+
+
     } else {
-        shop = null;
+
+        shops = null;
     }
 
     for (let i = 0; i < populationSize; i++) {
@@ -86,7 +97,7 @@ function draw() {
         person.update();
 
         if (withPeopleShopping) {
-            person.goToShop(people);
+            person.goToShop(people, shops);
         }
 
         if (withSocialDistancing) {
@@ -109,10 +120,14 @@ function draw() {
     results.push(result);
 
 
-    if (shop) {
-        fill(0, 0, 255);
-        ellipse(shop.x, shop.y, 10, 10);
-    }
+
+
+    if (shops) [
+        shops.forEach(s => {
+            fill(0, 0, 255);
+            rect(s.x, s.y, 10, 10);
+        })
+    ]
 
 
     drawGraph();

@@ -19,6 +19,8 @@ class Person {
         this.goingToShop = false;
         this.hunger = random(0, 500);
 
+        this.shop_index = null;
+
 
         // if (Math.random() > 0.95) {
         //   this.makeInfected();
@@ -159,11 +161,32 @@ class Person {
             })
     }
 
-    goToShop(people) {
+    goToShop(people, shops) {
 
         if (this.goingToShop) {
 
+            if (!this.shop_index) {
+                // random shop
+                // this.shop_index = Math.floor(random(0, shops.length));
 
+                // nearest shop
+                let recordd = 123812789;
+                let recordindex = 0;
+                shops.forEach((s, ind) => {
+                    const d = dist(s.x, s.y, this.pos.x, this.pos.y);
+                    if (d < recordd) {
+                        recordd = d;
+                        recordindex = ind;
+                    }
+                });
+                this.shop_index = recordindex;
+
+            }
+
+            const shop = shops[this.shop_index];
+
+            // stroke(100);
+            // line(shop.x, shop.y, this.pos.x, this.pos.y);
 
             shuffle(people).filter(p => p != this)
                 .forEach(other => {
