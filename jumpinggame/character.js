@@ -7,7 +7,7 @@ class Puppy {
         this.friction = 0.8
         this.w = 20;
         this.hue = 150;
-        this.maxV = 4;
+        this.maxV = 20;
         this.falling = true;
         this.jumping = false;
         this.score = 0;
@@ -51,22 +51,25 @@ class Puppy {
 
 
     jump() {
-
-        this.walk('up');
-
+        if (!this.jumping) {
+            this.jumping = true;
+            this.walk('up');
+        }
 
     }
+
     crouch() {
 
     }
+
     walk(dir) {
         let force;
         if (dir == 'left') {
-            force = createVector(-5, 0);
+            force = createVector(-2, 0);
         } else if (dir == 'right') {
-            force = createVector(5, 0);
+            force = createVector(2, 0);
         } else if (dir == 'up') {
-            force = createVector(0, -5);
+            force = createVector(0, -30);
         }
 
         this.applyForce(force);
@@ -93,7 +96,6 @@ class Puppy {
 
 
 
-
     }
 
     applyGravity() {
@@ -108,7 +110,7 @@ class Puppy {
         if (this.jumping) {
             fill(this.hue, 200, 200);
         } else {
-            fill(this.hue + 100, 200, 200);
+            fill(this.hue + 20, 200, 200);
         }
 
         rect(0, 0, this.w, this.w)

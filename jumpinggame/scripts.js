@@ -31,6 +31,11 @@ function reset() {
 }
 
 
+function keyReleased() {
+    character.jumping = false;
+}
+
+
 function draw() {
     background(0);
     noStroke();
@@ -59,6 +64,7 @@ function draw() {
 
 
 
+
     character.isFalling(platforms);
     character.show();
     character.update();
@@ -68,16 +74,18 @@ function draw() {
     noStroke();
     textSize(30);
     if (character.score > 0) {
-
         text('You win', 600, height - 300);
     }
-
     if (character.pos.y > height) {
         text('You dead', 600, height - 300);
     }
 
-
     candies = candies.filter(c => c.eaten == false);
+
+
+    textSize(15);
+    text('arrow keys to move', 30, 30);
+    text('click to reset', 30, 60);
 }
 
 
