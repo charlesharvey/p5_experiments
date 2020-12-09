@@ -70,7 +70,9 @@ function draw() {
     if (character.score > 0) {
 
         text('You win', 600, height - 300);
-    } else if (character.pos.y > height) {
+    }
+
+    if (character.pos.y > height) {
         text('You dead', 600, height - 300);
     }
 
