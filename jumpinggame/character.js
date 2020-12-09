@@ -40,7 +40,7 @@ class Puppy {
     eat(candy) {
         if (candy.eaten == false) {
             const d = dist(candy.x, candy.y, this.pos.x, this.pos.y);
-            if (d < 5) {
+            if (d < candy.r) {
                 this.score++;
                 return true;
             }
