@@ -38,14 +38,14 @@ function setup() {
 
 
     trunk = [];
-    for (let h = 0; h < treeHeight + 200; h += (treeHeight / 50)) {
+    for (let h = 0; h < treeHeight + 100; h += (treeHeight / 50)) {
         let bit = [];
         for (let t = 0; t < TWO_PI; t += (TWO_PI / 15)) {
 
             const r = 20 * (h / treeHeight);
             const x = sin(t) * r;
             const y = cos(t) * r;
-            const z = h - 480;
+            const z = h - 380;
             bit.push(createVector(x, y, z));
 
         }
@@ -58,7 +58,7 @@ function setup() {
             const r = treeRadius * (h / treeHeight);
             const x = sin(t) * r;
             const y = cos(t) * r;
-            const z = (h - 480) * map(sin(t * 7), -1, 1, 0.985, 1.02);
+            const z = (h - 380) * map(sin(t * 7), -1, 1, 0.985, 1.02);
             leaf.push(createVector(x, y, z));
 
         }
