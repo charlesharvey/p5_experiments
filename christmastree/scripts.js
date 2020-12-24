@@ -81,6 +81,16 @@ function draw() {
     background(120, 50, 90);
 
 
+    fill(0, 0, 100);
+    noStroke();
+    push();
+    translate(0, 0, -430);
+    rect(-400, 200, 900, 700);
+
+
+    pop();
+
+
     rotateX(-PI / 2);
     rotateX(-0.25 + (sin(mu) / 5));
     rotateZ(theta / 2);
@@ -132,7 +142,7 @@ function draw() {
         //     fill(100, 80, 90);
         // }
 
-        const hu = map((planeHeight - light.z) % treeHeight, 0, treeHeight, 0, 255);
+        const hu = map((planeHeight + light.z) % treeHeight, 0, treeHeight, 0, 255);
         fill(hu, 80, 90);
 
 
