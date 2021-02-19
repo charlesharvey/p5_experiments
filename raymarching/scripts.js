@@ -30,6 +30,13 @@ function setup() {
 }
 
 function keyPressed() {
+    changePointOfView();
+}
+function doubleClicked() {
+    changePointOfView();
+}
+
+function changePointOfView() {
     showFromAllPointsOfView = !showFromAllPointsOfView;
 }
 
