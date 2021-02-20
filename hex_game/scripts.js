@@ -4,33 +4,57 @@
 
 let hexagons = []
 let size;
-const cols = 7;
-const rows = 7;
-const boardPadding = 0;
+let cols = 7;
+let rows = 7;
+
 
 let player = 0;
 const player0Color = [255, 0, 0];
 const player1Color = [0, 255, 0];
 const darkPlayer0Color = player0Color.map(h => h * 0.7);
 const darkPlayer1Color = player1Color.map(h => h * 0.7);
+const lightPlayer0Color = player0Color.map(h => h + 70);
+const lightPlayer1Color = player1Color.map(h => h + 70);
+const lighterPlayer0Color = player0Color.map(h => h + 150);
+const lighterPlayer1Color = player1Color.map(h => h + 150);
 
 
 let mousePos;
 
-let button;
+let button, resetButton, slider;
 let usingAi = false;
 
 function setup() {
+    mousePos = createVector(0, 0);
 
-    button = createButton('use ai');
+    button = createButton('use AI');
     button.mousePressed(buttonClicked);
+    resetButton = createButton('Restart');
+    resetButton.mousePressed(createHexagons);
 
+    slider = createSlider(3, 15, cols, 1);
+    slider.mouseReleased(createHexagons);
 
     createCanvas(windowWidth - 10, windowHeight - 10);
 
+
+
+
+    createHexagons();
+
+}
+
+
+
+function createHexagons() {
+    player = 0;
+    hexagons = [];
+    cols = slider.value();
+    rows = cols;
+
     // // we need a diagonal board so cols is actually more than the number of hexagons
     const boardColsAmount = Math.ceil(cols + rows / 2) + 3;
-    const boardRowsAmount = rows + 2;
+    const boardRowsAmount = rows + 3;
     size = Math.floor(
         min(
             width / boardColsAmount * 0.6666,
@@ -44,20 +68,16 @@ function setup() {
             hexagons.push(hexagon);
         }
     }
-
-    mousePos = createVector(0, 0);
-
-
-
 }
+
+
 
 function buttonClicked() {
     usingAi = !usingAi;
-    console.log(button);
     if (usingAi) {
-        button.elt.innerHTML = 'using AI';
+        button.elt.innerHTML = 'AI: on';
     } else {
-        button.elt.innerHTML = 'use AI';
+        button.elt.innerHTML = 'AI: off';
     }
 
 }
@@ -119,9 +139,9 @@ function draw() {
     if (mousePos.x > 0) {
 
         if (player == 0) {
-            fill(player0Color.map(h => h + 100))
+            fill(lightPlayer0Color)
         } else {
-            fill(player1Color.map(h => h + 100));
+            fill(lightPlayer1Color)
         }
         noStroke();
         ellipse(mousePos.x, mousePos.y, size / 2, size / 2);

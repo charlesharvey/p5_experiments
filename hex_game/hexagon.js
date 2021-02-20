@@ -33,12 +33,13 @@ class Hexagon {
     calculateVertices() {
 
 
+        const sides = 6;
 
-        for (let i = 0; i < 6; i++) {
-            let theta = TWO_PI / 6 * i;
+        for (let i = 0; i < sides; i++) {
+            let theta = TWO_PI / sides * i;
 
-            let xoff = (this.row * size) + (this.col * size * 2) + (boardPadding) + size + size;
-            let yoff = (this.row * size * 1.6666667) + (boardPadding) + size + size;
+            let xoff = (this.row * size) + (this.col * size * 2) + size + size;
+            let yoff = (this.row * size * 1.6666667) + size + size;
 
 
             let x = (sin(theta) * size) + xoff;
@@ -89,7 +90,13 @@ class Hexagon {
         } else {
             noStroke();
             if (this.highlighted) {
-                fill(100);
+
+                if (player == 0) {
+                    fill(lighterPlayer0Color);
+                } else {
+                    fill(lighterPlayer1Color);
+                }
+
             } else {
                 fill(255);
             }
