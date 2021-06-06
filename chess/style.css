@@ -1,11 +1,13 @@
 :root {
     --board-size: 600px;
+    --board-size-small: 400px;
     --dark-color: #816720;
     --light-color: #dcbb82;
     --selected-color: #e06331;
     --last-moved-color: #ebe848;
     --hovered-color: #96d5da;
 }
+
 
 
 * {
@@ -32,15 +34,24 @@ h1 {
 }
 
 .board {
-    width: var(--board-size);
-    height: var(--board-size);
-    min-width: var(--board-size);
+    width: var(--board-size-small);
+    height: var(--board-size-small);
+    min-width: var(--board-size-small);
     background: url('images/maple.jpg') no-repeat center center var(--light-color);
     background-size: cover;
     position: relative;
     z-index: 10;
     cursor: pointer;
 
+}
+
+
+@media (min-width: 800px) {
+    .board {
+        width: var(--board-size);
+        height: var(--board-size);
+        min-width: var(--board-size);
+    }
 }
 
 

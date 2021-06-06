@@ -1,7 +1,7 @@
 
 
 const board = document.getElementById('board');
-const board_size = board.offsetWidth;
+let board_size = board.offsetWidth;
 
 const players = ['white', 'black'];
 const pieces = ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king'];
@@ -74,6 +74,15 @@ function addEventListeners() {
     // HOVER
 
 
+    window.addEventListener('resize', (event) => {
+        board_size = board.offsetWidth;
+        const pieces = getPieces();
+        for (let i = 0; i < pieces.length; i++) {
+            refreshPiecePosition(pieces[i]);
+        }
+    })
+
+
 }
 
 
@@ -131,6 +140,16 @@ function setPiecePosition(piece, rank, file) {
     piece.dataset.file = file;
 
 }
+
+function refreshPiecePosition(piece,) {
+    const rank = piece.dataset.rank;
+    const file = piece.dataset.file;
+    piece.style.transform = `translate(${file / 8 * board_size}px, ${rank / 8 * board_size}px)`;
+
+}
+
+
+
 
 
 function computerMakeRandomMove() {
