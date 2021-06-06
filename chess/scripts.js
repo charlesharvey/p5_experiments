@@ -194,9 +194,7 @@ function legalMove(piece, rank, file) {
 
     } else if (type == 'bishop') {
         // movement in x dir has to be same as y dir
-        const dr = Math.abs(rank - cp.rank);
-        const df = Math.abs(file - cp.file);
-        return (dr === df)
+        return Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
     } else if (type == 'rook') {
         return (rank == cp.rank || file == cp.file);
     } else if (type == 'knight') {
@@ -204,7 +202,7 @@ function legalMove(piece, rank, file) {
     } else if (type == 'king') {
         return ([8, -8, 1, -1, 7, -7, 9, -9].includes(diff_ind));
     } else if (type == 'queen') {
-        const diagonally = ((rank + cp.rank) % 2 === (file + cp.file) % 2);
+        const diagonally = Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
         const straightline = (rank == cp.rank || file == cp.file);
         return (diagonally || straightline);
     }
