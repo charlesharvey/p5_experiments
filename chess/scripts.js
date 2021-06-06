@@ -1,13 +1,90 @@
 
 
+class Piece {
+
+
+    constructor(color, type, rank, file) {
+        this.element = document.createElement('DIV');
+
+        this.color = color
+        this.type = type
+        this.rank = rank;
+        this.file = file;
+        this.value = 100;
+        this.captured = false;
+        this.setClassList();
+        this.setPiecePosition();
+        this.setValue();
+
+        board.append(this.element);
+    }
+
+
+
+    setValue() {
+        if (this.type == 'queen') {
+            this.value = '900';
+        }
+    }
+
+    upgrade(type) {
+        this.type = type;
+        this.setClassList();
+        this.setValue();
+    }
+
+    setClassList() {
+        this.element.classList = `${this.color} ${this.type} piece`;
+    }
+
+
+    position() {
+        return { rank: this.rank, file: this.file };
+    }
+
+
+    setPiecePosition() {
+        this.element.style.transform = `translate(${this.file / 8 * board_size}px, ${this.rank / 8 * board_size}px)`;
+
+    }
+
+    setRankAndFile(rank, file) {
+        this.rank = rank;
+        this.file = file;
+        this.setPiecePosition();
+
+        if (this.type == 'pawn' && (this.rank == 0 || this.rank == 7)) {
+            this.upgrade('queen');
+        }
+    }
+
+    removeFromBoard() {
+        this.captured = true;
+        pieces = pieces.filter(p => p != this);
+        board.removeChild(this.element);
+    }
+
+    sameColor(other) {
+        if (!other) {
+            return false
+        }
+        return (other.color == this.color);
+    }
+
+
+}
+
+
+
 const board = document.getElementById('board');
 let board_size = board.offsetWidth;
 
 const players = ['white', 'black'];
-const pieces = ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king'];
+let pieces = [];
 let currentPlayer = 'white';
 let selectedPiece = null;
 let lastMovedPiece = null;
+let gameEnded = false;
 
 resetBoard();
 addEventListeners();
@@ -42,7 +119,7 @@ function addEventListeners() {
             if (selectedPiece === other_piece) {
                 selectPiece(null);
             } else {
-                if (colorOfPiece(other_piece) === colorOfPiece(selectedPiece)) {
+                if (selectedPiece.sameColor(other_piece)) {
                     selectPiece(other_piece);
                 } else {
                     movePiece(selectedPiece, bp.rank, bp.file);
@@ -52,9 +129,10 @@ function addEventListeners() {
 
         } else {
             // if no selected piece currently
-            if (other_piece && colorOfPiece(other_piece) == currentPlayer) {
+            if (other_piece?.color == currentPlayer) {
                 selectPiece(other_piece);
             }
+
         }
     })
 
@@ -63,12 +141,11 @@ function addEventListeners() {
     // board.addEventListener('mousemove', (event) => {
     //     const bp = getBoardPositionFromEvent(event);
     //     const piece = getPieceAtPosition(bp.rank, bp.file);
-    //     const pieces = getPieces();
     //     for (let i = 0; i < pieces.length; i++) {
-    //         pieces[i].classList.remove('hovered');
+    //         pieces[i].element.classList.remove('hovered');
     //     }
     //     if (piece) {
-    //         piece.classList.add('hovered');
+    //         piece.element.classList.add('hovered');
     //     }
     // });
     // HOVER
@@ -76,9 +153,10 @@ function addEventListeners() {
 
     window.addEventListener('resize', (event) => {
         board_size = board.offsetWidth;
-        const pieces = getPieces();
+
         for (let i = 0; i < pieces.length; i++) {
-            refreshPiecePosition(pieces[i]);
+            // refreshPiecePosition(pieces[i]);
+            pieces[i].setPiecePosition();
         }
     })
 
@@ -88,16 +166,15 @@ function addEventListeners() {
 
 function legalMove(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
-    const color = colorOfPiece(piece);
-    const type = typeOfPiece(piece);
-    const cp = positionOfPiece(piece);
+    const color = piece.color;;
+    const type = piece.type;;
+    const cp = piece.position();
 
     const cp_ind = boardIndex(cp.rank, cp.file);
     const ind = boardIndex(rank, file);
     const diff_ind = (cp_ind - ind);
-    console.log(diff_ind);
 
-    if (colorOfPiece(otherPiece) === currentPlayer) {
+    if ((otherPiece?.color) === currentPlayer) {
         return false;
     }
     if (type == 'pawn') {
@@ -116,8 +193,10 @@ function legalMove(piece, rank, file) {
         }
 
     } else if (type == 'bishop') {
-        // have to stay on same colour
-        return ((rank + cp.rank) % 2 === (file + cp.file) % 2);
+        // movement in x dir has to be same as y dir
+        const dr = Math.abs(rank - cp.rank);
+        const df = Math.abs(file - cp.file);
+        return (dr === df)
     } else if (type == 'rook') {
         return (rank == cp.rank || file == cp.file);
     } else if (type == 'knight') {
@@ -137,27 +216,8 @@ function legalMove(piece, rank, file) {
 
 
 
-function colorOfPiece(piece) {
-    if (piece) {
-        return piece.dataset.color;
-    }
-    return null;
-
-}
-function typeOfPiece(piece) {
-    if (piece) {
-        return piece.dataset.type;
-    }
-    return null;
-
-}
 
 
-function positionOfPiece(piece) {
-    const rank = parseInt(piece.dataset.rank, 10);
-    const file = parseInt(piece.dataset.file, 10);
-    return { rank, file };
-}
 
 
 function boardIndex(rank, file) {
@@ -167,84 +227,69 @@ function boardIndex(rank, file) {
 function takePiece(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
     if (otherPiece) {
-        board.removeChild(otherPiece);
+        otherPiece.removeFromBoard();
     }
 }
-
-function upgradePiece(piece, type) {
-    const color = colorOfPiece(piece);
-    piece.classList = `${color} ${type} piece`;
-    piece.dataset.type = type;
-}
-
-function setPiecePosition(piece, rank, file) {
-
-    if (typeOfPiece(piece) == 'pawn' && (rank == 0 || rank == 7)) {
-        upgradePiece(piece, 'queen');
-    }
-    piece.style.transform = `translate(${file / 8 * board_size}px, ${rank / 8 * board_size}px)`;
-    piece.dataset.rank = rank;
-    piece.dataset.file = file;
-
-}
-
-function refreshPiecePosition(piece,) {
-    const rank = piece.dataset.rank;
-    const file = piece.dataset.file;
-    piece.style.transform = `translate(${file / 8 * board_size}px, ${rank / 8 * board_size}px)`;
-
-}
-
 
 
 
 
 function computerMakeRandomMove() {
-    const pieces = getPieces();
+
     const black_pieces = [];
     for (let i = 0; i < pieces.length; i++) {
-        if (colorOfPiece(pieces[i]) === 'black') {
+        if ((pieces[i].color) === 'black') {
             black_pieces.push(pieces[i])
         }
     }
 
-    if (black_pieces.length > 0) {
 
 
-        const randomI = Math.floor(Math.random() * black_pieces.length);
 
-        if (randomI >= 0) {
-            const randomPiece = black_pieces[randomI];
+    const randomI = Math.floor(Math.random() * black_pieces.length);
+
+    if (randomI >= 0) {
+        const randomPiece = black_pieces[randomI];
 
 
-            const x = Math.floor(Math.random() * 8);
-            const y = Math.floor(Math.random() * 8);
-            if (legalMove(randomPiece, x, y)) {
-                selectedPiece = randomPiece;
-                movePiece(randomPiece, x, y);
+        const x = Math.floor(Math.random() * 8);
+        const y = Math.floor(Math.random() * 8);
+        if (legalMove(randomPiece, x, y)) {
+            selectedPiece = randomPiece;
+            movePiece(randomPiece, x, y);
 
-            } else {
-                computerMakeRandomMove();
-            }
+        } else {
+            computerMakeRandomMove();
         }
-    } else {
-        alert(' checkmate ');
     }
+
 
 }
 
 
 function movePiece(piece, rank, file) {
-    if (colorOfPiece(piece) == currentPlayer) {
-        if (legalMove(piece, rank, file)) {
-            lastMovedPiece = selectedPiece;
-            takePiece(piece, rank, file);
-            setPiecePosition(piece, rank, file);
-            selectPiece(null);
-            switchPlayer();
-        } else {
+    if (!gameEnded) {
+        if ((piece.color) == currentPlayer) {
+            if (legalMove(piece, rank, file)) {
+                lastMovedPiece = selectedPiece;
+                takePiece(piece, rank, file);
+                piece.setRankAndFile(rank, file);
+                selectPiece(null);
 
+                if (isCheckmate()) {
+                    alert('checkmate');
+                    gameEnded = true;
+                } else {
+                    switchPlayer();
+                }
+
+
+            } else {
+
+            }
         }
+
+
     }
 }
 
@@ -259,29 +304,24 @@ function switchPlayer() {
 }
 
 
-function getPieces() {
-    return board.getElementsByClassName('piece');;
-}
+
 
 function selectPiece(piece) {
 
     selectedPiece = piece;
-    const pieces = getPieces()
+
     for (let i = 0; i < pieces.length; i++) {
 
-        pieces[i].classList.remove('selected');
-        pieces[i].classList.remove('last_moved');
+        pieces[i].element.classList.remove('selected');
+        pieces[i].element.classList.remove('last_moved');
         if (pieces[i] === selectedPiece) {
-            pieces[i].classList.add('selected');
+            pieces[i].element.classList.add('selected');
         }
         if (pieces[i] === lastMovedPiece) {
-            pieces[i].classList.add('last_moved');
+            pieces[i].element.classList.add('last_moved');
         }
-
-
-
     }
-    return null;
+
 }
 
 
@@ -291,23 +331,36 @@ function getBoardPositionFromEvent(e) {
     return { rank, file };
 }
 function getPieceAtPosition(rank, file) {
-    const pieces = getPieces();
-    for (let i = 0; i < pieces.length; i++) {
-        const piece = pieces[i];
-        if (piece.dataset.rank === rank.toString() && piece.dataset.file === file.toString()) {
-            return piece;
-        }
-    }
-    return null;
+
+    return pieces.find(p => p.file === file && p.rank === rank);
+
+
+
+
 }
 
 
 function appendPiece(color, type, rank, file) {
-    let piece = document.createElement('DIV');
-    piece.classList = `${color} ${type} piece`;
-    setPiecePosition(piece, rank, file);
-    piece.dataset.type = type;
-    piece.dataset.color = color;
-    board.append(piece);
+
+
+    pieces.push(new Piece(color, type, rank, file));
+
 }
 
+
+
+function isCheckmate() {
+    const alives = pieces.filter(p => p.captured === false);
+    if (alives.filter(p => p.type === 'king').length < 2) {
+        return true;
+    }
+
+
+    const blacks = alives.filter(p => p.color === 'black');
+    const white = alives.filter(p => p.color === 'white');
+    if (blacks.length === 0 || white.length === 0) {
+        return true;
+    }
+
+    return false;
+}
