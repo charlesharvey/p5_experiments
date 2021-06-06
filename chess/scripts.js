@@ -94,6 +94,7 @@ let pieces = [];
 let currentPlayer = 'white';
 let selectedPiece = null;
 let lastMovedPiece = null;
+let lastMovedStaringPlace = null;
 let gameEnded = false;
 
 resetBoard();
@@ -181,7 +182,7 @@ function scoreMove(piece, rank, file) {
     } else {
         if (piece.type == 'pawn') {
             // encourage promoting of pawn
-            return 1;
+            return Math.abs(piece.rank - rank);
         }
     }
 
@@ -218,9 +219,18 @@ function legalMove(piece, rank, file) {
         return dirs.includes(diff_ind);
     } else if (type == 'bishop') {
         // movement in x dir has to be same as y dir
-        return Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
+        if (Math.abs(rank - cp.rank) === Math.abs(file - cp.file)) {
+            return !diagonalBlockage(piece, rank, file, otherPiece);
+        };
+        return false;
     } else if (type == 'rook') {
-        return (rank == cp.rank || file == cp.file);
+
+        // check line of sight
+        if (rank == cp.rank || file == cp.file) {
+            return !linearBlockage(piece, rank, file, otherPiece);
+        }
+        return false;
+
     } else if (type == 'knight') {
         return ([17, -17, 10, -10, -6, 6, 15, -15].includes(diff_ind));
     } else if (type == 'king') {
@@ -228,7 +238,16 @@ function legalMove(piece, rank, file) {
     } else if (type == 'queen') {
         const diagonally = Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
         const straightline = (rank == cp.rank || file == cp.file);
-        return (diagonally || straightline);
+        if (diagonally || straightline) {
+            if (straightline) {
+                return !linearBlockage(piece, rank, file, otherPiece);
+            }
+            if (diagonally) {
+                return !diagonalBlockage(piece, rank, file, otherPiece);
+            }
+            return true;
+        }
+        return false;
     }
 
 
@@ -237,7 +256,60 @@ function legalMove(piece, rank, file) {
 }
 
 
+function linearBlockage(piece, rank, file, otherPiece) {
+    let anyBlockage = false;
+    if (rank == piece.rank) {
+        const minf = Math.min(file, piece.file);
+        const maxf = Math.max(file, piece.file);
+        for (let ff = minf; ff <= maxf; ff++) {
+            const blockage = getPieceAtPosition(rank, ff);
+            if (blockage && blockage !== piece && blockage !== otherPiece) {
+                anyBlockage = true;
+                break;
+            }
+        }
+        return anyBlockage;
+    } else if (file == piece.file) {
+        const minr = Math.min(rank, piece.rank);
+        const maxr = Math.max(rank, piece.rank);
+        for (let rr = minr; rr <= maxr; rr++) {
+            const blockage = getPieceAtPosition(rr, file);
+            if (blockage && blockage !== piece && blockage !== otherPiece) {
+                anyBlockage = true;
+                break;
+            }
+        }
+        return anyBlockage;
+    }
+    return anyBlockage;
+}
 
+function diagonalBlockage(piece, rank, file, otherPiece) {
+    let anyBlockage = false;
+    let steps = Math.abs(piece.file - file);
+    let rr = piece.rank;
+    let ff = piece.file;
+    for (let i = 0; i < steps; i++) {
+        const blockage = getPieceAtPosition(rr, ff);
+        if (blockage && blockage !== piece && blockage !== otherPiece) {
+            anyBlockage = true;
+            break;
+        }
+        if (rank > piece.rank) {
+            rr++;
+        } else {
+            rr--;
+        }
+        if (file > piece.file) {
+            ff++;
+        } else {
+            ff--;
+        }
+    }
+    return anyBlockage;
+
+
+}
 
 
 
@@ -305,6 +377,7 @@ function movePiece(piece, rank, file) {
         if ((piece.color) == currentPlayer) {
             if (legalMove(piece, rank, file)) {
                 lastMovedPiece = selectedPiece;
+                // lastMovedStaringPlace = something
                 takePiece(piece, rank, file);
                 piece.setRankAndFile(rank, file);
                 selectPiece(null);
