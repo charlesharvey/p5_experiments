@@ -166,32 +166,31 @@ function addEventListeners() {
 
 function legalMove(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
-    const color = piece.color;;
-    const type = piece.type;;
-    const cp = piece.position();
+    if (otherPiece) {
+        if (otherPiece.color === currentPlayer) {
+            return false;
+        }
+    }
 
+    const color = piece.color;
+    const type = piece.type;
+    const cp = piece.position();
     const cp_ind = boardIndex(cp.rank, cp.file);
     const ind = boardIndex(rank, file);
     const diff_ind = (cp_ind - ind);
 
-    if ((otherPiece?.color) === currentPlayer) {
-        return false;
-    }
     if (type == 'pawn') {
-        if (color == 'white') {
-            if (cp.rank == 6) {
-                return ([8, 16, 7, 9].includes(diff_ind));
-            } else {
-                return ([8, 7, 9].includes(diff_ind));
-            }
-        } else {
-            if (cp.rank == 1) {
-                return ([-8, -16, -7, -9].includes(diff_ind));
-            } else {
-                return ([-8, -7, -9].includes(diff_ind));
-            }
+        let dirs = [8];
+        if (otherPiece) {
+            dirs = [7, 9];
         }
-
+        if ((color == 'white' && cp.rank == 6) || (color == 'black' && cp.rank == 1)) {
+            dirs.push(16);
+        }
+        if (color == 'black') {
+            dirs = dirs.map(d => d * -1);
+        }
+        return dirs.includes(diff_ind);
     } else if (type == 'bishop') {
         // movement in x dir has to be same as y dir
         return Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
@@ -240,21 +239,18 @@ function computerMakeRandomMove() {
             black_pieces.push(pieces[i])
         }
     }
-
-
-
-
     const randomI = Math.floor(Math.random() * black_pieces.length);
 
     if (randomI >= 0) {
         const randomPiece = black_pieces[randomI];
-
-
         const x = Math.floor(Math.random() * 8);
         const y = Math.floor(Math.random() * 8);
         if (legalMove(randomPiece, x, y)) {
             selectedPiece = randomPiece;
-            movePiece(randomPiece, x, y);
+            setTimeout(() => {
+                movePiece(randomPiece, x, y);
+            }, 600);
+
 
         } else {
             computerMakeRandomMove();
