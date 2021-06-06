@@ -38,7 +38,7 @@ h1 {
     width: var(--board-size-small);
     height: var(--board-size-small);
     min-width: var(--board-size-small);
-    background: url('images/maple.jpg') no-repeat center center var(--light-color);
+    background: url('images/blue.svg') no-repeat center center var(--light-color);
     background-size: cover;
     position: relative;
     z-index: 10;
