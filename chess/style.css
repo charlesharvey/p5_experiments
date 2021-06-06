@@ -62,7 +62,7 @@ h1 {
     left: 0;
     width: 12.5%;
     height: 12.5%;
-    background-size: cover;
+    background-size: 100%;
     will-change: transform;
     pointer-events: none;
     z-index: 20;

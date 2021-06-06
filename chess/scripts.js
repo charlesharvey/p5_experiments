@@ -8,6 +8,7 @@ class Piece {
 
         this.color = color
         this.type = type
+        this.letter = 'p';
         this.rank = rank;
         this.file = file;
         this.value = 100;
@@ -24,16 +25,25 @@ class Piece {
     setValue() {
         if (this.type == 'queen') {
             this.value = 900;
+            this.letter = 'q';
         } else if (this.type == 'bishop') {
             this.value = 300;
+            this.letter = 'b';
         } else if (this.type == 'knight') {
             this.value = 300;
+            this.letter = 'n'
         } else if (this.type == 'rook') {
             this.value = 500;
+            this.letter = 'r';
         } else if (this.type == 'king') {
             this.value = 999999;
+            this.letter = 'k';
         } else {
+            this.letter = 'p';
             this.value = 100;
+        }
+        if (this.color == 'white') {
+            this.letter = this.letter.toUpperCase();
         }
     }
 
@@ -85,11 +95,59 @@ class Piece {
 }
 
 
+const stockfish = STOCKFISH();
+var fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+// start UCI
+stockfish.postMessage("uci");
+// start new game
+stockfish.postMessage("ucinewgame");
+// set new game position
+stockfish.postMessage("position fen " + fenString);
+// start search
+stockfish.postMessage("go depth 10");
+
+
+
+
+stockfish.onmessage = function (event) {
+    //NOTE: Web Workers wrap the response in an object.
+    const response = (event.data ? event.data : event);
+
+    if (response.includes('bestmove')) {
+
+        let bestmove = response.split('bestmove')[1]; //bestmove g5e5 ponder d2c4
+        if (bestmove.includes('ponder')) {
+            bestmove = bestmove.split('ponder')[0]
+        }
+        bestmove = bestmove.trim();
+        if (currentPlayer == 'black') {
+            if (bestmove && bestmove != '') {
+                makeStockfishMove(bestmove);
+            } else {
+                computerMakeRandomMove()
+            }
+        }
+
+    }
+};
+
+
+function makeStockfishMove(move) {
+    const file = letterToFile(move.charAt(0));
+    const rank = 8 - parseInt(move.charAt(1));
+    const newfile = letterToFile(move.charAt(2));
+    const newrank = 8 - parseInt(move.charAt(3));
+    const piece = getPieceAtPosition(rank, file);
+    if (piece) {
+        movePiece(piece, newrank, newfile);
+    }
+}
 
 const board = document.getElementById('board');
 let board_size = board.offsetWidth;
 
 const players = ['white', 'black'];
+let plies = 0;
 let pieces = [];
 let currentPlayer = 'white';
 let selectedPiece = null;
@@ -117,6 +175,8 @@ function resetBoard() {
         }
     })
 
+
+    make_fen_string();
 
 }
 
@@ -357,7 +417,7 @@ function computerMakeRandomMove() {
     let bestMoves = [];
 
     let attempts = 0;
-    while (bestMoves.length < 10 && attempts < 500) {
+    while (attempts < 1000) {
         const newmove = computerGetRandomMove();
         if (newmove) {
             bestMoves.push(newmove);
@@ -373,6 +433,8 @@ function computerMakeRandomMove() {
             movePiece(moveToMake.piece, moveToMake.rank, moveToMake.file);
         }, 600);
 
+    } else {
+        alert('computer can make no moves');
     }
 }
 
@@ -396,6 +458,76 @@ function computerGetRandomMove() {
 
 }
 
+function fileLetter(file) {
+    return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'][file];
+}
+
+function letterToFile(letter) {
+    return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].indexOf(letter);
+}
+
+function make_fen_string() {
+
+    let fe = '';
+    for (let r = 0; r < 8; r++) {
+        let gap = 0;
+        for (let f = 0; f < 8; f++) {
+            const piece = getPieceAtPosition(r, f);
+            if (piece) {
+                if (gap > 0) {
+                    fe = `${fe}${gap}`;
+                    gap = 0;
+                }
+                fe = `${fe}${piece.letter}`;
+            } else {
+                gap++;
+            }
+        }
+        if (gap > 0) {
+            fe = `${fe}${gap}`;
+            gap = 0;
+        }
+        if (r < 7) {
+            fe = `${fe}/`;
+        }
+
+    }
+
+    if (currentPlayer == 'white') {
+        fe = `${fe} w`;
+    } else {
+        fe = `${fe} b`;
+    }
+
+    const moves = Math.floor(plies / 2)
+    fe = `${fe} - 0 ${moves}`;
+
+
+    return fe;
+
+
+}
+
+function moveAsAlgebraic(piece, rank, file) {
+    let alg = `${fileLetter(piece.file)}${piece.rank}${fileLetter(file)}${rank}`
+    // if (piece.type == 'knight') {
+    //     alg = `N${alg}`;
+    // }
+    // if (piece.type == 'bishop') {
+    //     alg = `B${alg}`;
+    // }
+    // if (piece.type == 'rook') {
+    //     alg = `R${alg}`;
+    // }
+    // if (piece.type == 'queen') {
+    //     alg = `Q${alg}`;
+    // }
+    // if (piece.type == 'king') {
+    //     alg = `K${alg}`;
+    // }
+
+    return alg;
+}
 
 function movePiece(piece, rank, file) {
     if (!gameEnded) {
@@ -407,12 +539,16 @@ function movePiece(piece, rank, file) {
                 takePiece(piece, rank, file);
                 piece.setRankAndFile(rank, file);
                 selectPiece(null);
+                plies++;
 
                 if (isCheckmate()) {
                     alert('checkmate');
                     gameEnded = true;
                 } else {
                     switchPlayer();
+                    let fen = make_fen_string();
+                    stockfish.postMessage(`position fen ${fen}`);
+                    stockfish.postMessage("go depth 5");
                 }
 
 
@@ -429,7 +565,7 @@ function switchPlayer() {
     if (currentPlayer === 'white') {
         currentPlayer = 'black';
 
-        computerMakeRandomMove();
+        // computerMakeRandomMove();
     } else {
         currentPlayer = 'white';
     }
@@ -462,6 +598,9 @@ function getBoardPositionFromEvent(e) {
     const file = Math.floor(e.layerX * 8 / board_size);
     return { rank, file };
 }
+
+
+
 function getPieceAtPosition(rank, file) {
 
     return pieces.find(p => p.file === file && p.rank === rank);
