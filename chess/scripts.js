@@ -23,7 +23,17 @@ class Piece {
 
     setValue() {
         if (this.type == 'queen') {
-            this.value = '900';
+            this.value = 900;
+        } else if (this.type == 'bishop') {
+            this.value = 300;
+        } else if (this.type == 'knight') {
+            this.value = 300;
+        } else if (this.type == 'rook') {
+            this.value = 500;
+        } else if (this.type == 'king') {
+            this.value = 999999;
+        } else {
+            this.value = 100;
         }
     }
 
@@ -164,6 +174,21 @@ function addEventListeners() {
 }
 
 
+function scoreMove(piece, rank, file) {
+    const otherPiece = getPieceAtPosition(rank, file);
+    if (otherPiece) {
+        return otherPiece.value;
+    } else {
+        if (piece.type == 'pawn') {
+            // encourage promoting of pawn
+            return 1;
+        }
+    }
+
+    return 0;
+
+}
+
 function legalMove(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
     if (otherPiece) {
@@ -232,28 +257,42 @@ function takePiece(piece, rank, file) {
 
 
 function computerMakeRandomMove() {
+    let bestMoves = [];
 
-    const black_pieces = [];
-    for (let i = 0; i < pieces.length; i++) {
-        if ((pieces[i].color) === 'black') {
-            black_pieces.push(pieces[i])
+    let attempts = 0;
+    while (bestMoves.length < 5 && attempts < 500) {
+        const newmove = computerGetRandomMove();
+        if (newmove) {
+            bestMoves.push(newmove);
         }
+        attempts++;
+    };
+
+    if (bestMoves.length > 0) {
+        bestMoves.sort((a, b) => a.score < b.score);
+        const moveToMake = bestMoves[0];
+        selectedPiece = moveToMake.piece;
+        setTimeout(() => {
+            movePiece(moveToMake.piece, moveToMake.rank, moveToMake.file);
+        }, 600);
+
     }
-    const randomI = Math.floor(Math.random() * black_pieces.length);
+}
 
-    if (randomI >= 0) {
+
+function computerGetRandomMove() {
+    const black_pieces = pieces.filter(p => p.color === 'black');
+    if (black_pieces.length > 0) {
+        const randomI = Math.floor(Math.random() * black_pieces.length);
         const randomPiece = black_pieces[randomI];
-        const x = Math.floor(Math.random() * 8);
-        const y = Math.floor(Math.random() * 8);
-        if (legalMove(randomPiece, x, y)) {
-            selectedPiece = randomPiece;
-            setTimeout(() => {
-                movePiece(randomPiece, x, y);
-            }, 600);
+        const r = Math.floor(Math.random() * 8);
+        const f = Math.floor(Math.random() * 8);
 
-
+        if (legalMove(randomPiece, r, f)) {
+            const score = scoreMove(randomPiece, r, f);
+            return { piece: randomPiece, rank: r, file: f, score: score };
         } else {
-            computerMakeRandomMove();
+            return false;
         }
     }
 

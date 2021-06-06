@@ -23,6 +23,7 @@ h1 {
     top: 10px;
     text-align: center;
     width: 100%;
+    pointer-events: none;
 }
 
 .board_outer {
