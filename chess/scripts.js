@@ -94,7 +94,7 @@ let pieces = [];
 let currentPlayer = 'white';
 let selectedPiece = null;
 let lastMovedPiece = null;
-let lastMovedStaringPlace = null;
+let lastMovedStartingPlace;
 let gameEnded = false;
 
 resetBoard();
@@ -116,6 +116,19 @@ function resetBoard() {
             appendPiece(color, 'pawn', pawn_rank, i);
         }
     })
+
+
+}
+
+
+function moveLastMovedStartingPlace(rank, file) {
+    if (!lastMovedStartingPlace) {
+        lastMovedStartingPlace = document.createElement('DIV');
+        lastMovedStartingPlace.classList = `last_moved_start piece`;
+        board.append(lastMovedStartingPlace);
+    }
+
+    lastMovedStartingPlace.style.transform = `translate(${file / 8 * board_size}px, ${rank / 8 * board_size}px)`;
 
 }
 
@@ -182,7 +195,7 @@ function scoreMove(piece, rank, file) {
     } else {
         if (piece.type == 'pawn') {
             // encourage promoting of pawn
-            return Math.abs(piece.rank - rank);
+            return Math.random();
         }
     }
 
@@ -211,12 +224,24 @@ function legalMove(piece, rank, file) {
             dirs = [7, 9];
         }
         if ((color == 'white' && cp.rank == 6) || (color == 'black' && cp.rank == 1)) {
-            dirs.push(16);
+            if (!otherPiece) {
+                dirs.push(16);
+            }
         }
         if (color == 'black') {
             dirs = dirs.map(d => d * -1);
         }
-        return dirs.includes(diff_ind);
+        if (dirs.includes(diff_ind)) {
+            if (diff_ind == 16) {
+                // cant jump two spaces and capture
+                return (!otherPiece);
+            } else {
+                // pawn hasnt jumped accross board
+                return (Math.abs(cp.file - file) < 2);
+            }
+
+        };
+        return false;
     } else if (type == 'bishop') {
         // movement in x dir has to be same as y dir
         if (Math.abs(rank - cp.rank) === Math.abs(file - cp.file)) {
@@ -332,7 +357,7 @@ function computerMakeRandomMove() {
     let bestMoves = [];
 
     let attempts = 0;
-    while (bestMoves.length < 5 && attempts < 500) {
+    while (bestMoves.length < 10 && attempts < 500) {
         const newmove = computerGetRandomMove();
         if (newmove) {
             bestMoves.push(newmove);
@@ -377,7 +402,8 @@ function movePiece(piece, rank, file) {
         if ((piece.color) == currentPlayer) {
             if (legalMove(piece, rank, file)) {
                 lastMovedPiece = selectedPiece;
-                // lastMovedStaringPlace = something
+                moveLastMovedStartingPlace(piece.rank, piece.file);
+
                 takePiece(piece, rank, file);
                 piece.setRankAndFile(rank, file);
                 selectPiece(null);

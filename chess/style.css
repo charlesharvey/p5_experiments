@@ -76,6 +76,13 @@ h1 {
 
 .piece.last_moved {
     background-color: var(--last-moved-color);
+    position: relative;
+}
+
+.piece.last_moved_start {
+    background: var(--last-moved-color);
+    opacity: 0.55;
+
 }
 
 .piece.hovered {
