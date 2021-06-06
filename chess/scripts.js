@@ -88,11 +88,53 @@ function addEventListeners() {
 
 function legalMove(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
+    const color = colorOfPiece(piece);
+    const type = typeOfPiece(piece);
+    const cp = positionOfPiece(piece);
+
+    const cp_ind = boardIndex(cp.rank, cp.file);
+    const ind = boardIndex(rank, file);
+    const diff_ind = (cp_ind - ind);
+    console.log(diff_ind);
+
     if (colorOfPiece(otherPiece) === currentPlayer) {
         return false;
     }
+    if (type == 'pawn') {
+        if (color == 'white') {
+            if (cp.rank == 6) {
+                return ([8, 16, 7, 9].includes(diff_ind));
+            } else {
+                return ([8, 7, 9].includes(diff_ind));
+            }
+        } else {
+            if (cp.rank == 1) {
+                return ([-8, -16, -7, -9].includes(diff_ind));
+            } else {
+                return ([-8, -7, -9].includes(diff_ind));
+            }
+        }
+
+    } else if (type == 'bishop') {
+        // have to stay on same colour
+        return ((rank + cp.rank) % 2 === (file + cp.file) % 2);
+    } else if (type == 'rook') {
+        return (rank == cp.rank || file == cp.file);
+    } else if (type == 'knight') {
+        return ([17, -17, 10, -10, -6, 6, 15, -15].includes(diff_ind));
+    } else if (type == 'king') {
+        return ([8, -8, 1, -1, 7, -7, 9, -9].includes(diff_ind));
+    } else if (type == 'queen') {
+        const diagonally = ((rank + cp.rank) % 2 === (file + cp.file) % 2);
+        const straightline = (rank == cp.rank || file == cp.file);
+        return (diagonally || straightline);
+    }
+
+
+
     return true;
 }
+
 
 
 function colorOfPiece(piece) {
@@ -112,9 +154,14 @@ function typeOfPiece(piece) {
 
 
 function positionOfPiece(piece) {
-    const rank = piece.dataset.rank;
-    const file = piece.dataset.file;
+    const rank = parseInt(piece.dataset.rank, 10);
+    const file = parseInt(piece.dataset.file, 10);
     return { rank, file };
+}
+
+
+function boardIndex(rank, file) {
+    return file + rank * 8;
 }
 
 function takePiece(piece, rank, file) {
@@ -169,10 +216,13 @@ function computerMakeRandomMove() {
         if (randomI >= 0) {
             const randomPiece = black_pieces[randomI];
 
+
             const x = Math.floor(Math.random() * 8);
             const y = Math.floor(Math.random() * 8);
             if (legalMove(randomPiece, x, y)) {
+                selectedPiece = randomPiece;
                 movePiece(randomPiece, x, y);
+
             } else {
                 computerMakeRandomMove();
             }
