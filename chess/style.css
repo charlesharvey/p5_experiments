@@ -26,6 +26,17 @@ h1 {
     pointer-events: none;
 }
 
+
+
+.player_scores {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 20px;
+    text-align: right;
+    font-family: monospace;
+}
+
 .board_outer {
 
     display: flex;

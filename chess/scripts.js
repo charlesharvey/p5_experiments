@@ -15,14 +15,14 @@ class Piece {
         this.captured = false;
         this.setClassList();
         this.setPiecePosition();
-        this.setValue();
+        this.setValueAndLetter();
 
         board.append(this.element);
     }
 
 
 
-    setValue() {
+    setValueAndLetter() {
         if (this.type == 'queen') {
             this.value = 900;
             this.letter = 'q';
@@ -50,7 +50,7 @@ class Piece {
     upgrade(type) {
         this.type = type;
         this.setClassList();
-        this.setValue();
+        this.setValueAndLetter();
     }
 
     setClassList() {
@@ -101,7 +101,42 @@ class Piece {
 
 
 
+class Player {
+    constructor(color) {
+        this.color = color;
+        this.taken_pieces = [];
+        this.score = 0;
+        this.score_element = document.createElement('DIV');
+        player_scores.append(this.score_element)
+        this.updateScore();
+    }
 
+    addTakenPiece(piece) {
+        this.taken_pieces.push(piece);
+        this.updateScore();
+    }
+
+    updateScore() {
+        this.score = this.taken_pieces.map(p => p.value).reduce((a, b) => a + b, 0);
+        const other = this.otherPlayer();
+        let total_score = this.score / 100;
+        if (other) {
+            total_score = (this.score - other.score) / 100;
+        }
+        if (total_score > 0) {
+            total_score = `+${total_score}`;
+        }
+        this.score_element.innerHTML = `${this.color}  ${total_score}`;
+    }
+
+    otherPlayer() {
+        return players.find(p => p.color !== this.color);
+    }
+
+    theirTurn() {
+        return this.color == currentPlayer;
+    }
+}
 
 
 
@@ -112,17 +147,21 @@ function makeStockfishMove(move) {
     const newrank = 8 - parseInt(move.charAt(3));
     const piece = getPieceAtPosition(rank, file);
     if (piece) {
+        selectPiece(piece);
         movePiece(piece, newrank, newfile);
     }
 }
 
 const board = document.getElementById('board');
+const player_scores = document.getElementById('player_scores');
 let board_size = board.offsetWidth;
 
-const players = ['white', 'black'];
+
 let plies = 0;
 let pieces = [];
-let currentPlayer = 'white';
+let players = [];
+let currentPlayer;
+let white, black;
 let selectedPiece = null;
 let lastMovedPiece = null;
 let lastMovedStartingPlace;
@@ -134,7 +173,14 @@ resetBoard();
 addEventListeners();
 
 function resetBoard() {
-    players.forEach(color => {
+
+    white = new Player('white');
+    black = new Player('black');
+    players = [white, black];
+    currentPlayer = white;
+
+    players.forEach(player => {
+        const color = player.color;
         const main_piece_rank = (color === 'white') ? 7 : 0;
         const pawn_rank = (color === 'white') ? 6 : 1;
         appendPiece(color, 'rook', main_piece_rank, 0);
@@ -188,7 +234,7 @@ function addEventListeners() {
 
         } else {
             // if no selected piece currently
-            if (other_piece?.color == currentPlayer) {
+            if (other_piece?.color == currentPlayer.color) {
                 selectPiece(other_piece);
             }
 
@@ -241,7 +287,7 @@ function scoreMove(piece, rank, file) {
 function legalMove(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
     if (otherPiece) {
-        if (otherPiece.color === currentPlayer) {
+        if (otherPiece.color === currentPlayer.color) {
             return false;
         }
     }
@@ -382,6 +428,7 @@ function takePiece(piece, rank, file) {
     const otherPiece = getPieceAtPosition(rank, file);
     if (otherPiece) {
         otherPiece.removeFromBoard();
+        currentPlayer.addTakenPiece(otherPiece);
     }
 }
 
@@ -468,7 +515,7 @@ function make_fen_string() {
 
     }
 
-    if (currentPlayer == 'white') {
+    if (currentPlayer.color == 'white') {
         fe = `${fe} w`;
     } else {
         fe = `${fe} b`;
@@ -529,7 +576,7 @@ function loadStockfish() {
                 bestmove = bestmove.split('ponder')[0]
             }
             bestmove = bestmove.trim();
-            if (currentPlayer == 'black') {
+            if (currentPlayer.color == 'black') {
                 if (bestmove && bestmove != '') {
                     makeStockfishMove(bestmove);
                 } else {
@@ -556,7 +603,7 @@ function endGame() {
 
 function movePiece(piece, rank, file) {
     if (!gameEnded) {
-        if ((piece.color) == currentPlayer) {
+        if ((piece.color) == currentPlayer.color) {
             if (legalMove(piece, rank, file)) {
                 lastMovedPiece = selectedPiece;
                 moveLastMovedStartingPlace(piece.rank, piece.file);
@@ -591,13 +638,16 @@ function movePiece(piece, rank, file) {
 }
 
 function switchPlayer() {
-    if (currentPlayer === 'white') {
-        currentPlayer = 'black';
+    if (currentPlayer.color === 'white') {
+        currentPlayer = black;
 
         // computerMakeRandomMove();
     } else {
-        currentPlayer = 'white';
+        currentPlayer = white;
     }
+
+    white.updateScore();
+    black.updateScore();
 }
 
 
