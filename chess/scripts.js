@@ -68,6 +68,11 @@ class Piece {
 
     }
 
+
+    legalMoves() {
+        return [];
+    }
+
     setRankAndFile(rank, file) {
         this.rank = rank;
         this.file = file;
@@ -95,41 +100,9 @@ class Piece {
 }
 
 
-const stockfish = STOCKFISH();
-var fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-// start UCI
-stockfish.postMessage("uci");
-// start new game
-stockfish.postMessage("ucinewgame");
-// set new game position
-stockfish.postMessage("position fen " + fenString);
-// start search
-stockfish.postMessage("go depth 10");
 
 
 
-
-stockfish.onmessage = function (event) {
-    //NOTE: Web Workers wrap the response in an object.
-    const response = (event.data ? event.data : event);
-
-    if (response.includes('bestmove')) {
-
-        let bestmove = response.split('bestmove')[1]; //bestmove g5e5 ponder d2c4
-        if (bestmove.includes('ponder')) {
-            bestmove = bestmove.split('ponder')[0]
-        }
-        bestmove = bestmove.trim();
-        if (currentPlayer == 'black') {
-            if (bestmove && bestmove != '') {
-                makeStockfishMove(bestmove);
-            } else {
-                computerMakeRandomMove()
-            }
-        }
-
-    }
-};
 
 
 function makeStockfishMove(move) {
@@ -154,7 +127,9 @@ let selectedPiece = null;
 let lastMovedPiece = null;
 let lastMovedStartingPlace;
 let gameEnded = false;
+let stockfish;
 
+loadStockfish();
 resetBoard();
 addEventListeners();
 
@@ -529,6 +504,56 @@ function moveAsAlgebraic(piece, rank, file) {
     return alg;
 }
 
+
+
+function loadStockfish() {
+    stockfish = STOCKFISH();
+    var fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    // start UCI
+    stockfish.postMessage("uci");
+    // start new game
+    stockfish.postMessage("ucinewgame");
+    // set new game position
+    stockfish.postMessage("position fen " + fenString);
+    // start search
+    stockfish.postMessage("go depth 10");
+    stockfish.onmessage = function (event) {
+        //NOTE: Web Workers wrap the response in an object.
+        const response = (event.data ? event.data : event);
+        console.log(response);
+
+        if (response.includes('bestmove')) {
+
+            let bestmove = response.split('bestmove')[1]; //bestmove g5e5 ponder d2c4
+            if (bestmove.includes('ponder')) {
+                bestmove = bestmove.split('ponder')[0]
+            }
+            bestmove = bestmove.trim();
+            if (currentPlayer == 'black') {
+                if (bestmove && bestmove != '') {
+                    makeStockfishMove(bestmove);
+                } else {
+                    computerMakeRandomMove()
+                }
+            }
+
+        }
+
+        if (response.includes('mate 0')) {
+            endGame();
+        }
+    };
+
+
+}
+
+function endGame() {
+    alert('checkmate');
+    gameEnded = true;
+}
+
+
+
 function movePiece(piece, rank, file) {
     if (!gameEnded) {
         if ((piece.color) == currentPlayer) {
@@ -542,13 +567,17 @@ function movePiece(piece, rank, file) {
                 plies++;
 
                 if (isCheckmate()) {
-                    alert('checkmate');
-                    gameEnded = true;
+
+                    endGame();
                 } else {
                     switchPlayer();
-                    let fen = make_fen_string();
-                    stockfish.postMessage(`position fen ${fen}`);
-                    stockfish.postMessage("go depth 5");
+
+                    if (stockfish) {
+                        let fen = make_fen_string();
+                        stockfish.postMessage(`position fen ${fen}`);
+                        stockfish.postMessage("go depth 5");
+                    }
+
                 }
 
 

@@ -1,8 +1,8 @@
 :root {
     --board-size: 600px;
     --board-size-small: 400px;
-    --dark-color: #816720;
-    --light-color: #dcbb82;
+    --dark-color: #8ca2ad;
+    --light-color: #dee3e6;
     --selected-color: #1c90d3;
     --last-moved-color: #4ecd92;
     --hovered-color: #96d5da;
