@@ -6,13 +6,14 @@ class Piece {
     constructor(color, type, rank, file) {
         this.element = document.createElement('DIV');
 
-        this.color = color
-        this.type = type
+        this.color = color;
+        this.type = type;
         this.letter = 'p';
         this.rank = rank;
         this.file = file;
         this.value = 100;
         this.captured = false;
+        this.other;
         this.setClassList();
         this.setPiecePosition();
         this.setValueAndLetter();
@@ -114,14 +115,20 @@ class Player {
     addTakenPiece(piece) {
         this.taken_pieces.push(piece);
         this.updateScore();
+        this.showScore();
     }
 
     updateScore() {
         this.score = this.taken_pieces.map(p => p.value).reduce((a, b) => a + b, 0);
-        const other = this.otherPlayer();
+
+
+
+    }
+    showScore() {
+
         let total_score = this.score / 100;
-        if (other) {
-            total_score = (this.score - other.score) / 100;
+        if (this.other) {
+            total_score = (this.score - this.other.score) / 100;
         }
         if (total_score > 0) {
             total_score = `+${total_score}`;
@@ -129,9 +136,6 @@ class Player {
         this.score_element.innerHTML = `${this.color}  ${total_score}`;
     }
 
-    otherPlayer() {
-        return players.find(p => p.color !== this.color);
-    }
 
     theirTurn() {
         return this.color == currentPlayer;
@@ -147,13 +151,16 @@ function makeStockfishMove(move) {
     const newrank = 8 - parseInt(move.charAt(3));
     const piece = getPieceAtPosition(rank, file);
     if (piece) {
-        selectPiece(piece);
-        movePiece(piece, newrank, newfile);
+        setTimeout(() => {
+            selectPiece(piece);
+            movePiece(piece, newrank, newfile);
+        }, 500);
     }
 }
 
 const board = document.getElementById('board');
 const player_scores = document.getElementById('player_scores');
+const toggle_stockfish = document.getElementById('toggle_stockfish');
 let board_size = board.offsetWidth;
 
 
@@ -167,6 +174,8 @@ let lastMovedPiece = null;
 let lastMovedStartingPlace;
 let gameEnded = false;
 let stockfish;
+let use_stockfish = true;
+let board_ready = true;
 
 loadStockfish();
 resetBoard();
@@ -176,6 +185,8 @@ function resetBoard() {
 
     white = new Player('white');
     black = new Player('black');
+    white.other = black;
+    black.other = white;
     players = [white, black];
     currentPlayer = white;
 
@@ -212,6 +223,8 @@ function moveLastMovedStartingPlace(rank, file) {
     lastMovedStartingPlace.style.transform = `translate(${file / 8 * board_size}px, ${rank / 8 * board_size}px)`;
 
 }
+
+
 
 function addEventListeners() {
 
@@ -262,6 +275,19 @@ function addEventListeners() {
         for (let i = 0; i < pieces.length; i++) {
             // refreshPiecePosition(pieces[i]);
             pieces[i].setPiecePosition();
+        }
+    });
+
+    toggle_stockfish.addEventListener("click", (event) => {
+        use_stockfish = !use_stockfish;
+
+        if (use_stockfish) {
+            toggle_stockfish.innerHTML = 'Stockfish on';
+            if (currentPlayer === black) {
+                sendFenToStockfish();
+            }
+        } else {
+            toggle_stockfish.innerHTML = 'Stockfish off';
         }
     })
 
@@ -419,6 +445,11 @@ function diagonalBlockage(piece, rank, file, otherPiece) {
 
 
 
+function boardReady() {
+    board_ready = true;
+    board.classList.remove('loading');
+}
+
 
 function boardIndex(rank, file) {
     return file + rank * 8;
@@ -554,6 +585,7 @@ function moveAsAlgebraic(piece, rank, file) {
 
 
 function loadStockfish() {
+    board_ready = false;
     stockfish = STOCKFISH();
     var fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     // start UCI
@@ -565,9 +597,16 @@ function loadStockfish() {
     // start search
     stockfish.postMessage("go depth 10");
     stockfish.onmessage = function (event) {
+
+        if (!board_ready) {
+            boardReady();
+        }
+
+
+
         //NOTE: Web Workers wrap the response in an object.
         const response = (event.data ? event.data : event);
-        console.log(response);
+        // console.log(response);
 
         if (response.includes('bestmove')) {
 
@@ -613,16 +652,20 @@ function movePiece(piece, rank, file) {
                 selectPiece(null);
                 plies++;
 
+
+                white.updateScore();
+                black.updateScore();
+                white.showScore();
+                black.showScore();
+
                 if (isCheckmate()) {
 
                     endGame();
                 } else {
                     switchPlayer();
 
-                    if (stockfish) {
-                        let fen = make_fen_string();
-                        stockfish.postMessage(`position fen ${fen}`);
-                        stockfish.postMessage("go depth 5");
+                    if (use_stockfish) {
+                        sendFenToStockfish();
                     }
 
                 }
@@ -637,6 +680,16 @@ function movePiece(piece, rank, file) {
     }
 }
 
+
+function sendFenToStockfish() {
+    if (stockfish) {
+        let fen = make_fen_string();
+        stockfish.postMessage(`position fen ${fen}`);
+        stockfish.postMessage("go depth 5");
+    }
+}
+
+
 function switchPlayer() {
     if (currentPlayer.color === 'white') {
         currentPlayer = black;
@@ -646,8 +699,7 @@ function switchPlayer() {
         currentPlayer = white;
     }
 
-    white.updateScore();
-    black.updateScore();
+
 }
 
 

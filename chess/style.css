@@ -27,14 +27,23 @@ h1 {
 }
 
 
-
+.toggle_stockfish,
 .player_scores {
     position: absolute;
-    right: 0;
+    left: 0;
     top: 0;
     padding: 20px;
     text-align: right;
     font-family: monospace;
+}
+
+.toggle_stockfish {
+    cursor: pointer;
+}
+
+.player_scores {
+    right: 0;
+    left: auto;
 }
 
 .board_outer {
@@ -43,6 +52,10 @@ h1 {
     align-items: center;
     justify-content: center;
     height: 100vh;
+}
+
+.loading {
+    visibility: hidden;
 }
 
 .board {
