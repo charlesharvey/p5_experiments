@@ -1,5 +1,6 @@
 
 
+
 class Piece {
 
 
@@ -144,23 +145,9 @@ class Player {
 
 
 
-function makeStockfishMove(move) {
-    const file = letterToFile(move.charAt(0));
-    const rank = 8 - parseInt(move.charAt(1));
-    const newfile = letterToFile(move.charAt(2));
-    const newrank = 8 - parseInt(move.charAt(3));
-    const piece = getPieceAtPosition(rank, file);
-    if (piece) {
-        setTimeout(() => {
-            selectPiece(piece);
-            movePiece(piece, newrank, newfile);
-        }, 500);
-    }
-}
-
 const board = document.getElementById('board');
 const player_scores = document.getElementById('player_scores');
-const toggle_stockfish = document.getElementById('toggle_stockfish');
+const toggle_ai = document.getElementById('toggle_ai');
 let board_size = board.offsetWidth;
 
 
@@ -174,10 +161,10 @@ let lastMovedPiece = null;
 let lastMovedStartingPlace;
 let gameEnded = false;
 let stockfish;
-let use_stockfish = true;
 let board_ready = true;
+let ai_mode = 'random';
 
-loadStockfish();
+// loadStockfish();
 resetBoard();
 addEventListeners();
 
@@ -232,6 +219,7 @@ function addEventListeners() {
         const bp = getBoardPositionFromEvent(event);
         const other_piece = getPieceAtPosition(bp.rank, bp.file);
 
+        console.log(selectedPiece);
         if (selectedPiece) {
 
             if (selectedPiece === other_piece) {
@@ -248,6 +236,7 @@ function addEventListeners() {
         } else {
             // if no selected piece currently
             if (other_piece?.color == currentPlayer.color) {
+                console.log('here');
                 selectPiece(other_piece);
             }
 
@@ -278,17 +267,22 @@ function addEventListeners() {
         }
     });
 
-    toggle_stockfish.addEventListener("click", (event) => {
-        use_stockfish = !use_stockfish;
+    toggle_ai.addEventListener("click", (event) => {
 
-        if (use_stockfish) {
-            toggle_stockfish.innerHTML = 'Stockfish on';
-            if (currentPlayer === black) {
-                sendFenToStockfish();
-            }
+        if (ai_mode == 'random') {
+            ai_mode = 'stockfish';
+        } else if (ai_mode == 'stockfish') {
+            ai_mode = 'off';
         } else {
-            toggle_stockfish.innerHTML = 'Stockfish off';
+            ai_mode = 'random'
         }
+        toggle_ai.innerHTML = `AI mode: ${ai_mode}`;
+        if (ai_mode == 'stockfish') {
+            if (!stockfish) {
+                loadStockfish();
+            }
+        }
+        makeBlackPlayerMove();
     })
 
 
@@ -466,6 +460,20 @@ function takePiece(piece, rank, file) {
 
 
 
+function makeStockfishMove(move) {
+    const file = letterToFile(move.charAt(0));
+    const rank = 8 - parseInt(move.charAt(1));
+    const newfile = letterToFile(move.charAt(2));
+    const newrank = 8 - parseInt(move.charAt(3));
+    const piece = getPieceAtPosition(rank, file);
+    if (piece) {
+        setTimeout(() => {
+            selectPiece(piece);
+            movePiece(piece, newrank, newfile);
+        }, 500);
+    }
+}
+
 function computerMakeRandomMove() {
     let bestMoves = [];
 
@@ -585,6 +593,9 @@ function moveAsAlgebraic(piece, rank, file) {
 
 
 function loadStockfish() {
+
+
+    // board.classList.add('loading');
     board_ready = false;
     stockfish = STOCKFISH();
     var fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
@@ -653,6 +664,11 @@ function movePiece(piece, rank, file) {
                 plies++;
 
 
+
+                console.log('selected', selectedPiece?.rank, selectedPiece?.file);
+                // console.log('curpl', currentPlayer?.color);
+
+
                 white.updateScore();
                 black.updateScore();
                 white.showScore();
@@ -662,11 +678,10 @@ function movePiece(piece, rank, file) {
 
                     endGame();
                 } else {
-                    switchPlayer();
 
-                    if (use_stockfish) {
-                        sendFenToStockfish();
-                    }
+                    switchPlayer();
+                    makeBlackPlayerMove();
+
 
                 }
 
@@ -678,6 +693,18 @@ function movePiece(piece, rank, file) {
 
 
     }
+}
+
+
+function makeBlackPlayerMove() {
+    if (currentPlayer == black) {
+        if (ai_mode == 'stockfish') {
+            sendFenToStockfish();
+        } else if (ai_mode == 'random') {
+            computerMakeRandomMove();
+        }
+    }
+
 }
 
 

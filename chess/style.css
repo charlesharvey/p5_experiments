@@ -29,7 +29,7 @@ h1 {
 }
 
 
-.toggle_stockfish,
+.toggle_ai,
 .player_scores {
     position: absolute;
     left: 0;
@@ -39,7 +39,7 @@ h1 {
 
 }
 
-.toggle_stockfish {
+.toggle_ai {
     cursor: pointer;
 }
 
@@ -48,9 +48,13 @@ h1 {
     left: auto;
 }
 
+.hide {
+    display: none;
+}
+
 @media (min-width: 800px) {
 
-    .toggle_stockfish,
+    .toggle_ai,
     .player_scores {
         bottom: auto;
         top: 0;
