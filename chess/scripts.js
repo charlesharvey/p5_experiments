@@ -219,7 +219,7 @@ function addEventListeners() {
         const bp = getBoardPositionFromEvent(event);
         const other_piece = getPieceAtPosition(bp.rank, bp.file);
 
-        console.log(selectedPiece);
+
         if (selectedPiece) {
 
             if (selectedPiece === other_piece) {
@@ -236,7 +236,7 @@ function addEventListeners() {
         } else {
             // if no selected piece currently
             if (other_piece?.color == currentPlayer.color) {
-                console.log('here');
+
                 selectPiece(other_piece);
             }
 
@@ -461,6 +461,10 @@ function takePiece(piece, rank, file) {
 
 
 function makeStockfishMove(move) {
+
+
+
+
     const file = letterToFile(move.charAt(0));
     const rank = 8 - parseInt(move.charAt(1));
     const newfile = letterToFile(move.charAt(2));
@@ -468,10 +472,14 @@ function makeStockfishMove(move) {
     const piece = getPieceAtPosition(rank, file);
     if (piece) {
         setTimeout(() => {
-            selectPiece(piece);
-            movePiece(piece, newrank, newfile);
+            if (currentPlayer === black) {
+                selectPiece(piece);
+                movePiece(piece, newrank, newfile);
+            }
         }, 500);
     }
+
+
 }
 
 function computerMakeRandomMove() {
@@ -554,10 +562,10 @@ function make_fen_string() {
 
     }
 
-    if (currentPlayer.color == 'white') {
-        fe = `${fe} w`;
-    } else {
+    if (currentPlayer?.color == 'black') {
         fe = `${fe} b`;
+    } else {
+        fe = `${fe} w`;
     }
 
     const moves = Math.floor(plies / 2)
@@ -598,7 +606,7 @@ function loadStockfish() {
     // board.classList.add('loading');
     board_ready = false;
     stockfish = STOCKFISH();
-    var fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    const fenString = make_fen_string();
     // start UCI
     stockfish.postMessage("uci");
     // start new game
@@ -606,7 +614,7 @@ function loadStockfish() {
     // set new game position
     stockfish.postMessage("position fen " + fenString);
     // start search
-    stockfish.postMessage("go depth 10");
+    stockfish.postMessage("go depth 5");
     stockfish.onmessage = function (event) {
 
         if (!board_ready) {
@@ -617,7 +625,7 @@ function loadStockfish() {
 
         //NOTE: Web Workers wrap the response in an object.
         const response = (event.data ? event.data : event);
-        // console.log(response);
+        console.log(response);
 
         if (response.includes('bestmove')) {
 
@@ -626,14 +634,13 @@ function loadStockfish() {
                 bestmove = bestmove.split('ponder')[0]
             }
             bestmove = bestmove.trim();
-            if (currentPlayer.color == 'black') {
+            if (currentPlayer.color == 'black' && ai_mode == 'stockfish') {
                 if (bestmove && bestmove != '') {
                     makeStockfishMove(bestmove);
                 } else {
                     computerMakeRandomMove()
                 }
             }
-
         }
 
         if (response.includes('mate 0')) {
@@ -664,11 +671,6 @@ function movePiece(piece, rank, file) {
                 plies++;
 
 
-
-                console.log('selected', selectedPiece?.rank, selectedPiece?.file);
-                // console.log('curpl', currentPlayer?.color);
-
-
                 white.updateScore();
                 black.updateScore();
                 white.showScore();
@@ -697,9 +699,12 @@ function movePiece(piece, rank, file) {
 
 
 function makeBlackPlayerMove() {
+
+    sendFenToStockfish();
+
     if (currentPlayer == black) {
         if (ai_mode == 'stockfish') {
-            sendFenToStockfish();
+
         } else if (ai_mode == 'random') {
             computerMakeRandomMove();
         }
@@ -710,7 +715,7 @@ function makeBlackPlayerMove() {
 
 function sendFenToStockfish() {
     if (stockfish) {
-        let fen = make_fen_string();
+        const fen = make_fen_string();
         stockfish.postMessage(`position fen ${fen}`);
         stockfish.postMessage("go depth 5");
     }
@@ -720,8 +725,6 @@ function sendFenToStockfish() {
 function switchPlayer() {
     if (currentPlayer.color === 'white') {
         currentPlayer = black;
-
-        // computerMakeRandomMove();
     } else {
         currentPlayer = white;
     }
