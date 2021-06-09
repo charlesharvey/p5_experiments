@@ -6,6 +6,7 @@
     --selected-color: #1c90d3;
     --last-moved-color: #4ecd92;
     --hovered-color: #96d5da;
+    --checked-color: #e97f6c;
 }
 
 
@@ -110,6 +111,9 @@ h1 {
 
 }
 
+.piece.checked {
+    background-color: var(--checked-color);
+}
 
 .piece.selected {
     background-color: var(--selected-color);

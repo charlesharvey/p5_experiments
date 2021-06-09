@@ -14,6 +14,7 @@ class Piece {
         this.file = file;
         this.value = 100;
         this.captured = false;
+        this.checked = false;
         this.other;
         this.setClassList();
         this.setPiecePosition();
@@ -48,6 +49,23 @@ class Piece {
             this.letter = this.letter.toUpperCase();
         }
     }
+
+
+    setIsChecked() {
+
+        if (this.type === 'king') {
+            if (this.checked) {
+                this.element.classList.add('checked');
+            } else {
+                this.element.classList.remove('checked');
+            }
+
+        }
+
+
+
+    }
+
 
     upgrade(type) {
         this.type = type;
@@ -121,9 +139,6 @@ class Player {
 
     updateScore() {
         this.score = this.taken_pieces.map(p => p.value).reduce((a, b) => a + b, 0);
-
-
-
     }
     showScore() {
 
@@ -140,6 +155,26 @@ class Player {
 
     theirTurn() {
         return this.color == currentPlayer;
+    }
+
+    myKing() {
+        return pieces.find(p => p.type === 'king' && p.color == this.color);
+    }
+
+    checkIfChecked() {
+        const king = this.myKing();
+        const otherPieces = pieces.filter(p => p.color !== this.color);
+        let can_check_king = false;
+        otherPieces.forEach(other_piece => {
+            if (!can_check_king) {
+                if (legalMove(other_piece, king.rank, king.file)) {
+                    can_check_king = true;
+                }
+            }
+        })
+        king.checked = can_check_king;
+        king.setIsChecked();
+
     }
 }
 
@@ -599,6 +634,17 @@ function moveAsAlgebraic(piece, rank, file) {
 }
 
 
+function calculateLegalMoves(piece) {
+
+
+
+
+    return [];
+
+
+}
+
+
 
 function loadStockfish() {
 
@@ -675,6 +721,9 @@ function movePiece(piece, rank, file) {
                 black.updateScore();
                 white.showScore();
                 black.showScore();
+
+                white.checkIfChecked();
+                black.checkIfChecked();
 
                 if (isCheckmate()) {
 
