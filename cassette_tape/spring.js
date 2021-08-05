@@ -5,7 +5,7 @@ class Spring {
 
 
 
-        this.restLength = 1;
+        this.restLength = 3;
         this.k = 0.9;
 
         this.a = a;

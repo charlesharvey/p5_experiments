@@ -9,6 +9,7 @@ class Particle {
         this.friction = 0.99;
 
         this.maxSpeed = 5;
+        this.maxForce = 0.3;
     }
 
 
@@ -19,8 +20,10 @@ class Particle {
 
     update() {
         if (!this.locked) {
+
+            this.acc.limit(this.maxForce);
             this.vel.add(this.acc);
-            this.vel.limit(this.maxSpeed);
+            // this.vel.limit(this.maxSpeed);
             this.pos.add(this.vel);
             this.acc.mult(0);
 

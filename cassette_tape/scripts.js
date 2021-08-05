@@ -4,6 +4,7 @@ let particles
 let springs
 let gravity
 let wind
+let windTheta;
 let target;
 
 function setup() {
@@ -12,6 +13,7 @@ function setup() {
     createCanvas(windowWidth - 20, windowHeight - 20);
 
     gravity = createVector(0, -0.5);
+    windTheta = random(10000);
     wind = createVector(0.3, 0);
     target = createVector(0, 0);
 
@@ -55,9 +57,12 @@ function draw() {
     particles.forEach(particle => {
 
 
-        let f = p5.Vector.sub(particle.pos, target);
-        f.normalize().mult(-1);
-        particle.applyForce(f);
+        // let f = p5.Vector.sub(particle.pos, target);
+        // f.normalize().mult(-1);
+        // particle.applyForce(f);
+
+
+        particle.applyForce(wind);
         particle.applyForce(gravity);
         particle.update();
         particle.show();
@@ -79,6 +84,11 @@ function draw() {
     })
 
 
+
+    const wx = map(noise(windTheta), 0, 1, -0.5, 0.5);
+    const wy = map(noise(windTheta + 1000), 0, 1, -0.5, 0.5);
+    wind.set(wx, wy);
+    windTheta += 0.1;
 
 
 
