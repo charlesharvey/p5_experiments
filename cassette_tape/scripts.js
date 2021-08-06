@@ -63,12 +63,9 @@ function draw() {
     background(0);
 
 
-    fill(255);
-    noStroke();
-    text(`${mouseX}, ${mouseY}`, 40, 40);
 
-    p1 = map(noise(zeta), 0, 1, 10, noOfParticles / 3);
-    p2 = map(noise(zeta), 0, 1, noOfParticles / 3 * 2, noOfParticles - 10);
+    // p1 = map(noise(zeta), 0, 1, 10, noOfParticles / 3);
+    // p2 = map(noise(zeta), 0, 1, noOfParticles / 3 * 2, noOfParticles - 10);
 
 
     ribbons.forEach(ribbon => {
@@ -84,12 +81,12 @@ function draw() {
             // particle.applyForce(mouseForce);
 
             particle.applyForce(ribbon.wind);
-
-            if ((pp > p1 && pp < p2)) {
-                particle.applyForce(gravity.copy().mult(-0.1));
-            } else {
-                particle.applyForce(gravity);
-            }
+            particle.applyForce(gravity);
+            // if ((pp > p1 && pp < p2)) {
+            //     particle.applyForce(gravity.copy().mult(-0.1));
+            // } else {
+            //     particle.applyForce(gravity);
+            // }
 
             particle.update();
             particle.show();
