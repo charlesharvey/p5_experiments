@@ -6,7 +6,7 @@ class Particle {
         this.vel = createVector(0, 0);
         this.acc = createVector(0, 0);
         this.locked = false;
-        this.friction = 0.99;
+        this.friction = 0.91;
 
         this.maxSpeed = 5;
         this.maxForce = 0.3;

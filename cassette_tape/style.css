@@ -10,7 +10,7 @@ body {
 
 
 #truck {
-    background: url('truck.svg') no-repeat center center;
+    background: url('truck_bare.svg') no-repeat center center;
     background-size: 600px;
     width: 700px;
     height: 700px;
@@ -18,4 +18,46 @@ body {
     top: 0;
     left: 0;
     z-index: 3;
+}
+
+
+#truck2 {
+    width: 500px;
+    height: 700px;
+}
+
+#path14,
+#path16,
+#path18 {
+
+    stroke: #ec008c !important;
+    stroke-width: 70px;
+    fill: none !important;
+    stroke-dasharray: 50000;
+    stroke-dashoffset: 50000;
+    animation: growdash 13s linear infinite;
+}
+
+#path16 {
+    stroke: #f68332 !important;
+    animation-delay: 2s;
+}
+
+#path18 {
+    stroke: #fff200 !important;
+    animation-delay: 4s;
+}
+
+@keyframes growdash {
+    0% {
+        stroke-dashoffset: 50000;
+    }
+
+    80% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: 50000;
+    }
 }
