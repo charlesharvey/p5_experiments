@@ -22,7 +22,7 @@ function draw() {
     background(0);
 
     translate(width / 2, height / 2);
-    rotate(frameCount / 300 * TWO_PI);
+    rotate(frameCount / 450 * TWO_PI);
 
     let polygons = [];
 
