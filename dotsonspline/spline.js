@@ -44,15 +44,20 @@ class Spline {
         noStroke();
 
 
+
+
+        const cc1 = p5.Vector.add(this.control1, target);
+        const cc2 = p5.Vector.add(this.control2, target);
+
         for (let i = 0; i < this.numberofdots; i++) {
             const p = (this.percentage + (i / this.numberofdots)) % 1;
-            let d1 = p5.Vector.lerp(this.point1, this.control1, p);
-            let d2 = p5.Vector.lerp(this.control1, this.point2, p);
+            let d1 = p5.Vector.lerp(this.point1, cc1, p);
+            let d2 = p5.Vector.lerp(cc1, this.point2, p);
 
 
             let p1 = p5.Vector.lerp(d1, d2, p);
-            let d3 = p5.Vector.lerp(this.point1, this.control2, p);
-            let d4 = p5.Vector.lerp(this.control2, this.point2, p);
+            let d3 = p5.Vector.lerp(this.point1, cc2, p);
+            let d4 = p5.Vector.lerp(cc2, this.point2, p);
             let p2 = p5.Vector.lerp(d3, d4, p);
             let g1 = p5.Vector.lerp(p1, p2, p);
 

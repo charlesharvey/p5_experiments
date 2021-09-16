@@ -3,11 +3,15 @@
 let splines;
 
 
+let target;
+
 function setup() {
 
 
     createCanvas(windowWidth - 20, windowHeight - 20);
 
+
+    target = createVector(0, 0);
     splines = [];
     for (let i = 0; i < 10; i++) {
         splines.push(new Spline(i / 10));
@@ -15,6 +19,10 @@ function setup() {
     }
 
 
+}
+
+function mouseMoved() {
+    target.set((mouseX - width) / 2, (mouseY - height) / 2);
 }
 
 
@@ -27,5 +35,8 @@ function draw() {
         spline.update();
         spline.show();
     });
+
+
+
 
 }
