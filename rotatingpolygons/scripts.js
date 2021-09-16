@@ -3,12 +3,12 @@ const numberPolygons = 16;
 let sides = 7;
 let radius = 200;
 let percentage = 0.5;
-
+let hue = 0;
 function setup() {
 
 
     createCanvas(windowWidth - 20, windowHeight - 20);
-
+    colorMode(HSB, 255, 255, 255, 255)
 }
 
 function mouseMoved() {
@@ -61,8 +61,8 @@ function draw() {
     }
 
 
-    fill(100, 205, 30, 10);
-    stroke(255, 100);
+    fill(hue, 235, 130, 20);
+    stroke(255, 70);
     polygons.forEach((polygon, ii) => {
 
         if (ii == polygons.length - 1) {
@@ -80,6 +80,7 @@ function draw() {
     percentage = (percentage + 0.003) % 1;
 
 
+    hue = (hue + 0.3) % 255;
 
 
 }
