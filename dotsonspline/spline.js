@@ -1,33 +1,33 @@
 class Spline {
 
 
-    constructor(theta) {
+    constructor(c1x, c1y, p1x, p1y, c2x, c2y, p2x, p2y, theta) {
         this.theta = theta;
         this.percentage = 0;
 
+        scale = 3; // svgs might be too small
+
+        // const p1x = map(theta, 0, 1, 100, 200);
+        // const p1y = height / 4;
+
+        // const p2x = map(theta, 0, 1, width / 2, width / 2 + 200);
+        // const p2y = height / 4;
+
+        // const c1x = map(theta, 0, 1, width / 2 - 400, width / 2 - 300);
+        // const c1y = map(theta, 0, 1, height + 500, height + 650)
+
+        // const c2x = map(theta, 0, 1, width / 2 + 300, width / 2 + 400);
+        // const c2y = map(theta, 0, 1, height + 500, height + 650)
 
 
-        const p1x = map(theta, 0, 1, 100, 200);
-        const p1y = height / 2;
-
-        const p2x = map(theta, 0, 1, width - 100, width - 200);
-        const p2y = height / 2;
-
-        const c1x = map(theta, 0, 1, width / 2 - 400, width / 2 - 300);
-        const c1y = map(theta, 0, 1, -50, -150)
-
-        const c2x = map(theta, 0, 1, width / 2 + 300, width / 2 + 400);
-        const c2y = map(theta, 0, 1, height + 500, height + 650)
-
-
-        this.point1 = createVector(p1x, p1y);
-        this.point2 = createVector(p2x, p2y);
-        this.control1 = createVector(c1x, c1y);
-        this.control2 = createVector(c2x, c2y);
+        this.point1 = createVector(p1x * scale, p1y * scale);
+        this.point2 = createVector(p2x * scale, p2y * scale);
+        this.control1 = createVector(c1x * scale, c1y * scale);
+        this.control2 = createVector(c2x * scale, c2y * scale);
         this.dotsize = 3;
-        this.numberofdots = 50;
-        // this.speed = map(theta, 0, 1, 0.001, 0.004);
-        this.speed = random(0.001, 0.004);
+        this.numberofdots = 40;
+        this.speed = map(theta, 0, 1, 0.001, 0.004);
+        // this.speed = random(0.001, 0.004);
         // this.speed = 0.003;
 
 
@@ -46,8 +46,8 @@ class Spline {
 
 
 
-        const cc1 = p5.Vector.add(this.control1, target);
-        const cc2 = p5.Vector.add(this.control2, target);
+        const cc1 = this.control1;//  p5.Vector.add(this.control1, target);
+        const cc2 = this.control2;//  p5.Vector.add(this.control2, target);
 
         for (let i = 0; i < this.numberofdots; i++) {
             const p = (this.percentage + (i / this.numberofdots)) % 1;
@@ -62,7 +62,7 @@ class Spline {
             let g1 = p5.Vector.lerp(p1, p2, p);
 
 
-            let dot = g1; //p1;
+            let dot = g1;  // p1; //
 
             const v = p - 0.5;
             const w = 1 / Math.exp(v * v);
@@ -76,6 +76,7 @@ class Spline {
         // ellipse(this.point2.x, this.point2.y, 10, 10);
         // fill(0, 255, 0);
         // ellipse(this.control1.x, this.control1.y, 10, 10);
+        // ellipse(this.control2.x, this.control2.y, 10, 10);
 
     }
 }
