@@ -1,11 +1,13 @@
 class Spline {
 
 
-    constructor(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, theta) {
-        this.theta = theta;
+    constructor(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y) {
+        this.theta = Math.random(); //theta;
         this.percentage = 0;
 
-        scale = 3; // svgs might be too small
+
+
+        scale = 1; // svgs might be too small
 
         // const p1x = map(theta, 0, 1, 100, 200);
         // const p1y = height / 4;
@@ -29,13 +31,22 @@ class Spline {
         c2x *= scale;
         c2y *= scale;
 
+
+
+
         this.point1 = createVector(p1x, p1y);
         this.point2 = createVector(p2x + p1x, p2y + p1y);
         this.control1 = createVector(c1x + p1x, c1y + p1y);
         this.control2 = createVector(c2x + p1x, c2y + p1y);
         this.dotsize = 3;
-        this.numberofdots = 50;
-        this.speed = map(theta, 0, 1, 0.001, 0.004);
+
+
+        const dist = p5.Vector.dist(this.point1, this.point2);
+        console.log(dist);
+
+
+        this.numberofdots = map(dist, 50, 400, 10, 25);
+        this.speed = map(dist, 50, 400, 0.001, 0.005);
         // this.speed = random(0.001, 0.004);
         // this.speed = 0.003;
 
@@ -75,10 +86,10 @@ class Spline {
 
             const v = p - 0.5;
             const w = 1 / Math.exp(v * v);
-            const b = map(w, 0.8, 1, 0, 255);
+            const b = map(w, 0.8, 1, 50, 255);
+            const r = map(w, 0.8, 1, 1, 4);
             fill(b);
-            fill(255);
-            ellipse(dot.x, dot.y, this.dotsize, this.dotsize);
+            ellipse(dot.x, dot.y, r, r);
         }
 
         // fill(255, 0, 0);
