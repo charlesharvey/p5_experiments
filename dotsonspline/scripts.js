@@ -21,6 +21,9 @@ function setup() {
     splines.push(new Spline(48.237586, 100.50635, 0, 0, 168.042884, 168.58143, 84.005204, -4.233337, 0.2));
     splines.push(new Spline(46.861752, 110.34885, 0, 0, 163.736388, 148.25219, 79.639588, -8.99584, 0.3));
 
+
+
+
 }
 
 function mouseMoved() {
@@ -31,7 +34,7 @@ function mouseMoved() {
 
 function draw() {
     background(0);
-    translate(100, 100);
+
 
 
     splines.forEach(spline => {
