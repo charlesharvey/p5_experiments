@@ -5,6 +5,7 @@ class Circle {
         this.r = r;
         this.child;
 
+
     }
 
     addChild() {
@@ -13,9 +14,12 @@ class Circle {
 
     show() {
 
-        stroke(255, 0, 0);
-        strokeWeight(1);
         noFill();
+        stroke(hue, 220, 150);
+        strokeWeight(1);
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
+
+
+
     }
 }

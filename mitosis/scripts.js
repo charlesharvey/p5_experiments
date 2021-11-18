@@ -3,6 +3,7 @@
 let cells;
 let bettercells;
 let evenbettercells;
+let evenevenbettercells;
 
 
 function setup() {
@@ -16,9 +17,13 @@ function setup() {
 }
 
 function reset() {
-    evenbettercells = [];
-    const cell = new Evenbettercell();
-    evenbettercells.push(cell);
+    evenevenbettercells = [];
+    const cell = new Evenevenbettercell();
+    evenevenbettercells.push(cell);
+
+    // evenbettercells = [];
+    // const cell = new Evenbettercell();
+    // evenbettercells.push(cell);
     // bettercells = [];
     // const bettercell = new Bettercell();
     // bettercells.push(bettercell);
@@ -34,10 +39,16 @@ function reset() {
 function draw() {
     background(0);
 
-    evenbettercells.forEach(cell => {
+    evenevenbettercells.forEach(cell => {
         cell.update();
         cell.show();
     });
+
+
+    // evenbettercells.forEach(cell => {
+    //     cell.update();
+    //     cell.show();
+    // });
 
     // bettercells.forEach(cell => {
     //     cell.update();

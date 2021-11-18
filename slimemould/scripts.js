@@ -7,12 +7,14 @@ let cols, rows;
 
 let pheremones;
 
-const numberOfCells = 1000;
+const numberOfCells = 2000;
 const grid = 4;  // size of grid
-const degredationSpeed = 0.93;            // pheremones degrade over time
-const cellSenseRange = 40;       // how far can they sense pheremone
-const cellSensePrecision = 10;         // how many angles does the cell check around it
-const cellMaxSpeed = 1.3;         // how many angles does the cell check around it
+const degredationSpeed = 0.903;            // pheremones degrade over time
+const cellSenseRange = 50;       // how far can they sense pheremone
+const cellSensePrecision = 7;         // how many angles does the cell check around it
+const cellMaxSpeed = 3.3;         // how many angles does the cell check around it
+const checkingPointsShow = false;
+
 
 function setup() {
 
@@ -86,6 +88,12 @@ function draw() {
         cell.depositPheremone();
         // cell.show();
     });
+
+
+    // 45 degree lines
+    // stroke(255);
+    // line(0, 0, 1000, 1000);
+    // line(500, 0, 0, 500);
 
 
 

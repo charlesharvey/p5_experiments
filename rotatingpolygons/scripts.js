@@ -22,7 +22,7 @@ function draw() {
     background(0);
 
     translate(width / 2, height / 2);
-    rotate(frameCount / 450 * TWO_PI);
+    rotate(frameCount / 600 * TWO_PI);
 
     let polygons = [];
 
@@ -77,7 +77,7 @@ function draw() {
     })
 
 
-    percentage = (percentage + 0.003) % 1;
+    percentage = (percentage + 0.005) % 1;
 
 
     hue = (hue + 0.3) % 255;

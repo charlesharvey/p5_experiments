@@ -9,7 +9,7 @@ class Cell {
 
         this.vel = p5.Vector.random2D();
         this.vel.setMag(2);
-        this.r = grid / 2;
+        this.r = grid;
 
 
         this.heading = 0; // this.vel.heading();
@@ -96,10 +96,19 @@ class Cell {
                 const r = (this.senseRange * (d / this.distancesToCheck))
                 const x = sin(theta) * r;
                 const y = cos(theta) * r;
+
+
+                if (checkingPointsShow) {
+                    fill(255, 100, 100);
+                    noStroke();
+                    ellipse(x + this.pos.x, y + this.pos.y, 5, 5);
+                }
+
+
                 const ti = this.whichI(this.pos.x + x);
                 const tj = this.whichJ(this.pos.y + y);
                 if (ti && tj) {
-                    const tval = pheremones[ti][tj];
+                    const tval = pheremones[ti][tj] * (3 / this.distancesToCheck);
                     amountAtThisAngle += tval;
                 }
 

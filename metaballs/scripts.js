@@ -2,7 +2,7 @@
 let blobs;
 
 let grid = 7;
-let numberofblobs = 7;
+let numberofblobs = 6;
 let rows, cols;
 let w, h;
 
@@ -13,7 +13,7 @@ function setup() {
     h = 450;
 
 
-    colorMode(HSB);
+    // colorMode(HSB);
     calcGrid();
     rectMode(CENTER);
 
@@ -46,7 +46,7 @@ function showSquares() {
                 // d += (blob.r * blob.r) / distSq(x * grid, y * grid, blob.pos.x, blob.pos.y);
             });
 
-            fill(d * 500, 200, 200);
+            fill(d * 500, 100, 100);
             rect(x * grid, y * grid, grid, grid);
         }
     }

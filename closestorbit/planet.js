@@ -17,11 +17,14 @@ class Planet {
         this.records = {};
 
 
+        this.incr = Math.sqrt(10 * this.size / this.radius) / 20;
+
+
     }
 
     update() {
-        const incr = map(this.radius, 0, 900, 0.05, 0.002);
-        this.angle += incr;
+        // const incr = map(this.radius, 0, 900, 0.05, 0.002);
+        this.angle += this.incr;
     }
 
 

@@ -4,7 +4,7 @@ const useWebcam = false;
 let img, conv, capture, temp_squished, squished;
 // let energymap, energyarray, directionsarray;
 
-const linesToRemove = 1;
+const linesToRemove = 10;
 
 
 const filter_x = [
@@ -22,7 +22,7 @@ const filter_y = [
 
 
 function preload() {
-    size = 200;
+    size = 201;
 
     if (useWebcam) {
         let constraints = {
@@ -51,7 +51,7 @@ function preload() {
         // }
         // img.updatePixels();
 
-        img = loadImage('puppy.jpg');
+        img = loadImage('balloon.jpg');
         // img = image(puppy, 0, 0, size, size);
     }
 }
@@ -150,24 +150,29 @@ function seamCarve(image) {
 
     image.loadPixels();
     newimage.loadPixels();
+    let new_w = 0;
     for (let i = 0; i < image.width; i++) {
         offsetsarray[i] = 0;
         for (let j = 0; j < image.height; j++) {
-            const ind = index(i, j, image);
+            const ind = index(i, j, newimage);
 
-            image.pixels[ind + 0] = 0;
-            image.pixels[ind + 1] = 0;
-            image.pixels[ind + 2] = 0;
+            // image.pixels[ind + 0] = 0;
+            // image.pixels[ind + 1] = 0;
+            // image.pixels[ind + 2] = 0;
 
 
-            let imgindex = index(i, j, image);
+            // let imgindex = index(i, j, image);
 
             if (energymap.pixels[ind + 3] == 254) {
-                offsetsarray[i] += 1
+
+                offsetsarray[i] += 1;
+
+
                 // should be removed
             }
 
-            imgindex = index(i + offsetsarray[i], j, image);
+
+            let imgindex = index(i + offsetsarray[i], j, image);
             newimage.pixels[ind + 0] = image.pixels[imgindex + 0];
             newimage.pixels[ind + 1] = image.pixels[imgindex + 1];
             newimage.pixels[ind + 2] = image.pixels[imgindex + 2];
@@ -222,10 +227,10 @@ function draw() {
 
         // SHOW STAGES OF CONVERSION ON SCREEN
         image(img, 0, 0);
-        image(conv, size, 0);
-        image(energymap, size * 2, 0);
-        image(squished, size * 3, 0);
 
+        image(energymap, size * 1, 0);
+        image(squished, size * 2, 0);
+        // image(temp_squished, size * 3, 0);
         noLoop();
 
     }

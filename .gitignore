@@ -1,1 +1,11 @@
 pushtoprod.sh
+
+**/node_modules
+aschess/stockfish.js
+
+montecarlo
+sudokumaker
+jumpinggame2
+abkguessinggame
+ml_puppymoose
+sphereintersection
