@@ -2,7 +2,6 @@ class LegalPlace {
   constructor(rank, file) {
     this.file = file;
     this.rank = rank;
-    console.log(rank, file);
     this.element = document.createElement("DIV");
     this.element.classList = `legal_move`;
     this.element.style.transform = `translate(${
@@ -25,6 +24,8 @@ class Piece {
     this.letter = "p";
     this.rank = rank;
     this.file = file;
+    this.provisional_rank;
+    this.provisional_file;
     this.value = 100;
     this.captured = false;
     this.checked = false;
@@ -157,6 +158,9 @@ class Player {
 
   checkIfChecked() {
     const king = this.myKing();
+    if (!king) {
+      endGame();
+    }
     const otherPieces = pieces.filter((p) => p.color !== this.color);
     let can_check_king = false;
     otherPieces.forEach((other_piece) => {
@@ -312,6 +316,24 @@ function scoreMove(piece, rank, file) {
 }
 
 function legalMove(piece, rank, file) {
+  let is_legal_move = legalMoveWithoutSavingKing(piece, rank, file);
+
+  if (!is_legal_move) {
+    return false;
+  }
+
+  const king = pieces.find((p) => p.type === "king" && p.color === piece.color);
+  if (!king.checked) {
+    return true;
+  }
+  console.log("checked should only allow move that stop king being checked");
+
+  piece.provisional_file = file;
+  piece.provisional_rank = rank;
+  return true;
+}
+
+function legalMoveWithoutSavingKing(piece, rank, file) {
   const otherPiece = getPieceAtPosition(rank, file);
   if (otherPiece) {
     if (otherPiece.color === currentPlayer.color) {
@@ -365,9 +387,15 @@ function legalMove(piece, rank, file) {
     }
     return false;
   } else if (type == "knight") {
-    return [17, -17, 10, -10, -6, 6, 15, -15].includes(diff_ind);
+    const tr = Math.abs(cp.rank - rank);
+    const tf = Math.abs(cp.file - file);
+    return (tr === 2 && tf === 1) || (tr === 1 && tf === 2);
   } else if (type == "king") {
-    return [8, -8, 1, -1, 7, -7, 9, -9].includes(diff_ind);
+    const tr = Math.abs(cp.rank - rank);
+    const tf = Math.abs(cp.file - file);
+    return (
+      (tr === 1 && tf === 0) || (tr === 0 && tf === 1) || (tr === 1 && tf === 1)
+    );
   } else if (type == "queen") {
     const diagonally = Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
     const straightline = rank == cp.rank || file == cp.file;
@@ -582,7 +610,6 @@ function moveAsAlgebraic(piece, rank, file) {
 function calculateLegalMoves(piece) {
   const moves = [];
 
-  console.log(piece);
   for (let r = 0; r < 8; r++) {
     for (let f = 0; f < 8; f++) {
       if (legalMove(piece, r, f)) {
