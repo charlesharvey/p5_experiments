@@ -29,6 +29,7 @@ class Piece {
     this.value = 100;
     this.captured = false;
     this.checked = false;
+    this.has_moved = false;
     this.other;
     this.setClassList();
     this.setPiecePosition();
@@ -316,7 +317,7 @@ function scoreMove(piece, rank, file) {
 }
 
 function legalMove(piece, rank, file) {
-  let is_legal_move = legalMoveWithoutSavingKing(piece, rank, file);
+  let is_legal_move = legalMoveIgnoringKing(piece, rank, file);
 
   if (!is_legal_move) {
     return false;
@@ -333,7 +334,7 @@ function legalMove(piece, rank, file) {
   return true;
 }
 
-function legalMoveWithoutSavingKing(piece, rank, file) {
+function legalMoveIgnoringKing(piece, rank, file) {
   const otherPiece = getPieceAtPosition(rank, file);
   if (otherPiece) {
     if (otherPiece.color === currentPlayer.color) {
@@ -393,8 +394,28 @@ function legalMoveWithoutSavingKing(piece, rank, file) {
   } else if (type == "king") {
     const tr = Math.abs(cp.rank - rank);
     const tf = Math.abs(cp.file - file);
+    let castling = false;
+
+    let king_rank = 0;
+    if (color == "white") {
+      king_rank = 7;
+    }
+
+    if (!piece.has_moved) {
+      if (
+        cp.rank == king_rank &&
+        rank == king_rank &&
+        (file == 2 || file == 6)
+      ) {
+        castling = true;
+      }
+    }
+
     return (
-      (tr === 1 && tf === 0) || (tr === 0 && tf === 1) || (tr === 1 && tf === 1)
+      (tr === 1 && tf === 0) ||
+      (tr === 0 && tf === 1) ||
+      (tr === 1 && tf === 1) ||
+      castling
     );
   } else if (type == "queen") {
     const diagonally = Math.abs(rank - cp.rank) === Math.abs(file - cp.file);
@@ -580,6 +601,8 @@ function make_fen_string() {
     fe = `${fe} w`;
   }
 
+  fe = `${fe}  KQkq `;
+
   const moves = Math.floor(plies / 2);
   fe = `${fe} - 0 ${moves}`;
 
@@ -674,12 +697,32 @@ function endGame() {
   gameEnded = true;
 }
 
+function castleIfCastling(piece, rank, file) {
+  if (piece.type == "king") {
+    let check_f = 0;
+    let move_f = 3;
+    if (file == 6) {
+      check_f = 7;
+      move_f = 5;
+    }
+    let rook = pieces.find(
+      (p) => p.type == "rook" && p.color === piece.color && p.file == check_f
+    );
+    if (rook) {
+      rook.setRankAndFile(rook.rank, move_f);
+    }
+  }
+}
+
 function movePiece(piece, rank, file) {
   if (!gameEnded) {
     if (piece.color == currentPlayer.color) {
       if (legalMove(piece, rank, file)) {
         lastMovedPiece = selectedPiece;
         moveLastMovedStartingPlace(piece.rank, piece.file);
+
+        piece.has_moved = true;
+        castleIfCastling(piece, rank, file);
 
         takePiece(piece, rank, file);
         piece.setRankAndFile(rank, file);
