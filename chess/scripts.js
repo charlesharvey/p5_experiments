@@ -698,7 +698,11 @@ function endGame() {
 }
 
 function castleIfCastling(piece, rank, file) {
-  if (piece.type == "king") {
+  let king_rank = 7;
+  if (piece.color == "black") {
+    king_rank = 0;
+  }
+  if (piece.type == "king" && king_rank == rank) {
     let check_f = 0;
     let move_f = 3;
     if (file == 6) {
