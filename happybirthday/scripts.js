@@ -66,7 +66,7 @@ class Charles {
   }
 }
 
-let useImage = false;
+let useImage = true;
 let target;
 let charleses;
 let charlesimage;
