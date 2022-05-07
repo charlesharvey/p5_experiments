@@ -8,8 +8,8 @@ class Charles {
     this.acc = createVector(0, 0);
     this.image = image;
 
-    this.width = random(30, 110);
-    this.height = this.width * (147 / 100);
+    this.width = random(30, 130);
+    this.height = this.width * (80 / 100);
   }
 
   applyForce(force) {
