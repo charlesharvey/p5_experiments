@@ -10,7 +10,7 @@ class Demon {
   constructor() {
     this.x = width / 2;
     this.y = height / 2;
-    this.height = 100;
+    this.height = height * 0.29;
 
     this.topy = this.y - this.height / 2;
     this.bottomy = this.y + this.height / 2;
@@ -57,7 +57,7 @@ class Demon {
     line(this.x, 0, this.x, height);
 
     if (this.show_door) {
-      stroke(255);
+      stroke(100, 255, 100);
     } else {
       stroke(255, 140);
     }
@@ -72,9 +72,9 @@ class Particle {
     this.r = 8;
 
     if (temp == "hot") {
-      this.vel.mult(random(5, 10));
+      this.vel.mult(random(6, 12));
     } else {
-      this.vel.mult(random(2, 4));
+      this.vel.mult(random(3, 6));
     }
   }
 

@@ -18,19 +18,13 @@ function setup() {
 function draw() {
   background(0);
 
-  // axes
-  stroke(255);
-  strokeWeight(1);
-  line(0, height / 2, width, height / 2);
-  line(width / 2, 0, width / 2, height);
-
   //lines
 
   calculateLines();
 
   noFill();
   strokeWeight(1);
-  stroke(66);
+  stroke(80);
   beginShape();
   l1s.forEach((p) => {
     vertex(resizeX(p.x), resizeY(p.y));
@@ -59,6 +53,12 @@ function draw() {
     vertex(resizeX(p.x), resizeY(p.y));
   });
   endShape();
+
+  // axes
+  stroke(200);
+  strokeWeight(1);
+  line(0, height / 2, width, height / 2);
+  line(width / 2, 0, width / 2, height);
 
   // points
   const size = 12;
@@ -112,6 +112,13 @@ function calculateLines() {
     fin.push(createVector(x, l1 + l2 + l3 + l4));
   }
 }
+
+// function mouseMoved() {
+//   d.set(
+//     map(mouseX, 0, width, -range, range),
+//     map(mouseY, 0, height, -range, range)
+//   );
+// }
 
 function movePoints() {
   const speed = 0.0014;
