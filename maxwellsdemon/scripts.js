@@ -4,7 +4,8 @@ let demon;
 
 let counts;
 
-const NUMBER_PARTICLES = 100;
+const MAX_NUMBER_PARTICLES = 400;
+const bri = 150;
 
 class Demon {
   constructor() {
@@ -17,7 +18,7 @@ class Demon {
     this.show_door = false;
   }
 
-  detect(ps) {
+  detect(ps, operational) {
     this.show_door = false;
     ps.forEach((p) => {
       const dx = Math.abs(p.pos.x - this.x);
@@ -43,25 +44,27 @@ class Demon {
           }
         }
 
-        if (should_bounce) {
+        if (should_bounce || !operational) {
           p.bounceX();
         }
       }
     });
   }
 
-  show() {
+  show(operational) {
     stroke(255);
     noFill();
     strokeWeight(3);
     line(this.x, 0, this.x, height);
 
-    if (this.show_door) {
-      stroke(100, 255, 100);
-    } else {
-      stroke(255, 140);
+    if (operational) {
+      if (this.show_door) {
+        stroke(100, 255, 100);
+      } else {
+        stroke(255, 140);
+      }
+      rect(this.x, this.y, 10, this.height);
     }
-    rect(this.x, this.y, 10, this.height);
   }
 }
 class Particle {
@@ -72,9 +75,9 @@ class Particle {
     this.r = 8;
 
     if (temp == "hot") {
-      this.vel.mult(random(6, 12));
+      this.vel.mult(random(4, 10));
     } else {
-      this.vel.mult(random(3, 6));
+      this.vel.mult(random(2, 6));
     }
   }
 
@@ -124,12 +127,16 @@ class Particle {
   }
 }
 
+function addParticle() {
+  particles.push(new Particle(random(width), random(height), "hot"));
+  particles.push(new Particle(random(width), random(height), "cold"));
+}
+
 function setup() {
-  createCanvas(windowWidth - 20, windowHeight - 20);
+  createCanvas(windowWidth - 5, windowHeight - 5);
   rectMode(CENTER);
-  for (let i = 0; i < NUMBER_PARTICLES; i++) {
-    particles.push(new Particle(random(width), random(height), "hot"));
-    particles.push(new Particle(random(width), random(height), "cold"));
+  for (let i = 0; i < 70; i++) {
+    addParticle();
   }
 
   demon = new Demon();
@@ -147,26 +154,48 @@ function resetCounts() {
 }
 
 function draw() {
-  background(0);
+  // background(0);
   resetCounts();
 
   particles.forEach((p) => {
     p.update();
-    p.show();
     p.count(counts);
   });
 
-  demon.detect(particles);
-  demon.show();
+  const pl = particles.length;
+  const lr = (counts.hot_left / pl) * bri;
+  const lb = (counts.cold_left / pl) * bri;
+  const rr = (counts.hot_right / pl) * bri;
+  const rb = (counts.cold_right / pl) * bri;
+
+  fill(lr, 0, lb);
+  rect(width / 4, height / 2, width / 2, height);
+  fill(rr, 0, rb);
+  rect((width / 4) * 3, height / 2, width / 2, height);
+
+  particles.forEach((p) => {
+    p.show();
+  });
+
+  const operational = frameCount > 200;
+  demon.detect(particles, operational);
+  demon.show(operational);
 
   noStroke();
 
-  textSize(20);
-  fill(0, 0, 255);
-  text(counts.cold_left, width / 2 - 40, 25);
-  text(counts.cold_right, width / 2 + 20, 25);
+  // textSize(20);
+  // fill(0, 0, 255);
+  // text(counts.cold_left, width / 2 - 40, 25);
+  // text(counts.cold_right, width / 2 + 20, 25);
 
-  fill(255, 0, 0);
-  text(counts.hot_left, width / 2 - 40, 50);
-  text(counts.hot_right, width / 2 + 20, 50);
+  // fill(255, 0, 0);
+  // text(counts.hot_left, width / 2 - 40, 50);
+  // text(counts.hot_right, width / 2 + 20, 50);
+
+  if (pl < MAX_NUMBER_PARTICLES) {
+    const fr = frameRate();
+    if (fr > 60) {
+      addParticle();
+    }
+  }
 }
