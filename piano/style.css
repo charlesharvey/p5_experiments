@@ -1,0 +1,96 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  padding: 50px;
+  background-color: #ddd;
+  margin: auto;
+  font-family: "Work Sans", sans-serif;
+}
+
+.container {
+  display: flex;
+}
+.keyboard {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: auto;
+  justify-content: center;
+  background-color: black;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.key {
+  border-radius: 10px;
+  height: 340px;
+  font-size: 1.7rem;
+  flex: 1 auto;
+  cursor: pointer;
+  background-color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 20px;
+  width: 50px;
+  max-width: 50px;
+  position: relative;
+}
+
+.key.key_e,
+.key.key_b {
+  margin-right: 3px;
+}
+
+.key.white {
+}
+
+.key.black {
+  background-color: black;
+  color: white;
+  height: 200px;
+  margin: 0 -22px;
+  z-index: 3;
+  width: 44px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.key.playing {
+  background-color: forestgreen;
+  animation: fadeOut 1.5s forwards;
+}
+
+.key.black.playing {
+  animation-name: fadeOutBlack;
+}
+@keyframes fadeOut {
+  from {
+    background-color: forestgreen;
+  }
+  to {
+    background-color: white;
+  }
+}
+
+@keyframes fadeOutBlack {
+  from {
+    background-color: forestgreen;
+  }
+  to {
+    background-color: black;
+  }
+}
+
+.key span {
+  opacity: 0.8;
+  font-size: 70%;
+  position: relative;
+  top: -12px;
+}
