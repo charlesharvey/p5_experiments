@@ -22,8 +22,14 @@ class Piano {
       "b",
       "c_2",
     ];
+
     this.keys;
     this.init();
+  }
+
+  keyPressMap() {
+    // return ["1", "!", "2", '"', "3", "4", "$", "5", "%", "6", "^", "7", "8"];
+    return ["a", "w", "s", "e", "d", "f", "t", "g", "y", "h", "u", "j", "k"];
   }
 
   audioFile(note) {
@@ -73,9 +79,9 @@ class Piano {
 
     document.addEventListener("keydown", (event) => {
       if (event.key) {
-        const index = parseInt(event.key);
-        if (index > 0) {
-          const key = this.keys[index - 1];
+        const index = this.keyPressMap().indexOf(event.key);
+        if (index >= 0) {
+          const key = this.keys[index];
           if (key) {
             this.playAudio(key);
           }
