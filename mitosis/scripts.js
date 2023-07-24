@@ -1,72 +1,59 @@
-
-
 let cells;
 let bettercells;
 let evenbettercells;
 let evenevenbettercells;
 
-
 function setup() {
+  createCanvas(windowWidth - 20, windowHeight - 20);
 
-
-    createCanvas(windowWidth - 20, windowHeight - 20);
-
-
-    reset();
-
+  reset();
 }
 
 function reset() {
-    evenevenbettercells = [];
-    const cell = new Evenevenbettercell();
-    evenevenbettercells.push(cell);
+  evenevenbettercells = [];
+  const cell = new Evenevenbettercell();
+  evenevenbettercells.push(cell);
 
-    // evenbettercells = [];
-    // const cell = new Evenbettercell();
-    // evenbettercells.push(cell);
-    // bettercells = [];
-    // const bettercell = new Bettercell();
-    // bettercells.push(bettercell);
-    // cells = [];
-    // const cell = new Cell();
-    // cells.push(cell);
-
-
+  // evenbettercells = [];
+  // const cell = new Evenbettercell();
+  // evenbettercells.push(cell);
+  // bettercells = [];
+  // const bettercell = new Bettercell();
+  // bettercells.push(bettercell);
+  // cells = [];
+  // const cell = new Cell();
+  // cells.push(cell);
 }
 
-
-
 function draw() {
-    background(0);
+  background(0);
 
-    evenevenbettercells.forEach(cell => {
-        cell.update();
-        cell.show();
-    });
+  evenevenbettercells.forEach((cell) => {
+    cell.update();
+    cell.giftwrap();
+    cell.show();
+  });
 
+  // evenbettercells.forEach(cell => {
+  //     cell.update();
+  //     cell.show();
+  // });
 
-    // evenbettercells.forEach(cell => {
-    //     cell.update();
-    //     cell.show();
-    // });
+  // bettercells.forEach(cell => {
+  //     cell.update();
+  //     cell.show();
+  // });
 
-    // bettercells.forEach(cell => {
-    //     cell.update();
-    //     cell.show();
-    // });
+  // cells.forEach(cell => {
 
-    // cells.forEach(cell => {
+  //     cell.update();
+  //     cell.show();
 
-    //     cell.update();
-    //     cell.show();
+  //     cell.addChild();
 
-    //     cell.addChild();
-
-    //     newchild = cell.split();
-    //     if (newchild) {
-    //         cells.push(newchild);
-    //     }
-    // })
-
-
+  //     newchild = cell.split();
+  //     if (newchild) {
+  //         cells.push(newchild);
+  //     }
+  // })
 }

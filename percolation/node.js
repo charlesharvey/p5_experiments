@@ -2,73 +2,100 @@ class Node {
   constructor(r, c) {
     this.r = r;
     this.c = c;
-    this.x = r * grid;
-    this.y = c * grid;
+    this.x = c * grid;
+    this.y = r * grid;
 
+    this.filled = false;
     this.radius = grid / 4;
     this.pipeWidth = grid / 12;
     this.onlyShowSquares = true;
-    this.hue = random(0, 255);
+    this.hue = random(20, 185);
+
+    this.randx = random(0, 1);
+    this.randy = random(0, 1);
 
     this.reset();
   }
 
   reset() {
-    this.px = random(0, 1) > prob;
-    this.py = random(0, 1) > prob;
+    this.px = this.randx > prob;
+    this.py = this.randy > prob;
     this.ancestor_hue = null;
     this.filled = false;
   }
 
-  flood(ancestor = null) {
-    this.filled = true;
-
-    if (ancestor) {
-      this.ancestor_hue = ancestor.hue;
+  flood(opts = null) {
+    if (opts) {
+      if (opts.ancestor) {
+        this.ancestor_hue = opts.ancestor.hue;
+      } else {
+        opts.ancestor = this;
+      }
+      if (opts.depth) {
+      } else {
+      }
     } else {
-      ancestor = this;
+      opts = {};
+      opts.depth = -1;
+      opts.ancestor = this;
     }
 
-    const nr = this.r;
-    const nc = this.c - 1;
-    const north = nodes.find((o) => o.r === nr && o.c === nc);
+    this.filled = true;
 
-    const er = this.r - 1;
-    const ec = this.c;
-    const east = nodes.find((o) => o.r === er && o.c === ec);
+    const nr = this.r - 1;
+    const nc = this.c;
+    const north = nodes.find(
+      (o) => o.r === nr && o.c === nc && o.filled == false
+    );
 
-    const sr = this.r;
-    const sc = this.c + 1;
-    const south = nodes.find((o) => o.r === sr && o.c === sc);
+    const er = this.r;
+    const ec = this.c + 1;
+    const east = nodes.find(
+      (o) => o.r === er && o.c === ec && o.filled == false
+    );
 
-    const wr = this.r + 1;
-    const wc = this.c;
-    const west = nodes.find((o) => o.r === wr && o.c === wc);
+    const sr = this.r + 1;
+    const sc = this.c;
+    const south = nodes.find(
+      (o) => o.r === sr && o.c === sc && o.filled == false
+    );
+
+    const wr = this.r;
+    const wc = this.c - 1;
+    const west = nodes.find(
+      (o) => o.r === wr && o.c === wc && o.filled == false
+    );
+
+    // if (opts.depth <= maxDepth) {
+    // }
 
     if (north) {
-      if (north.py && !north.filled) {
-        north.filled = true;
-        north.flood(ancestor);
+      if (north.py) {
+        north.flood({ ancestor: opts.ancestor });
       }
     }
     if (east) {
-      if (east.px && !east.filled) {
-        east.filled = true;
-        east.flood(ancestor);
+      if (this.px) {
+        east.flood({ ancestor: opts.ancestor });
       }
     }
     if (south) {
-      if (this.py && !south.filled) {
-        south.filled = true;
-        south.flood(ancestor);
+      if (this.py) {
+        south.flood({ ancestor: opts.ancestor });
       }
     }
     if (west) {
-      if (this.px && !west.filled) {
-        west.filled = true;
-        west.flood(ancestor);
+      if (west.px) {
+        west.flood({ ancestor: opts.ancestor });
       }
     }
+
+    // return (
+    //   north !== undefined ||
+    //   west !== undefined ||
+    //   south !== undefined ||
+    //   east !== undefined
+    // );
   }
 
   show() {
@@ -106,6 +133,7 @@ class Node {
         fill(0, 0, 200);
       }
       ellipse(this.x, this.y, this.radius, this.radius);
+
       pop();
     }
   }
