@@ -6,7 +6,7 @@ class Evenevenbettercell {
     this.foc2 = this.pos.copy();
 
     this.vel1 = p5.Vector.random2D();
-    this.vel1.setMag(0.24);
+    this.vel1.setMag(0.34);
     this.vel2 = this.vel1.copy();
     this.vel2.mult(-1);
 
@@ -105,7 +105,7 @@ class Evenevenbettercell {
       bit.show();
     });
 
-    fill(95, 100, 30, 100);
+    fill(95, 100, 30, 120);
     noStroke();
     this.hulls.forEach((hull) => {
       beginShape();

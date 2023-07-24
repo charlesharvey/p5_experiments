@@ -5,7 +5,7 @@ class Evenevenbit {
     this.acc = createVector(0, 0);
     this.hue = random(100, 200);
     this.r = 5;
-    this.repelForce = 3;
+    this.repelForce = 5;
     this.attractForce = 4;
   }
 
@@ -45,7 +45,7 @@ class Evenevenbit {
 
   show() {
     noStroke();
-    fill(150, 255 - this.hue, this.hue, 100);
+    fill(150, 255 - this.hue, this.hue, 80);
     ellipse(this.pos.x, this.pos.y, this.r, this.r);
   }
 }
