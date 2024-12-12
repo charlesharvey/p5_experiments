@@ -1,4 +1,4 @@
-const USE_IMAGES = true;
+const USE_IMAGES = window.location.hostname.includes("charles");
 const grid = 40;
 
 let tiles = [
@@ -235,7 +235,9 @@ function checkAllCells() {
 
 function getLowestEntropyCell() {
   if (choices.length > 0) {
-    return choices.pop();
+    const a = random(choices);
+    choices = choices.filter((c) => c != a);
+    return a;
   } else {
     // const wc =
     //   choices.length > 0
