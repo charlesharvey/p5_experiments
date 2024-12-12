@@ -105,18 +105,18 @@ class Cell {
       const til = tiles.find((t) => t.id === this.options[0]);
 
       if (til) {
-        const hu = til.color;
-
         if (this === current_cell) {
           strokeWeight(3);
         } else {
           strokeWeight(1);
         }
 
-        // fill(hu, 255, 255);
-        // rect(grid * this.i, grid * this.j, grid, grid);
         if (til.image) {
           image(til.image, grid * this.i, grid * this.j, grid, grid);
+        } else {
+          const hu = til.color;
+          fill(hu, 255, 255);
+          rect(grid * this.i, grid * this.j, grid, grid);
         }
       }
     } else {
@@ -127,9 +127,14 @@ class Cell {
       this.options.forEach((opt, oi) => {
         const ww = grid / tiles.length;
         const xx = grid * this.i + ww * oi;
-        const hu = tiles.find((t) => t.id === opt).color;
-        fill(hu, 255, 255);
-        rect(xx, grid * this.j, ww, ww);
+        const til = tiles.find((t) => t.id === opt);
+        if (til.image) {
+          image(til.image, xx, grid * this.j, ww, ww);
+        } else {
+          const hu = til.color;
+          fill(hu, 255, 255);
+          rect(xx, grid * this.j, ww, ww);
+        }
       });
     }
   }
