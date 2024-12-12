@@ -1,4 +1,4 @@
-const USE_IMAGES = false;
+const USE_IMAGES = true;
 const grid = 40;
 
 let tiles = [
