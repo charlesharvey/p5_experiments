@@ -1,21 +1,31 @@
 const USE_IMAGES = window.location.hostname.includes("charles");
-const grid = 40;
+const grid = 50;
+const SLOW = false;
 
 let tiles = [
-  { name: "a", id: 1, color: 0, buddies: [2] },
-  { name: "b", id: 2, color: 100, buddies: [1] },
+  { id: 1, hu: 0, buddies: [1, 2, 3, 4], n: [2], s: [2], e: [3], w: [3] },
+  { id: 2, hu: 100, buddies: [1], n: [1], s: [1], e: [2], w: [2] },
+  { id: 3, hu: 200, buddies: [1], n: [3], s: [3], e: [1], w: [1] },
+  { id: 4, hu: 300, buddies: [1, 4], n: [3], s: [3], e: [1], w: [1] },
 ];
 
-let options = [1, 2];
+let options = [1, 2, 3, 4];
+
+const checks = [
+  ["n", "s"],
+  ["s", "n"],
+  ["w", "e"],
+  ["e", "w"],
+];
 
 if (USE_IMAGES) {
   tiles = [
-    { name: "a", id: 1, image: null, color: 0, buddies: [1, 3, 4, 5, 6] },
-    { name: "b", id: 2, image: null, color: 50, buddies: [2, 3, 4, 5, 6] },
-    { name: "c", id: 3, image: null, color: 100, buddies: [1, 2, 3, 4, 5, 6] },
-    { name: "d", id: 4, image: null, color: 150, buddies: [1, 2, 3, 4, 5, 6] },
-    { name: "e", id: 5, image: null, color: 200, buddies: [1, 2, 3, 4, 5, 6] },
-    { name: "f", id: 6, image: null, color: 250, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "a", id: 1, image: null, hu: 0, buddies: [1, 3, 4, 5, 6] },
+    { name: "b", id: 2, image: null, hu: 50, buddies: [2, 3, 4, 5, 6] },
+    { name: "c", id: 3, image: null, hu: 100, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "d", id: 4, image: null, hu: 150, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "e", id: 5, image: null, hu: 200, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "f", id: 6, image: null, hu: 250, buddies: [1, 2, 3, 4, 5, 6] },
   ];
   options = [1, 2, 3, 4, 5, 6];
 }
@@ -43,34 +53,69 @@ class Cell {
 
   allNeighboursOK() {
     let allok = true;
-    const allowed = tiles.find((t) => t.id === this.options[0]).buddies;
-    this.neighbours.forEach((other) => {
-      if (allowed.includes(other.options[0])) {
-      } else {
-        allok = false;
-      }
-    });
+    const til = tile(this.options[0]);
+    if (til) {
+      const allowed = til.buddies;
+      this.neighbours.forEach((other) => {
+        if (allowed.includes(other.options[0])) {
+        } else {
+          allok = false;
+        }
+      });
+    } else {
+      allok = false;
+    }
     return allok;
   }
 
   setNeighbours() {
-    this.neighbours = [];
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        // get cells top bottom left and right
-        if (abs(i) + abs(j) == 1) {
-          const other = cells.find(
-            (c) => c.i === this.i + i && c.j === this.j + j
-          );
-          if (other) {
-            this.neighbours.push(other);
-          }
-        }
-      }
-    }
+    this.s = cells.find((c) => c.i + 1 == this.i && c.j == this.j);
+    this.n = cells.find((c) => c.i - 1 == this.i && c.j == this.j);
+    this.w = cells.find((c) => c.i == this.i && c.j - 1 == this.j);
+    this.e = cells.find((c) => c.i == this.i && c.j + 1 == this.j);
+
+    this.neighbours = [this.s, this.n, this.w, this.e].filter(
+      (n) => n != undefined
+    );
+    // for (let i = -1; i <= 1; i++) {
+    //   for (let j = -1; j <= 1; j++) {
+    //     // get cells top bottom left and right
+    //     if (abs(i) + abs(j) == 1) {
+    //       const other = cells.find(
+    //         (c) => c.i === this.i + i && c.j === this.j + j
+    //       );
+    //       if (other) {
+    //         this.neighbours.push(other);
+    //       }
+    //     }
+    //   }
+    // }
   }
 
-  collapse(recurse) {
+  // 123 , 123 , 123
+  // 123 , 1   , 123
+  // 123 , 123 , 123
+
+  checkNeighbours() {
+    let notpos = [];
+
+    this.options.forEach((opt) => {
+      checks.forEach((check) => {
+        const [q, r] = check;
+        if (this[q]) {
+          this[q].options.forEach((nopt) => {
+            const vs = tile(nopt)[r];
+            if (!vs.includes(opt)) {
+              notpos.push(opt);
+            }
+          });
+        }
+      });
+    });
+    console.log(notpos);
+  }
+
+  collapse() {
     let allneighbourscollapsed = true;
     let next = [];
 
@@ -85,7 +130,7 @@ class Cell {
           allneighbourscollapsed = false;
           let poss = [];
           this.options.forEach((opt) => {
-            const t = tiles.find((tt) => tt.id == opt);
+            const t = tile(opt);
             if (t) {
               t.buddies.forEach((bud) => {
                 if (other.options.includes(bud)) {
@@ -101,10 +146,6 @@ class Cell {
       }
     });
 
-    // if (recurse) {
-    //   next.forEach((next) => next.collapse(false));
-    // }
-
     if (allneighbourscollapsed) {
       this.finished = true;
     }
@@ -117,7 +158,7 @@ class Cell {
 
     const ol = this.options.length;
     if (ol == 1) {
-      const til = tiles.find((t) => t.id === this.options[0]);
+      const til = tile(this.options[0]);
 
       if (til) {
         if (this === current_cell) {
@@ -129,8 +170,7 @@ class Cell {
         if (til.image) {
           image(til.image, grid * this.i, grid * this.j, grid, grid);
         } else {
-          const hu = til.color;
-          fill(hu, 255, 255);
+          fill(til.hu, 255, 255);
           rect(grid * this.i, grid * this.j, grid, grid);
         }
       }
@@ -142,12 +182,11 @@ class Cell {
       this.options.forEach((opt, oi) => {
         const ww = grid / tiles.length;
         const xx = grid * this.i + ww * oi;
-        const til = tiles.find((t) => t.id === opt);
+        const til = tile(opt);
         if (til.image) {
           image(til.image, xx, grid * this.j, ww, ww);
         } else {
-          const hu = til.color;
-          fill(hu, 255, 255);
+          fill(til.hu, 255, 255);
           rect(xx, grid * this.j, ww, ww);
         }
       });
@@ -182,7 +221,9 @@ function setup() {
 
   cells.forEach((cell) => cell.setNeighbours());
 
-  //   frameRate(2);
+  if (SLOW) {
+    frameRate(2);
+  }
   getNewCurrentCell();
 }
 
@@ -194,6 +235,10 @@ function getNewCurrentCell() {
   }
 }
 
+function tile(id) {
+  return tiles.find((t) => t.id === id);
+}
+
 function draw() {
   background(0);
   cells.forEach((cell) => {
@@ -201,17 +246,15 @@ function draw() {
   });
 
   if (choices.length === 0) {
+    // getNewCurrentCell();
   } else {
-    getNewCurrentCell();
   }
 
   if (current_cell) {
-    // console.log(current_cell.state, current_cell.i, current_cell.j);
     if (current_cell.state == "pick_one") {
       current_cell.pickRandomOption();
     } else if (current_cell.state == "collapse_me") {
-      //   console.log(current_cell.options);
-      current_cell.collapse(true);
+      current_cell.collapse();
     } else if (current_cell.state == "collapsed") {
       getNewCurrentCell();
     }
