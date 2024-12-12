@@ -12,6 +12,7 @@ class Quadtree {
     this.sw;
     this.se;
     this.subdivided = false;
+    this.parent;
   }
 
   show() {
@@ -32,6 +33,7 @@ class Quadtree {
     if (this.boundary.contains(point)) {
       if (this.points.length < this.capacity) {
         this.points.push(point);
+        point.node = this;
       } else {
         if (!this.subdivided) {
           this.subdivide();
@@ -63,6 +65,7 @@ class Quadtree {
     this.sw = new Quadtree(swx, swy, w, h, this.capacity);
     this.se = new Quadtree(sex, sey, w, h, this.capacity);
     this.subdivided = true;
+    this.parent = this;
   }
 
   query(range, found = []) {
@@ -131,6 +134,7 @@ class Point {
     this.y = y;
     this.theta = random(20000);
     this.move();
+    this.node;
   }
 
   show() {
@@ -145,6 +149,14 @@ class Point {
     this.x = map(noise(this.theta + 1), 0, 1, 0, width);
     this.y = map(noise(this.theta + 10000), 0, 1, 0, height);
     this.theta += 0.001;
+  }
+
+  parentRect() {
+    if (this.node) {
+      if (this.node.parent) {
+        return this.node.parent.boundary;
+      }
+    }
   }
 }
 
@@ -180,7 +192,7 @@ function setup() {
   }
 
   box = new Rectangle(width / 2 - 50, height / 2 - 50, 100, 100);
-  box.highlighted = true;
+  // box.highlighted = true;
 }
 
 function draw() {
@@ -193,12 +205,33 @@ function draw() {
     tree.insert(point);
   });
 
-  tree.show();
+  points.forEach((point) => {
+    // const boundary = point.parentRect();
+    const size = 150;
+    const boundary = new Rectangle(
+      point.x - size / 2,
+      point.y - size / 2,
+      size,
+      size
+    );
+    if (boundary) {
+      let nest = tree.query(boundary);
+      nest.forEach((n) => {
+        const d = dist(n.x, n.y, point.x, point.y);
+        const b = map(d, 0, size / 2, 200, 0);
+        stroke(255, b);
+        strokeWeight(1);
+        line(n.x, n.y, point.x, point.y);
+      });
+    }
+  });
+
+  // tree.show();
 
   let results = tree.query(box);
-  box.show();
+  // box.show();
   noStroke();
-  fill(0, 255, 0);
+  fill(255);
   results.forEach((p) => {
     ellipse(p.x, p.y, 9, 9);
   });

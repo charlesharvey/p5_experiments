@@ -12,15 +12,35 @@ function setup() {
 function reset() {
   planets = [];
   cm_history = [];
-  const numberOfPlanets = Math.floor(random(2, 6));
-  const haveSun = Math.random() > 0.5;
-  for (let i = 0; i < numberOfPlanets; i++) {
-    const planet = new Planet();
-    if (i == 0 && haveSun) {
-      planet.makeSun();
-    }
-    planets.push(planet);
-  }
+  // const numberOfPlanets = Math.floor(random(2, 6));
+  // const haveSun = Math.random() > 0.5;
+  // for (let i = 0; i < numberOfPlanets; i++) {
+  //   const planet = new Planet();
+  //   if (i == 0 && haveSun) {
+  //     planet.makeSun();
+  //   }
+  //   planets.push(planet);
+  // }
+
+  ///three stars one planet
+  const sun1 = new Planet();
+  const sun2 = new Planet();
+  const sun3 = new Planet();
+  sun1.mass = 400;
+  sun2.mass = 400;
+  sun3.mass = 400;
+  sun1.calculateR();
+  sun2.calculateR();
+  sun3.calculateR();
+
+  const planet = new Planet();
+  planet.mass = 20;
+  planet.r = 5;
+
+  planets.push(sun1);
+  planets.push(sun2);
+  planets.push(sun3);
+  planets.push(planet);
 }
 
 function mousePressed() {

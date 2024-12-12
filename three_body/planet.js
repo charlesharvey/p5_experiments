@@ -7,9 +7,13 @@ class Planet {
     this.vel = p5.Vector.random2D();
     this.acc = p5.Vector.random2D();
     this.mass = random(50, 400);
-    this.r = map(this.mass, 0, 400, 0, 20);
+    this.calculateR();
     this.hue = random(255);
     this.history = [];
+  }
+
+  calculateR() {
+    this.r = map(this.mass, 0, 400, 0, 20);
   }
 
   makeSun() {

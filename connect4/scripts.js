@@ -7,6 +7,7 @@ const WIN_LENGTH = 4;
 const DISC_SIZE = 0.8;
 
 const USE_AI = location.search.includes("ai");
+const AI_LEVELS = 2;
 
 let grid;
 let mx, my;
@@ -58,7 +59,7 @@ function fakeData() {
   const d3 = new Disc(0, rows - 2, RED);
   const d4 = new Disc(1, rows - 2, YELLOW);
   const d5 = new Disc(0, rows - 3, RED);
-  const d6 = new Disc(1, rows - 3, YELLOW);
+  const d6 = new Disc(3, rows - 1, YELLOW);
   discs = [d1, d2, d3, d4, d5, d6];
 }
 
@@ -95,27 +96,58 @@ function makeTestMove(x, y) {
   const lowestRow = lowestRowFree(x, y);
   const disc = new Disc(x, lowestRow, currentColor);
   testdiscs.push(disc);
-  const ctw = checkTestWins();
+  const ctw = checkTestWins(disc);
   return ctw;
+}
+
+function checkTestWins(disc) {
+  let w = false;
+  let r = null;
+  let curentMaxlength = 0;
+  testdiscs
+    .filter((d) => d.color === currentColor)
+    .forEach((d) => {
+      const dw = d.wins({ test: true });
+      // if (dw.length == WIN_LENGTH) {
+      //   w = true;
+      // }
+
+      if (dw.includes(disc)) {
+        if (dw.length >= curentMaxlength) {
+          r = dw;
+          curentMaxlength = dw.length;
+        }
+      }
+    });
+  return r;
 }
 
 function makeAIMove() {
   if (!animating && !gameOver) {
     let shouldmakemove = true;
+
     while (shouldmakemove) {
-      allowedmoves = [];
+      let curentMaxlength = 0;
+      let allowedmoves = [];
       for (let k = 0; k < cols; k++) {
         const cfo = columnFullyOccupied(k);
         if (!cfo) {
           shouldmakemove = false;
           let movewins = makeTestMove(k, 0);
 
-          if (movewins) {
+          if (movewins.length > curentMaxlength) {
             allowedmoves = [k];
-            k = Infinity;
-          } else {
+            curentMaxlength = movewins.length;
+          } else if (movewins.length === curentMaxlength) {
             allowedmoves.push(k);
           }
+
+          // if (movfewins) {
+          //   allowedmoves = [k];
+          //   k = Infinity;
+          // } else {
+          //   allowedmoves.push(k);
+          // }
         }
       }
 
@@ -132,23 +164,14 @@ function makeAIMove() {
   }
 }
 
-function checkTestWins() {
-  let w = false;
-  testdiscs.forEach((disc) => {
-    if (disc.wins({ test: true })) {
-      w = true;
-    }
-  });
-  return w;
-}
-
 function checkWins() {
   winLine = null;
 
   if (!gameOver) {
     discs.forEach((disc) => {
       let w = disc.wins({ test: false });
-      if (w) {
+      // if (w){
+      if (w.length == WIN_LENGTH) {
         gameOver = true;
         winnerColor = w[0].color;
 
@@ -389,6 +412,10 @@ class Disc {
     let currentNegColor = this.color;
     let currentHorColor = this.color;
     let currentVerColor = this.color;
+    let donthor = false;
+    let dontver = false;
+    let dontpos = false;
+    let dontneg = false;
 
     for (let mm = 1; mm < WIN_LENGTH; mm++) {
       let posoc = occupied(this.x + mm, this.y - mm, opts);
@@ -425,32 +452,43 @@ class Disc {
       }
       if (horoc) {
         if (horoc.color === currentHorColor) {
-          poshor.push(horoc);
+          if (!donthor) {
+            poshor.push(horoc);
+          }
           if (poshor.length >= WIN_LENGTH) {
             return poshor;
           }
         } else {
-          //
+          donthor = true;
         }
         currentHorColor = horoc.color;
       } else {
-        //
+        donthor = true;
       }
 
       if (veroc) {
         if (veroc.color === currentVerColor) {
-          posver.push(veroc);
+          if (!dontver) {
+            posver.push(veroc);
+          }
           if (posver.length >= WIN_LENGTH) {
             return posver;
           }
         } else {
-          //
+          dontver = true;
         }
         currentVerColor = veroc.color;
       } else {
-        //
+        dontver = true;
       }
     }
-    return false;
+
+    const lines = [posver, poshor, posneg, pospos].sort(
+      (a, b) => a.length < b.length
+    );
+    const longest = lines[0];
+
+    return longest;
+    // return false;
   }
 }

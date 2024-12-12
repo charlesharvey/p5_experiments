@@ -23,14 +23,29 @@ function setup() {
 function draw() {
   background(0);
   noStroke();
+  frameRate(4);
 
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       const cell = cells[i][j];
-      if (cell.length == 1) {
+      const cl = cell.length;
+      if (cl == 1) {
         const hu = cell[0];
+        noStroke();
         fill(0, hu, hu);
         rect(i * grid, j * grid, grid, grid);
+      } else {
+        // show options;
+        cell.forEach((cc, ci) => {
+          const hu = cc;
+          const ww = grid / cl;
+          const xx = i * grid + ci * ww;
+          const yy = j * grid;
+          fill(0, hu, hu);
+          stroke(255);
+          strokeWeight(3);
+          rect(xx, yy, ww, ww);
+        });
       }
     }
   }
