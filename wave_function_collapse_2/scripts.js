@@ -1,12 +1,10 @@
-let im1, im2, im3, im4, im5, im6;
-
 const tiles = [
-  { name: "a", id: 1, image: im1, color: 0, buddies: [3, 4, 5, 6] },
-  { name: "b", id: 2, image: im2, color: 50, buddies: [3, 4, 5, 6] },
-  { name: "c", id: 3, image: im3, color: 100, buddies: [1, 2, 3, 4, 5, 6] },
-  { name: "d", id: 4, image: im4, color: 150, buddies: [1, 2, 3, 4, 5, 6] },
-  { name: "e", id: 5, image: im5, color: 200, buddies: [1, 2, 3, 4, 5, 6] },
-  { name: "f", id: 6, image: im6, color: 250, buddies: [1, 2, 3, 4, 5, 6] },
+  { name: "a", id: 1, image: null, color: 0, buddies: [3, 4, 5, 6] },
+  { name: "b", id: 2, image: null, color: 50, buddies: [3, 4, 5, 6] },
+  { name: "c", id: 3, image: null, color: 100, buddies: [1, 2, 3, 4, 5, 6] },
+  { name: "d", id: 4, image: null, color: 150, buddies: [1, 2, 3, 4, 5, 6] },
+  { name: "e", id: 5, image: null, color: 200, buddies: [1, 2, 3, 4, 5, 6] },
+  { name: "f", id: 6, image: null, color: 250, buddies: [1, 2, 3, 4, 5, 6] },
   //   { name: "purple", id: 4, color: 300, buddies: [1, 3, 4] },
 ];
 const options = [1, 2, 3, 4, 5, 6];
@@ -117,7 +115,9 @@ class Cell {
 
         // fill(hu, 255, 255);
         // rect(grid * this.i, grid * this.j, grid, grid);
-        image(til.image, grid * this.i, grid * this.j, grid, grid);
+        if (til.image) {
+          image(til.image, grid * this.i, grid * this.j, grid, grid);
+        }
       }
     } else {
       const w = grid / ol;
@@ -136,12 +136,12 @@ class Cell {
 }
 
 function preload() {
-  im1 = loadImage("1.png");
-  im2 = loadImage("2.png");
-  im3 = loadImage("3.png");
-  im4 = loadImage("4.png");
-  im5 = loadImage("5.png");
-  im6 = loadImage("6.png");
+  tiles[0].image = loadImage("1.png");
+  tiles[1].image = loadImage("2.png");
+  tiles[2].image = loadImage("3.png");
+  tiles[3].image = loadImage("4.png");
+  tiles[4].image = loadImage("5.png");
+  tiles[5].image = loadImage("6.png");
 }
 
 function setup() {
