@@ -1,6 +1,6 @@
 const tiles = [
-  { name: "a", id: 1, image: null, color: 0, buddies: [3, 4, 5, 6] },
-  { name: "b", id: 2, image: null, color: 50, buddies: [3, 4, 5, 6] },
+  { name: "a", id: 1, image: null, color: 0, buddies: [1, 3, 4, 5, 6] },
+  { name: "b", id: 2, image: null, color: 50, buddies: [2, 3, 4, 5, 6] },
   { name: "c", id: 3, image: null, color: 100, buddies: [1, 2, 3, 4, 5, 6] },
   { name: "d", id: 4, image: null, color: 150, buddies: [1, 2, 3, 4, 5, 6] },
   { name: "e", id: 5, image: null, color: 200, buddies: [1, 2, 3, 4, 5, 6] },
