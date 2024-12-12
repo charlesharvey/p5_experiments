@@ -1,15 +1,25 @@
-const tiles = [
-  { name: "a", id: 1, image: null, color: 0, buddies: [1, 3, 4, 5, 6] },
-  { name: "b", id: 2, image: null, color: 50, buddies: [2, 3, 4, 5, 6] },
-  { name: "c", id: 3, image: null, color: 100, buddies: [1, 2, 3, 4, 5, 6] },
-  { name: "d", id: 4, image: null, color: 150, buddies: [1, 2, 3, 4, 5, 6] },
-  { name: "e", id: 5, image: null, color: 200, buddies: [1, 2, 3, 4, 5, 6] },
-  { name: "f", id: 6, image: null, color: 250, buddies: [1, 2, 3, 4, 5, 6] },
-  //   { name: "purple", id: 4, color: 300, buddies: [1, 3, 4] },
-];
-const options = [1, 2, 3, 4, 5, 6];
+const USE_IMAGES = false;
+const grid = 40;
 
-const grid = 60;
+let tiles = [
+  { name: "a", id: 1, color: 0, buddies: [2] },
+  { name: "b", id: 2, color: 100, buddies: [1] },
+];
+
+let options = [1, 2];
+
+if (USE_IMAGES) {
+  tiles = [
+    { name: "a", id: 1, image: null, color: 0, buddies: [1, 3, 4, 5, 6] },
+    { name: "b", id: 2, image: null, color: 50, buddies: [2, 3, 4, 5, 6] },
+    { name: "c", id: 3, image: null, color: 100, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "d", id: 4, image: null, color: 150, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "e", id: 5, image: null, color: 200, buddies: [1, 2, 3, 4, 5, 6] },
+    { name: "f", id: 6, image: null, color: 250, buddies: [1, 2, 3, 4, 5, 6] },
+  ];
+  options = [1, 2, 3, 4, 5, 6];
+}
+
 let rows, cols;
 let cells;
 let current_cell;
@@ -22,6 +32,7 @@ class Cell {
     this.options = options;
     this.state = "started";
     this.neighbours = [];
+    this.finished = false;
   }
 
   pickRandomOption() {
@@ -94,6 +105,10 @@ class Cell {
     //   next.forEach((next) => next.collapse(false));
     // }
 
+    if (allneighbourscollapsed) {
+      this.finished = true;
+    }
+
     this.state = "collapsed";
   }
 
@@ -141,12 +156,14 @@ class Cell {
 }
 
 function preload() {
-  tiles[0].image = loadImage("1.png");
-  tiles[1].image = loadImage("2.png");
-  tiles[2].image = loadImage("3.png");
-  tiles[3].image = loadImage("4.png");
-  tiles[4].image = loadImage("5.png");
-  tiles[5].image = loadImage("6.png");
+  if (USE_IMAGES) {
+    tiles[0].image = loadImage("1.png");
+    tiles[1].image = loadImage("2.png");
+    tiles[2].image = loadImage("3.png");
+    tiles[3].image = loadImage("4.png");
+    tiles[4].image = loadImage("5.png");
+    tiles[5].image = loadImage("6.png");
+  }
 }
 
 function setup() {
@@ -172,6 +189,7 @@ function setup() {
 function getNewCurrentCell() {
   current_cell = getLowestEntropyCell();
   if (current_cell) {
+    choices = [];
     current_cell.state = "pick_one";
   }
 }
@@ -181,6 +199,11 @@ function draw() {
   cells.forEach((cell) => {
     cell.show();
   });
+
+  if (choices.length === 0) {
+  } else {
+    getNewCurrentCell();
+  }
 
   if (current_cell) {
     // console.log(current_cell.state, current_cell.i, current_cell.j);
@@ -211,25 +234,33 @@ function checkAllCells() {
 }
 
 function getLowestEntropyCell() {
-  const wc =
-    choices.length > 0 ? choices : cells.filter((c) => c.state !== "collapsed");
+  if (choices.length > 0) {
+    return choices.pop();
+  } else {
+    // const wc =
+    //   choices.length > 0
+    //     ? choices
+    //     : cells.filter((c) => c.state !== "collapsed" && !c.finished);
 
-  //   console.log("cl", choices.length);
+    //   console.log("cl", choices.length);
 
-  let record_cells = [];
-  let record_length = Number.POSITIVE_INFINITY;
-  wc.forEach((cell) => {
-    // if (cell.options.length > 1) {
-    if (cell.options.length < record_length) {
-      record_length = cell.options.length;
-      record_cells = [cell];
-    } else if (cell.options.length == record_length) {
-      record_cells.push(cell);
-    }
-    // }
-  });
+    const wc = cells.filter((c) => c.state !== "collapsed" && !c.finished);
 
-  let record_cell = random(record_cells);
+    let record_cells = [];
+    let record_length = Number.POSITIVE_INFINITY;
+    wc.forEach((cell) => {
+      // if (cell.options.length > 1) {
+      if (cell.options.length < record_length) {
+        record_length = cell.options.length;
+        record_cells = [cell];
+      } else if (cell.options.length == record_length) {
+        record_cells.push(cell);
+      }
+      // }
+    });
 
-  return record_cell;
+    let record_cell = random(record_cells);
+
+    return record_cell;
+  }
 }
