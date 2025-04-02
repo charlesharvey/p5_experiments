@@ -6,7 +6,7 @@ let ruleNumber;
 let h;
 
 const cool_rules = [
-  150, 165, 237, 102, 78, 178, 109, 180, 182, 130, 134, 210, 105, 57,
+  150, 165, 237, 102, 78, 178, 109, 180, 182, 130, 134, 210, 105, 57, 30,
 ];
 
 function setup() {
@@ -97,10 +97,16 @@ function draw() {
   });
 
   let new_generation = makeGeneration();
-  for (let i = 1; i < generations[0].length - 1; i++) {
-    const a = generations[0][i - 1];
-    const b = generations[0][i + 0];
-    const c = generations[0][i + 1];
+  for (let i = 0; i < generations[0].length; i++) {
+    const ai = (i - 1 + generations[0].length) % generations[0].length;
+    const bi = 1;
+    const ci = (i + 1 + generations[0].length) % generations[0].length;
+
+    // console.log(ai, bi, ci);
+
+    const a = generations[0][ai];
+    const b = generations[0][bi];
+    const c = generations[0][ci];
     const newval = applyRule(a, b, c);
     new_generation[i] = newval;
   }
