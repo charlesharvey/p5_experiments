@@ -63,6 +63,7 @@ class Ant {
     this.pos = createVector(x, y);
     this.vel = p5.Vector.random2D();
     this.vel.setMag(MAX_SPEED);
+    this.acc = createVector(0, 0);
     this.fov = PI / 3;
     this.bestpost;
   }
@@ -104,6 +105,8 @@ class Ant {
 
     if (bestv) {
       this.bestspot = bestv;
+      //   const force = p5.Vector.sub(this.vel, bestv).normalize();
+      //   this.applyForce(force);
     }
   }
 
@@ -120,9 +123,19 @@ class Ant {
     return [v1, v2, v3];
   }
 
+  applyForce(force) {
+    this.acc.add(force);
+  }
+
   update() {
     this.pos.add(this.vel);
+    this.vel.add(this.acc);
+
+    this.vel.limit(MAX_SPEED);
+
     this.bounce();
+
+    this.acc.mult(0);
   }
 
   bounce() {
