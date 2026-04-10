@@ -62,15 +62,32 @@ class Shaaape {
   shadow() {
     if (mouse) {
       fill(117, 117, 55);
-      beginShape();
-      vertex(mouse.x, height);
 
-      this.bottom_points.forEach((p) => {
-        vertex(p.x, p.y);
+      const a = this.points[0];
+      const b = this.points[1];
+      const c = this.points[2];
+      const d = this.points[3];
+      const sets = [
+        [a, b],
+        [b, c],
+        [c, d],
+        [d, a],
+      ];
+      sets.forEach((s) => {
+        beginShape();
+
+        s.forEach((c) => {
+          vertex(c.x, c.y);
+        });
+        vertex(mouse.x, height);
+        endShape();
       });
-      // vertex(x1, y2);
-      // vertex(x2, y2);
-      endShape();
+      // beginShape();
+      // vertex(mouse.x, height);
+      // this.bottom_points.forEach((p) => {
+      //   vertex(p.x, p.y);
+      // });
+      // endShape();
     }
   }
 }
@@ -94,9 +111,9 @@ function setup() {
 
   const dots = 11;
   for (let i = 0; i < dots; i++) {
-    const y = i % 2 == 0 ? 100 : 200;
+    const y = i % 2 == 0 ? 100 : 250;
     const x = map(i, 0, dots, 0, width);
-    const pts = createSquare(x, y, (width / dots) * 0.8);
+    const pts = createSquare(x, y, (width / dots) * 0.7);
     shapes.push(new Shaaape(pts));
   }
 
