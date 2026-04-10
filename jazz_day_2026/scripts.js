@@ -4,6 +4,7 @@ let lights = [];
 
 let shapes = [];
 let mouse;
+let mountain = [];
 
 class Light {
   constructor(x, w) {
@@ -118,6 +119,13 @@ function setup() {
   }
 
   mouse = createVector(0, 0);
+
+  mountain = [];
+  const res = 10;
+  for (let x = 0; x < width; x += res) {
+    const y = map(noise(x * 0.006), 0, 1, height * 0.99, height * 0.7);
+    mountain.push(createVector(x, y));
+  }
 }
 
 function createSquare(x, y, w) {
@@ -148,4 +156,13 @@ function draw() {
   shapes.forEach((shp) => {
     shp.show();
   });
+
+  fill(40);
+  beginShape();
+  vertex(0, height);
+  mountain.forEach((p) => {
+    vertex(p.x, p.y);
+  });
+  vertex(width, height);
+  endShape();
 }
